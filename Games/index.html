@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>English Grammar Quiz</title>
+    <title>Grammar Quiz</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
@@ -12,7 +12,7 @@
             font-family: 'Inter', sans-serif;
         }
         .quiz-container {
-            max-width: 600px;
+            max-width: none;
             width: 95%;
         }
         .answer-btn {
@@ -35,13 +35,13 @@
         }
     </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+<body class="bg-gray-500 flex items-center justify-center min-h-screen">
 
-    <div id="quiz-container" class="quiz-container bg-white p-6 sm:p-8 rounded-2xl shadow-lg text-center">
+    <div id="quiz-container" class="quiz-container bg-gray-200 p-6 sm:p-8 rounded-2xl shadow-lg text-center">
         
         <!-- Start Screen -->
         <div id="start-screen">
-            <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 mb-4">Grammar Quiz: Adjectives</h1>
+            <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 mb-4">Comparative and Superlative: Adjectives</h1>
             <p class="text-gray-600 mb-8">You'll have 20 seconds for each question. Good luck!</p>
             <button id="start-btn" class="w-full bg-blue-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-600 transition-colors duration-300 text-lg">Start Quiz</button>
         </div>
@@ -167,7 +167,7 @@
                 question.answers.forEach(answer => {
                     const button = document.createElement('button');
                     button.innerText = answer.text;
-                    button.classList.add('answer-btn', 'w-full', 'bg-gray-200', 'text-gray-700', 'font-semibold', 'py-3', 'px-4', 'rounded-lg');
+                    button.classList.add('answer-btn', 'w-full', 'bg-gray-400', 'text-gray-700', 'font-semibold', 'py-3', 'px-4', 'rounded-lg');
                     button.dataset.correct = answer.correct;
                     button.addEventListener('click', selectAnswer);
                     answerButtonsContainer.appendChild(button);
