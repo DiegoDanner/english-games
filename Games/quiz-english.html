@@ -1,0 +1,1618 @@
+<!DOCTYPE html>
+<html lang="port">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Grammar and Vocabulary Quiz</title>
+    <!-- Tailwind CSS CDN for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1a202c; /* Dark background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .quiz-container {
+            background-color: #2d3748; /* Darker blue-gray */
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 800px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 500px; /* Ensure a minimum height */
+            position: relative; /* Needed for absolute positioning of watermark */
+        }
+        .question-area {
+            background-color: #4299e1; /* Blue header */
+            color: white;
+            padding: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            flex-grow: 1;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+        }
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr; /* Single column for mobile */
+            gap: 15px;
+            padding: 20px;
+            flex-grow: 2; /* Allow options to take more space */
+        }
+        @media (min-width: 768px) {
+            .options-grid {
+                grid-template-columns: 1fr 1fr; /* Two columns for larger screens */
+            }
+        }
+        .option-button {
+            background-color: #a0aec0; /* Light gray */
+            color: #2d3748; /* Dark text */
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+            text-align: center;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .option-button:hover {
+            background-color: #cbd5e0; /* Lighter gray on hover */
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+        }
+        .option-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .option-button.correct {
+            background-color: #48bb78; /* Green for correct */
+            color: white;
+        }
+        .option-button.incorrect {
+            background-color: #e53e3e; /* Red for incorrect */
+            color: white;
+        }
+        .results-area {
+            background-color: #2d3748;
+            color: white;
+            padding: 30px;
+            text-align: center;
+            font-size: 1.5rem;
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+        }
+        .restart-button {
+            background-color: #4299e1; /* Blue */
+            color: white;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin-top: 20px;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .restart-button:hover {
+            background-color: #3182ce; /* Darker blue on hover */
+            transform: translateY(-1px);
+        }
+        .hint-area {
+            background-color: #2d3748; /* Darker blue-gray */
+            color: #a0aec0; /* Light gray for hint text */
+            padding: 15px;
+            text-align: center;
+            font-size: 0.9rem;
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+            margin-top: 10px;
+        }
+        .progress-bar-container {
+            width: 90%;
+            background-color: #4a5568; /* Gray for empty bar */
+            border-radius: 5px;
+            height: 10px;
+            margin: 20px auto 10px auto;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background-color: #63b3ed; /* Light blue for progress */
+            border-radius: 5px;
+            transition: width 0.5s ease-in-out;
+        }
+        .watermark-logo {
+            position: absolute;
+            bottom: 1px; /* Small padding from top */
+            left: 1px; /* Small padding from left */
+            width: 130px; /* Adjust size as needed */
+            height: auto;
+            opacity: 0.55; /* Make it semi-transparent */
+            z-index: 0; /* Ensure it's behind other content */
+        }
+    </style>
+</head>
+<body>
+    <div id="quizApp" class="quiz-container">
+        <!-- Watermark image -->
+        <img src="img/LOGO_DANNER.png" alt="Logótipo Danner Idiomas" class="watermark-logo" onerror="this.onerror=null;this.src='https://placehold.co/80x80/2d3748/a0aec0?text=LOGO'; console.error('Failed to load LOGO_DANNER.jpg');">
+
+        <div class="progress-bar-container">
+            <div id="progressBar" class="progress-bar"></div>
+        </div>
+        <div id="questionArea" class="question-area">
+            Loading Quiz...
+        </div>
+        <div id="optionsGrid" class="options-grid">
+            <!-- Options will be dynamically loaded here -->
+        </div>
+        <div id="hintArea" class="hint-area hidden">
+            <!-- Hint will be displayed here -->
+        </div>
+        <div id="resultsArea" class="results-area hidden">
+            <!-- Results will be displayed here -->
+            <button id="restartButton" class="restart-button hidden">Restart Quiz</button>
+        </div>
+    </div>
+
+    <script>
+        // Quiz data from the provided JSON
+        const quizData = {
+          "questions": [
+            {
+              "question": "Where _____ his sister work? (present)",
+              "answerOptions": [
+                {
+                  "text": "does",
+                  "rationale": "This auxiliary verb is used for questions in the simple present with a third-person singular subject like 'his sister'.",
+                  "isCorrect": true
+                },
+                {
+                  "text": "do",
+                  "rationale": "This auxiliary verb is used for simple present questions, but not with third-person singular subjects.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "is",
+                  "rationale": "This verb is used for continuous tenses or states of being, not for actions like 'work' in this question structure.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "did",
+                  "rationale": "This auxiliary verb is used for questions in the past tense, not the present.",
+                  "isCorrect": false
+                }
+              ],
+              "hint": "For questions in the present tense about 'he', 'she', or 'it', we use a specific helper verb."
+            },
+            {
+              "question": "Would you mind _____ the window?",
+              "answerOptions": [
+                {
+                  "text": "open",
+                  "rationale": "This is the base form of the verb, which is not the correct structure following the phrase 'would you mind'.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "opening",
+                  "rationale": "The expression 'would you mind' is always followed by the gerund (-ing) form of a verb.",
+                  "isCorrect": true
+                },
+                {
+                  "text": "to open",
+                  "rationale": "This is the infinitive form, used in other constructions but not after 'would you mind'.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "opened",
+                  "rationale": "This is the past tense form and does not fit grammatically in this polite request.",
+                  "isCorrect": false
+                }
+              ],
+              "hint": "The phrase 'Would you mind...' is followed by a verb in its gerund form (-ing)."
+            },
+            {
+              "question": "Choose the word that best fits: 'I’m really ______ about the trip!'",
+              "answerOptions": [
+                {
+                  "text": "excited",
+                  "rationale": "This adjective ending in '-ed' is used to describe how a person feels.",
+                  "isCorrect": true
+                },
+                {
+                  "text": "exciting",
+                  "rationale": "This adjective ending in '-ing' describes the thing that causes the emotion, such as 'an exciting trip'.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "bored",
+                  "rationale": "This describes a feeling, but it is the opposite of what would be expected in this context.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "boring",
+                  "rationale": "This adjective describes the thing that causes the feeling of boredom, not the feeling itself.",
+                  "isCorrect": false
+                }
+              ],
+              "hint": "The word should describe a person's feeling, not the thing that causes the feeling."
+            },
+            {
+              "question": "____ you like to go to the movies tonight?",
+              "answerOptions": [
+                {
+                  "text": "Do",
+                  "rationale": "This would form a question about a general preference, 'Do you like to go...', not a specific invitation.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "Are",
+                  "rationale": "This verb does not fit grammatically with 'like' in this question structure for an invitation.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "Would",
+                  "rationale": "This modal verb is used to form a polite invitation with the verb 'like'.",
+                  "isCorrect": true
+                },
+                {
+                  "text": "Did",
+                  "rationale": "This auxiliary verb would place the question in the past, which contradicts 'tonight'.",
+                  "isCorrect": false
+                }
+              ],
+              "hint": "This word is used to make a polite offer or invitation."
+            },
+            {
+              "question": "Helen _____ shopping every week.",
+              "answerOptions": [
+                {
+                  "text": "goes",
+                  "rationale": "This is the correct third-person singular present tense form for a routine action.",
+                  "isCorrect": true
+                },
+                {
+                  "text": "go",
+                  "rationale": "This form is used with I, you, we, and they, but not with a third-person singular subject like 'Helen'.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "went",
+                  "rationale": "This is the past tense form, but the sentence describes a current, weekly habit.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "is going",
+                  "rationale": "This tense is for actions happening now or planned for the near future, not for a general routine.",
+                  "isCorrect": false
+                }
+              ],
+              "hint": "For routine actions in the present tense with 'he', 'she', or 'it', the verb needs a specific ending."
+            },
+            {
+              "question": "Who is the _______ person in your family?",
+              "answerOptions": [
+                {
+                  "text": "tall",
+                  "rationale": "This is the base adjective, used for description but not for comparison to this degree.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "taller",
+                  "rationale": "This is the comparative form, used to compare two people, not one against a whole group.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "most tall",
+                  "rationale": "For short adjectives like 'tall', we add '-est' for the superlative form, rather than using 'most'.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "tallest",
+                  "rationale": "This is the superlative form, used to single out one person from a group of three or more.",
+                  "isCorrect": true
+                }
+              ],
+              "hint": "To compare one thing against a whole group, you need the superlative form of the adjective."
+            },
+            {
+              "question": "Bob__________ play soccer when he was young.",
+              "answerOptions": [
+                {
+                  "text": "used to",
+                  "rationale": "This phrase correctly describes a repeated action or habit in the past that is no longer true.",
+                  "isCorrect": true
+                },
+                {
+                  "text": "is used to",
+                  "rationale": "This phrase means 'is accustomed to' and is followed by a gerund (e.g., 'is used to playing').",
+                  "isCorrect": false
+                },
+                {
+                  "text": "uses to",
+                  "rationale": "This is a common grammatical error; the correct phrase for past habits does not change for the third person.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "was using to",
+                  "rationale": "This structure is not grammatically correct for describing a past habit.",
+                  "isCorrect": false
+                }
+              ],
+              "hint": "This phrase is used to talk about habits in the past that are finished now."
+            },
+            {
+              "question": "Has Mr. Johnson arrived ______ ?",
+              "answerOptions": [
+                {
+                  "text": "already",
+                  "rationale": "'Already' is typically used in affirmative sentences to say something happened sooner than expected.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "still",
+                  "rationale": "'Still' is used to say a situation continues to exist, often in affirmative sentences.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "yet",
+                  "rationale": "This word is used in questions and negative sentences to ask if something expected has happened.",
+                  "isCorrect": true
+                },
+                {
+                  "text": "since",
+                  "rationale": "'Since' is used to indicate a starting point in time, which doesn't fit this question's structure.",
+                  "isCorrect": false
+                }
+              ],
+              "hint": "This word is often used in questions and negative sentences to ask about something we are expecting to happen."
+            },
+            {
+              "question": "There are ____ things that I haven't told you.",
+              "answerOptions": [
+                {
+                  "text": "a few",
+                  "rationale": "This indicates a small, countable number of items, fitting the context of 'things'.",
+                  "isCorrect": true
+                },
+                {
+                  "text": "a little",
+                  "rationale": "This is used with uncountable nouns (like water or time), not countable nouns like 'things'.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "much",
+                  "rationale": "'Much' is used with uncountable nouns, typically in questions and negative sentences.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "any",
+                  "rationale": "While 'any' can be used in negative sentences, 'a few' better expresses the idea of a specific, small quantity.",
+                  "isCorrect": false
+                }
+              ],
+              "hint": "You need a phrase that means 'a small number' for countable nouns like 'things'."
+            },
+            {
+              "question": "We didn't find ____ decent restaurants in the area.",
+              "answerOptions": [
+                {
+                  "text": "any",
+                  "rationale": "This word is used in negative sentences and questions with countable or uncountable nouns.",
+                  "isCorrect": true
+                },
+                {
+                  "text": "some",
+                  "rationale": "'Some' is generally used in affirmative sentences, not negative ones like this.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "no",
+                  "rationale": "Using 'no' here would create a double negative ('didn't find no'), which is grammatically incorrect.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "a few",
+                  "rationale": "This implies you found a small number, which contradicts the negative verb 'didn't find'.",
+                  "isCorrect": false
+                }
+              ],
+              "hint": "In negative sentences, we often use a specific word to talk about a quantity of zero."
+            },
+            {
+              "question": "When I last saw him, he ________ on the phone.",
+              "answerOptions": [
+                {
+                  "text": "was talking",
+                  "rationale": "This past continuous tense is used for an ongoing action that was in progress when another action happened.",
+                  "isCorrect": true
+                },
+                {
+                  "text": "talked",
+                  "rationale": "The simple past would imply the talking was a completed action, not one in progress at that moment.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "is talking",
+                  "rationale": "This is the present continuous tense, but the main clause 'I last saw him' is in the past.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "has talked",
+                  "rationale": "The present perfect tense connects a past event to the present, which doesn't fit the specific past context.",
+                  "isCorrect": false
+                }
+              ],
+              "hint": "This tense describes an action that was in progress at a specific time in the past."
+            },
+            {
+              "question": "She ______ to school every day.",
+              "answerOptions": [
+                {
+                  "text": "goes",
+                  "rationale": "For a third-person singular subject performing a routine action in the present, the verb ends in '-es'.",
+                  "isCorrect": true
+                },
+                {
+                  "text": "go",
+                  "rationale": "This form is used with I, you, we, and they, but not with a third-person singular subject like 'Helen'.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "is going",
+                  "rationale": "This tense is for actions happening now or planned for the near future, not for a general routine.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "went",
+                  "rationale": "This is the past tense form, but 'every day' implies a current, ongoing routine.",
+                  "isCorrect": false
+                }
+              ],
+              "hint": "Think about the verb form for daily routines with 'he' or 'she'."
+            },
+            {
+              "question": "How about _____ to the beach tomorrow?",
+              "answerOptions": [
+                {
+                  "text": "going",
+                  "rationale": "The phrase 'How about...' is a suggestion and is followed by the gerund (-ing) form of the verb.",
+                  "isCorrect": true
+                },
+                {
+                  "text": "go",
+                  "rationale": "The base form of the verb does not follow the suggestion phrase 'How about...'.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "to go",
+                  "rationale": "The infinitive form is not used in this structure for making a suggestion.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "went",
+                  "rationale": "The past tense form doesn't make sense for a suggestion about 'tomorrow'.",
+                  "isCorrect": false
+                }
+              ],
+              "hint": "When you make a suggestion using 'How about...', the verb that follows takes a specific form."
+            },
+            {
+              "question": "If I ______ you, I wouldn’t do that.",
+              "answerOptions": [
+                {
+                  "text": "were",
+                  "rationale": "In the second conditional, used for hypothetical situations, 'were' is used for all pronouns, including 'I'.",
+                  "isCorrect": true
+                },
+                {
+                  "text": "was",
+                  "rationale": "Although 'was' is the standard past tense for 'I', the subjunctive mood for hypothetical situations uses 'were'.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "am",
+                  "rationale": "The present tense is not used in the 'if' clause of a second conditional sentence.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "be",
+                  "rationale": "The base form 'be' is not grammatically correct in this conditional structure.",
+                  "isCorrect": false
+                }
+              ],
+              "hint": "For hypothetical or imaginary situations in the present (the second conditional), a specific form of the verb 'to be' is used."
+            },
+            {
+              "question": "I've lost my keys. I can't find them ______.",
+              "answerOptions": [
+                {
+                  "text": "anywhere",
+                  "rationale": "This word is used in negative sentences to mean 'in any place'.",
+                  "isCorrect": true
+                },
+                {
+                  "text": "somewhere",
+                  "rationale": "This word is typically used in affirmative sentences (e.g., 'They must be somewhere').",
+                  "isCorrect": false
+                },
+                {
+                  "text": "nowhere",
+                  "rationale": "Using 'nowhere' would create a double negative ('can't find them nowhere'), which is incorrect.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "everywhere",
+                  "rationale": "This would mean you can't find them in all places, which is illogical in this context. You'd say 'I've looked everywhere'.",
+                  "isCorrect": false
+                }
+              ],
+              "hint": "When you have a negative verb like 'can't find', you need a word that means 'in any place'."
+            },
+            {
+              "question": "George is __________.",
+              "answerOptions": [
+                {
+                  "text": "engineer",
+                  "rationale": "The noun 'engineer' requires an article before it.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "a engineer",
+                  "rationale": "The indefinite article 'a' is used before words starting with a consonant sound, but 'engineer' starts with a vowel sound.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "the engineer",
+                  "rationale": "The definite article 'the' would imply a specific engineer, but here we are stating a profession generally.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "an engineer",
+                  "rationale": "The indefinite article 'an' is correctly used before words that start with a vowel sound.",
+                  "isCorrect": true
+                }
+              ],
+              "hint": "Consider which indefinite article ('a' or 'an') is appropriate before a word starting with a vowel sound."
+            },
+            {
+              "question": "By this time tomorrow, we ____ the meeting.",
+              "answerOptions": [
+                {
+                  "text": "will have",
+                  "rationale": "This is future simple, implying the meeting will happen, but not necessarily be completed by a specific future time.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "will have had",
+                  "rationale": "This is the future perfect tense, used to describe an action that will be completed by a certain time in the future.",
+                  "isCorrect": true
+                },
+                {
+                  "text": "had",
+                  "rationale": "This is the past tense and does not fit the future context.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "have",
+                  "rationale": "This is the present tense and does not fit the future context.",
+                  "isCorrect": false
+                }
+              ],
+              "hint": "This tense is used for actions that will be completed before a specific point in the future."
+            },
+            {
+              "question": "The room was empty. There _____ there.",
+              "answerOptions": [
+                {
+                  "text": "were no one",
+                  "rationale": "'No one' is singular, so 'were' is incorrect. Also, 'no one' is generally used as a pronoun, not with 'there was/were'.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "was no one",
+                  "rationale": "While grammatically possible, 'nobody' is a more common and natural fit in this context.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "was nobody",
+                  "rationale": "This correctly uses the singular 'was' with the singular indefinite pronoun 'nobody' to indicate absence.",
+                  "isCorrect": true
+                },
+                {
+                  "text": "were nobody",
+                  "rationale": "'Nobody' is singular, so 'were' is incorrect.",
+                  "isCorrect": false
+                }
+              ],
+              "hint": "When talking about the absence of people, consider singular indefinite pronouns and their corresponding verb forms."
+            },
+            {
+              "question": "I was looking forward __________ at the new Italian restaurant, but unfortunately it was closed.",
+              "answerOptions": [
+                {
+                  "text": "eat",
+                  "rationale": "The base form of the verb is not used after 'looking forward to'.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "eating",
+                  "rationale": "While 'eating' is a gerund, the full phrase 'look forward to' is followed by a gerund, so the 'to' is crucial.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "to eat",
+                  "rationale": "This is an infinitive, but the idiom 'look forward to' requires a gerund after 'to'.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "to eating",
+                  "rationale": "The idiom 'look forward to' is always followed by a gerund (the -ing form of the verb).",
+                  "isCorrect": true
+                }
+              ],
+              "hint": "The idiom 'look forward to' is a common idiom that requires a specific verb form after 'to'."
+            },
+            {
+              "question": "Choose the correct preposition: 'He is good ______ math.'",
+              "answerOptions": [
+                {
+                  "text": "in",
+                  "rationale": "While 'in' can be used for subjects (e.g., 'He is interested in math'), 'good at' is the correct idiom.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "on",
+                  "rationale": "'On' is not used in this context.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "at",
+                  "rationale": "The idiom 'good at' is used to express proficiency in a skill or subject.",
+                  "isCorrect": true
+                },
+                {
+                  "text": "with",
+                  "rationale": "'Good with' implies being skilled at handling something or someone, not a subject like math.",
+                  "isCorrect": false
+                }
+              ],
+              "hint": "There's a specific preposition used with 'good' to express proficiency in a subject or skill."
+            },
+            {
+              "question": "______ have you been waiting?",
+              "answerOptions": [
+                {
+                  "text": "How much",
+                  "rationale": "'How much' is used for uncountable nouns (e.g., 'How much money?'), not for duration of time.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "What time",
+                  "rationale": "'What time' asks for a specific point in time (e.g., 'What time did you arrive?').",
+                  "isCorrect": false
+                },
+                {
+                  "text": "How long",
+                  "rationale": "This phrase is used to ask about the duration of time.",
+                  "isCorrect": true
+                },
+                {
+                  "text": "When",
+                  "rationale": "'When' asks for a specific point in time, not a duration.",
+                  "isCorrect": false
+                }
+              ],
+              "hint": "This question asks about the duration of an action."
+            },
+            {
+              "question": "I didn't ________ TV last night.",
+              "answerOptions": [
+                {
+                  "text": "watched",
+                  "rationale": "After the auxiliary verb 'did' (or 'didn't'), the main verb should be in its base form.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "watching",
+                  "rationale": "The gerund form is not used after 'didn't' for a simple past action.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "to watch",
+                  "rationale": "The infinitive form is not used after 'didn't' for a simple past action.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "watch",
+                  "rationale": "After the auxiliary verb 'did' (or 'didn't'), the main verb is always in its base form.",
+                  "isCorrect": true
+                }
+              ],
+              "hint": "When using 'did' or 'didn't' in the past tense, the main verb remains in its base form."
+            },
+            {
+              "question": "______ brothers and sisters do you have?",
+              "answerOptions": [
+                {
+                  "text": "How much",
+                  "rationale": "'How much' is used for uncountable nouns (e.g., 'How much water?'), not countable nouns like 'brothers and sisters'.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "Which",
+                  "rationale": "'Which' is used when choosing from a limited set of options.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "What",
+                  "rationale": "'What' is a general question word, but 'how many' is specific for quantity.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "How many",
+                  "rationale": "This phrase is used to ask about the quantity of countable nouns.",
+                  "isCorrect": true
+                }
+              ],
+              "hint": "This question asks about the quantity of countable items."
+            },
+            {
+              "question": "This is not the same place _____ we visited last year.",
+              "answerOptions": [
+                {
+                  "text": "which",
+                  "rationale": "While 'which' can refer to places, 'that' is more commonly used as a relative pronoun for places, especially when not specifying a particular type or category.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "where",
+                  "rationale": "'Where' would be used if the verb related to location (e.g., 'where we lived'), but 'visited' acts on the place itself.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "that",
+                  "rationale": "This is a common and versatile relative pronoun that can refer to people, things, or places.",
+                  "isCorrect": true
+                },
+                {
+                  "text": "what",
+                  "rationale": "'What' is used for things, not as a relative pronoun to refer back to a specific noun like 'place'.",
+                  "isCorrect": false
+                }
+              ],
+              "hint": "You need a relative pronoun to connect the two parts of the sentence, referring to 'place'."
+            },
+            {
+              "question": "Which word is related to 'weather'?",
+              "answerOptions": [
+                {
+                  "text": "hot",
+                  "rationale": "While 'hot' describes a temperature, 'sunny' is a direct descriptor of a type of weather.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "cold",
+                  "rationale": "Similar to 'hot', 'cold' describes a temperature, not a general weather condition.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "rainy",
+                  "rationale": "Similar to 'hot' and 'cold', 'rainy' describes a specific weather condition, but 'sunny' is also a direct weather term.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "sunny",
+                  "rationale": "This word directly describes a common weather condition.",
+                  "isCorrect": true
+                }
+              ],
+              "hint": "Think about words that describe conditions of the sky or atmosphere."
+            },
+            {
+              "question": "Sorry, I can't talk. I ______. ",
+              "answerOptions": [
+                {
+                  "text": "drive",
+                  "rationale": "This is the simple present, implying a general habit, not an action happening now.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "drove",
+                  "rationale": "This is the simple past tense, which doesn't fit the present context.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "am driving",
+                  "rationale": "This is the present continuous tense, used for an action happening at the moment of speaking.",
+                  "isCorrect": true
+                },
+                {
+                  "text": "have driven",
+                  "rationale": "This is the present perfect, implying a completed action with a connection to the present, not an ongoing action.",
+                  "isCorrect": false
+                }
+              ],
+              "hint": "The action is happening right now, at the moment of speaking."
+            },
+            {
+              "question": "Jack arrived ___ the airport on Monday morning.",
+              "answerOptions": [
+                {
+                  "text": "in",
+                  "rationale": "While 'in' can be used for subjects (e.g., 'He is interested in math'), 'good at' is the correct idiom.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "on",
+                  "rationale": "'On' is not used in this context.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "at",
+                  "rationale": "The preposition 'at' is used to specify a particular location or point.",
+                  "isCorrect": true
+                },
+                {
+                  "text": "to",
+                  "rationale": "'To' indicates direction or movement towards something, not the place of arrival itself.",
+                  "isCorrect": false
+                }
+              ],
+              "hint": "When referring to a specific building or location where someone arrives, a particular preposition is used."
+            },
+            {
+              "question": "Pick the item you can wear:",
+              "answerOptions": [
+                {
+                  "text": "book",
+                  "rationale": "A book is something you read, not wear.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "table",
+                  "rationale": "A table is a piece of furniture, not something you wear.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "shoes",
+                  "rationale": "Shoes are items of clothing worn on the feet.",
+                  "isCorrect": true
+                },
+                {
+                  "text": "car",
+                  "rationale": "A car is a vehicle, not something you wear.",
+                  "isCorrect": false
+                }
+              ],
+              "hint": "Think about what you put on your body."
+            },
+            {
+              "question": "We ____ better hurry up or we'll be late.",
+              "answerOptions": [
+                {
+                  "text": "would",
+                  "rationale": "'Would' is used for conditional statements or polite requests, not for strong advice.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "should",
+                  "rationale": "While 'should' gives advice, 'had better' is a stronger expression of urgency.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "must",
+                  "rationale": "'Must' indicates obligation or necessity, which is stronger than the advice given here.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "had",
+                  "rationale": "The phrase 'had better' is used to give strong advice or warn about consequences.",
+                  "isCorrect": true
+                }
+              ],
+              "hint": "This phrase is used to give strong advice or warn about something negative if the advice isn't followed."
+            },
+            {
+              "question": "Which one is a fruit?",
+              "answerOptions": [
+                {
+                  "text": "carrot",
+                  "rationale": "A carrot is a vegetable.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "potato",
+                  "rationale": "A potato is a vegetable.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "onion",
+                  "rationale": "An onion is a vegetable.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "apple",
+                  "rationale": "An apple is a common fruit.",
+                  "isCorrect": true
+                }
+              ],
+              "hint": "Think about sweet, often juicy, products of a plant that contain seeds."
+            },
+            {
+              "question": "I ______ never been to London.",
+              "answerOptions": [
+                {
+                  "text": "am",
+                  "rationale": "'Am' is used with the present continuous or for states of being, not with 'been' for experience.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "was",
+                  "rationale": "'Was' is the simple past of 'to be' and doesn't form the present perfect tense.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "did",
+                  "rationale": "'Did' is an auxiliary verb for the simple past, not for forming the present perfect with 'been'.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "have",
+                  "rationale": "This is the correct auxiliary verb to form the present perfect tense, used for experiences or actions that started in the past and continue to the present.",
+                  "isCorrect": true
+                }
+              ],
+              "hint": "This sentence talks about a past experience that is still relevant now. Which auxiliary verb is used for that tense?"
+            },
+            {
+              "question": "We have ____ money, so we can't afford to buy a new car.",
+              "answerOptions": [
+                {
+                  "text": "a lot of",
+                  "rationale": "This implies a large quantity, which contradicts 'can't afford'.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "many",
+                  "rationale": "'Many' is used with countable nouns, but 'money' is uncountable.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "little",
+                  "rationale": "'Little' (without 'a') means 'almost none' and is used with uncountable nouns, fitting the context of not being able to afford something.",
+                  "isCorrect": true
+                },
+                {
+                  "text": "few",
+                  "rationale": "'Few' is used with countable nouns, not uncountable 'money'.",
+                  "isCorrect": false
+                }
+              ],
+              "hint": "You need a word that means 'not much' for an uncountable noun like 'money'."
+            },
+            {
+              "question": "Which one is a job?",
+              "answerOptions": [
+                {
+                  "text": "House",
+                  "rationale": "A house is a building, not a profession.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "Park",
+                  "rationale": "A park is a recreational area, not a profession.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "Teacher",
+                  "rationale": "A teacher is a person whose profession is teaching.",
+                  "isCorrect": true
+                },
+                {
+                  "text": "Tree",
+                  "rationale": "A tree is a plant, not a profession.",
+                  "isCorrect": false
+                }
+              ],
+              "hint": "Think about what someone does for work."
+            },
+            {
+              "question": "She looks _____ someone I know.",
+              "answerOptions": [
+                {
+                  "text": "as",
+                  "rationale": "'As' is used for roles or functions (e.g., 'as a doctor'), not for appearance.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "like",
+                  "rationale": "'Like' is used to express similarity or resemblance.",
+                  "isCorrect": true
+                },
+                {
+                  "text": "similar",
+                  "rationale": "While 'similar' means resemblance, it would be 'similar to', not 'looks similar someone'.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "same as",
+                  "rationale": "'Same as' implies identity, not just resemblance.",
+                  "isCorrect": false
+                }
+              ],
+              "hint": "This word is used to show resemblance or similarity."
+            },
+            {
+              "question": "___ there a restaurant near here?",
+              "answerOptions": [
+                {
+                  "text": "Are",
+                  "rationale": "'Are' is used for plural nouns (e.g., 'Are there restaurants?'), but 'restaurant' is singular.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "Do",
+                  "rationale": "'Do' is an auxiliary verb for actions, not for asking about existence with 'there is/are'.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "Have",
+                  "rationale": "'Have' is used for possession or in perfect tenses, not for asking about existence.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "Is",
+                  "rationale": "This is the correct verb form for asking about the existence of a singular noun with 'there'.",
+                  "isCorrect": true
+                }
+              ],
+              "hint": "When asking about the existence of a singular item, you use a specific form of 'to be' with 'there'."
+            },
+            {
+              "question": "He usually ______ coffee in the morning.",
+              "answerOptions": [
+                {
+                  "text": "drink",
+                  "rationale": "The base form of the verb is not used with a third-person singular subject in the simple present.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "drinking",
+                  "rationale": "The gerund form is not used for simple present habits.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "drank",
+                  "rationale": "This is the past tense form, but 'usually' indicates a present habit.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "drinks",
+                  "rationale": "This is the correct third-person singular form for a routine action in the simple present.",
+                  "isCorrect": true
+                }
+              ],
+              "hint": "For routine actions with 'he', 'she', or 'it' in the present tense, the verb needs an 's' ending."
+            },
+            {
+              "question": "They ______ TV when the lights went out.",
+              "answerOptions": [
+                {
+                  "text": "watched",
+                  "rationale": "The simple past would imply a completed action, not one in progress when interrupted.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "are watching",
+                  "rationale": "This is the present continuous, but the sentence is about past events.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "were watching",
+                  "rationale": "This past continuous tense describes an action in progress that was interrupted by another past action.",
+                  "isCorrect": true
+                },
+                {
+                  "text": "watch",
+                  "rationale": "This is the simple present tense and does not fit the past context.",
+                  "isCorrect": false
+                }
+              ],
+              "hint": "This describes an action that was ongoing in the past when another, shorter action occurred."
+            },
+            {
+              "question": "Your car is too old. You _____ buy a new one.",
+              "answerOptions": [
+                {
+                  "text": "must",
+                  "rationale": "'Must' implies a strong obligation or necessity, which might be too strong for advice.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "could",
+                  "rationale": "'Could' suggests possibility or ability, not advice.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "would",
+                  "rationale": "'Would' is used for hypothetical situations or polite requests, not for giving advice.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "should",
+                  "rationale": "'Should' is used to give advice or make recommendations.",
+                  "isCorrect": true
+                }
+              ],
+              "hint": "This modal verb is commonly used for giving advice or making suggestions."
+            },
+            {
+              "question": "Dubai has the ______ tower in the world.",
+              "answerOptions": [
+                {
+                  "text": "tall",
+                  "rationale": "This is the base adjective, not the correct form for comparing to all others.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "taller",
+                  "rationale": "This is the comparative form, used for comparing two things, not one against all others.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "most tall",
+                  "rationale": "For short adjectives like 'tall', the superlative form is made by adding '-est'.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "tallest",
+                  "rationale": "This is the superlative form, used to describe the highest degree of a quality among three or more items.",
+                  "isCorrect": true
+                }
+              ],
+              "hint": "When comparing one item to all others in a group, you use the superlative form of the adjective."
+            },
+            {
+              "question": "What’s a synonym for 'happy'?",
+              "answerOptions": [
+                {
+                  "text": "sad",
+                  "rationale": "'Sad' is an antonym (opposite) of 'happy'.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "angry",
+                  "rationale": "'Angry' describes a different emotion.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "tired",
+                  "rationale": "'Tired' describes a physical state, not an emotion directly related to happiness.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "joyful",
+                  "rationale": "'Joyful' means feeling or expressing great pleasure and happiness, making it a synonym for 'happy'.",
+                  "isCorrect": true
+                }
+              ],
+              "hint": "Think of another word that means feeling or showing pleasure."
+            },
+            {
+              "question": "They ______ here since Monday.",
+              "answerOptions": [
+                {
+                  "text": "are",
+                  "rationale": "This is the present tense and does not fit the past context.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "were",
+                  "rationale": "This is the past tense and does not fit the past context.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "will be",
+                  "rationale": "This is future tense and does not fit the context of something ongoing since a past point.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "have been",
+                  "rationale": "This is the present perfect continuous (or simple perfect for states), used for actions or states that started in the past and continue up to the present.",
+                  "isCorrect": true
+                }
+              ],
+              "hint": "The phrase 'since Monday' indicates an action or state that began in the past and continues to the present. Which tense expresses this?"
+            },
+            {
+              "question": "He can’t play the piano, ______ he?",
+              "answerOptions": [
+                {
+                  "text": "is",
+                  "rationale": "The tag question should use the same auxiliary verb as the main clause, which is 'can't'.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "does",
+                  "rationale": "'Does' would be used if the main verb were in the simple present without a modal (e.g., 'He plays, doesn't he?').",
+                  "isCorrect": false
+                },
+                {
+                  "text": "can",
+                  "rationale": "When the main clause is negative, the tag question is positive and uses the same modal verb.",
+                  "isCorrect": true
+                },
+                {
+                  "text": "will",
+                  "rationale": "'Will' is a different modal verb and does not match the 'can't' in the main clause.",
+                  "isCorrect": false
+                }
+              ],
+              "hint": "Tag questions usually use the same auxiliary or modal verb as the main sentence, but with opposite polarity."
+            },
+            {
+              "question": "George is ______ than Robert.",
+              "answerOptions": [
+                {
+                  "text": "funny",
+                  "rationale": "This is the base adjective, not used for comparison.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "funniest",
+                  "rationale": "This is the superlative form, used for comparing three or more, not just two.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "more funny",
+                  "rationale": "For two-syllable adjectives ending in '-y', we usually change 'y' to 'i' and add '-er'.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "funnier",
+                  "rationale": "This is the correct comparative form for the adjective 'funny', used when comparing two people.",
+                  "isCorrect": true
+                }
+              ],
+              "hint": "When comparing two people or things using an adjective ending in 'y', how do you form the comparative?"
+            },
+            {
+              "question": "Can you hear what he is ____ ?",
+              "answerOptions": [
+                {
+                  "text": "tell",
+                  "rationale": "The base form of the verb is not used after 'is' for an ongoing action.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "telling",
+                  "rationale": "While 'telling' is a gerund, 'saying' is more appropriate when the specific content of speech is not specified to a listener.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "said",
+                  "rationale": "This is the past tense form and does not fit the present continuous context.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "saying",
+                  "rationale": "This is the correct present participle form for an ongoing action, especially when the content of the speech is unknown.",
+                  "isCorrect": true
+                }
+              ],
+              "hint": "The verb should be in the continuous form, and consider the difference between 'say' and 'tell'."
+            },
+            {
+              "question": "What’s the opposite of 'cheap'?",
+              "answerOptions": [
+                {
+                  "text": "small",
+                  "rationale": "'Small' is the opposite of 'big', not 'cheap'.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "big",
+                  "rationale": "'Big' is the opposite of 'small', not 'cheap'.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "new",
+                  "rationale": "'New' is the opposite of 'old', not 'cheap'.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "expensive",
+                  "rationale": "'Expensive' means costing a lot of money, which is the opposite of 'cheap'.",
+                  "isCorrect": true
+                }
+              ],
+              "hint": "Think about words related to cost. If something isn't cheap, what is it?"
+            },
+            {
+              "question": "By next week, she ______ the book.",
+              "answerOptions": [
+                {
+                  "text": "will finish",
+                  "rationale": "This is the simple future, implying the action will happen, but not necessarily be completed by a specific future time.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "finishes",
+                  "rationale": "This is the simple present, used for habits or scheduled events, not a future completion.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "finished",
+                  "rationale": "This is the simple past tense and does not fit the future context.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "will have finished",
+                  "rationale": "This is the future perfect tense, used to describe an action that will be completed by a certain point in the future.",
+                  "isCorrect": true
+                }
+              ],
+              "hint": "This tense describes an action that will be completed before a specific future deadline."
+            },
+            {
+              "question": "I ______ a great movie last night.",
+              "answerOptions": [
+                {
+                  "text": "see",
+                  "rationale": "This is the present tense, but the action happened 'last night'.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "seeing",
+                  "rationale": "This is the gerund form, not used for a completed past action.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "seen",
+                  "rationale": "'Seen' is the past participle and requires an auxiliary verb (e.g., 'have seen', 'was seen').",
+                  "isCorrect": false
+                },
+                {
+                  "text": "watched",
+                  "rationale": "This is the simple past tense, correctly used for a completed action at a specific time in the past.",
+                  "isCorrect": true
+                }
+              ],
+              "hint": "The action happened at a specific time in the past. You need the simple past tense."
+            },
+            {
+              "question": "Select the correct item: 'We need to ______ a decision.'",
+              "answerOptions": [
+                {
+                  "text": "do",
+                  "rationale": "While 'do' is a general verb for actions, 'make' is the specific verb used in the collocation 'make a decision'.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "have",
+                  "rationale": "'Have' is not used in this collocation.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "get",
+                  "rationale": "'Get' is not used in this collocation.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "make",
+                  "rationale": "The verb 'make' is part of the common collocation 'make a decision'.",
+                  "isCorrect": true
+                }
+              ],
+              "hint": "This is a common English collocation. Which verb is typically used with 'decision'?"
+            },
+            {
+              "question": "We ______ dinner when you called.",
+              "answerOptions": [
+                {
+                  "text": "have",
+                  "rationale": "This is the present tense and does not fit the past context.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "had",
+                  "rationale": "This is the simple past, implying a completed action, not one in progress when interrupted.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "are having",
+                  "rationale": "This is the present continuous, but the sentence is about past events.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "were having",
+                  "rationale": "This past continuous tense describes an action that was in progress when another past action ('you called') occurred.",
+                  "isCorrect": true
+                }
+              ],
+              "hint": "This describes an action that was ongoing in the past when another, shorter action happened."
+            },
+            {
+              "question": "Which word means 'not difficult'?",
+              "answerOptions": [
+                {
+                  "text": "hard",
+                  "rationale": "'Hard' is a synonym for 'difficult'.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "complicated",
+                  "rationale": "'Complicated' means difficult to understand or deal with.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "challenging",
+                  "rationale": "'Challenging' implies difficulty or requiring effort.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "simple",
+                  "rationale": "'Simple' means easy to understand or do; not complicated.",
+                  "isCorrect": true
+                }
+              ],
+              "hint": "Think of a word that means easy or straightforward."
+            }
+          ]
+        };
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let quizActive = true; // Flag to prevent multiple clicks
+
+        const questionArea = document.getElementById('questionArea');
+        const optionsGrid = document.getElementById('optionsGrid');
+        const resultsArea = document.getElementById('resultsArea');
+        const restartButton = document.getElementById('restartButton');
+        const hintArea = document.getElementById('hintArea');
+        const progressBar = document.getElementById('progressBar');
+
+        // Function to shuffle array (Fisher-Yates algorithm)
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+            }
+            return array;
+        }
+
+        function updateProgressBar() {
+            const progress = (currentQuestionIndex / quizData.questions.length) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        function displayQuestion() {
+            if (currentQuestionIndex < quizData.questions.length) {
+                quizActive = true;
+                const question = quizData.questions[currentQuestionIndex];
+                questionArea.textContent = question.question;
+                optionsGrid.innerHTML = ''; // Clear previous options
+                hintArea.classList.add('hidden'); // Hide hint for new question
+
+                // Shuffle answer options for the current question
+                const shuffledOptions = shuffleArray([...question.answerOptions]);
+
+                shuffledOptions.forEach(option => {
+                    const button = document.createElement('button');
+                    button.textContent = option.text;
+                    button.classList.add('option-button');
+                    button.addEventListener('click', () => handleAnswerClick(button, option.isCorrect));
+                    optionsGrid.appendChild(button);
+                });
+
+                // Display hint for the current question
+                if (question.hint) { // Check if a hint exists
+                    hintArea.textContent = 'Hint: ' + question.hint;
+                    hintArea.classList.remove('hidden');
+                }
+                updateProgressBar(); // Update progress bar
+            } else {
+                displayResults();
+            }
+        }
+
+        function handleAnswerClick(selectedButton, isCorrect) {
+            if (!quizActive) return; // Prevent double clicking
+            quizActive = false; // Deactivate quiz until next question
+
+            // Disable all buttons to prevent further clicks
+            Array.from(optionsGrid.children).forEach(button => {
+                button.disabled = true;
+            });
+
+            if (isCorrect) {
+                selectedButton.classList.add('correct');
+                score++;
+            } else {
+                selectedButton.classList.add('incorrect');
+                // Find and highlight the correct answer
+                Array.from(optionsGrid.children).forEach(button => {
+                    const optionText = button.textContent;
+                    const correctOption = quizData.questions[currentQuestionIndex].answerOptions.find(opt => opt.text === optionText && opt.isCorrect);
+                    if (correctOption) {
+                        button.classList.add('correct');
+                    }
+                });
+            }
+
+            // Display rationale as hint after answer
+            const currentQuestion = quizData.questions[currentQuestionIndex];
+            if (currentQuestion.rationale) {
+                hintArea.textContent = 'Explanation: ' + currentQuestion.rationale;
+                hintArea.classList.remove('hidden');
+            }
+
+
+            setTimeout(() => {
+                currentQuestionIndex++;
+                displayQuestion();
+            }, 3000); // Increased pause to 3 seconds (3000 milliseconds)
+        }
+
+        function displayResults() {
+            questionArea.classList.add('hidden');
+            optionsGrid.classList.add('hidden');
+            hintArea.classList.add('hidden');
+            resultsArea.classList.remove('hidden');
+            restartButton.classList.remove('hidden');
+            progressBar.style.width = '100%'; // Ensure progress bar is full at the end
+
+
+            const totalQuestions = quizData.questions.length;
+            const incorrectAnswers = totalQuestions - score;
+
+            resultsArea.innerHTML = `
+                <h2 class="text-3xl font-bold mb-4">Quiz Completed!</h2>
+                <p class="text-2xl mb-6">You got ${score} correct out of ${totalQuestions} questions.</p>
+                <p class="text-xl mb-6">Incorrect answers: ${incorrectAnswers}</p>
+                <button id="restartButton" class="restart-button">Restart Quiz</button>
+            `;
+            document.getElementById('restartButton').addEventListener('click', restartQuiz);
+        }
+
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            quizActive = true;
+
+            questionArea.classList.remove('hidden');
+            optionsGrid.classList.remove('hidden');
+            resultsArea.classList.add('hidden');
+            restartButton.classList.add('hidden');
+            hintArea.classList.add('hidden');
+
+            shuffleArray(quizData.questions); // Reshuffle questions for a new game
+            displayQuestion();
+        }
+
+        // Initial shuffle of questions and start the quiz
+        window.onload = function() {
+            shuffleArray(quizData.questions); // Shuffle the order of questions
+            displayQuestion();
+        };
+
+    </script>
+</body>
+</html>
