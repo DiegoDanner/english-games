@@ -146,12 +146,28 @@
             opacity: 0.55; /* Make it semi-transparent */
             z-index: 0; /* Ensure it's behind other content */
         }
+            .hidden {
+        display: none;
+        }
     </style>
 </head>
 <body>
-    <div id="quizApp" class="quiz-container">
+
+    
+    
+   
+
+    <div id="quiz-screen" class="quiz-container">
+
+       <div id="start-screen">
+      <img src="img/LOGO_DANNER.png" alt="Logótipo Danner Idiomas" class="watermark-logo" >
+        <h1>QUESTIONS TO PRACTICE ENGLISH</h1>
+        <p>You'll have 20 seconds for each question. Good luck!</p>
+        <button id="start-btn">Start Quiz</button>
+    </div>
+    
         <!-- Watermark image -->
-        <img src="img/LOGO_DANNER.png" alt="Logótipo Danner Idiomas" class="watermark-logo" onerror="this.onerror=null;this.src='https://placehold.co/80x80/2d3748/a0aec0?text=LOGO'; console.error('Failed to load LOGO_DANNER.jpg');">
+        <img src="img/LOGO_DANNER.png" alt="Logótipo Danner Idiomas" class="watermark-logo" >
 
         <div class="progress-bar-container">
             <div id="progressBar" class="progress-bar"></div>
@@ -171,9 +187,21 @@
             <button id="restartButton" class="restart-button hidden">Restart Quiz</button>
         </div>
         
+    
+
     </div>
 
     <script>
+        const startScreen = document.getElementById('start-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const startBtn = document.getElementById('start-btn');
+
+        startBtn.addEventListener('click', () => {
+            startScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+            // You can call your function to start the quiz here
+        });
+
         // Quiz data from the provided JSON
         const quizData = {
           "questions": [

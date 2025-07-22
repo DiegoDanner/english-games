@@ -317,9 +317,9 @@
         function selectAnswer(e) {
             clearInterval(timer);
             const selected = e.target;
-            const correct = questions[currentQuestion].answers.find(a => a.correct).text;
-            const correctArray = selected.dataset.correct === "true";
-            if (selected.innerText === correct) {
+            
+            const isCorrect = selected.dataset.correct === "true";
+            if (isCorrect) {
                 selected.classList.add('correct');
                 feedbackMessage.innerText = "Correct!";
                 score++;
@@ -327,13 +327,15 @@
                 selected.classList.add('incorrect');
                 feedbackMessage.innerText = "Wrong!";
                 Array.from(answerButtons.children).forEach(btn => {
-                    if (btn.innerText === true) {
+                    if (btn.dataset.correct === "true") {
                         btn.classList.add('correct');
                     }
                 });
+                
             }
             feedbackMessage.classList.remove('hidden');
             nextBtn.classList.remove('hidden');
+            
             Array.from(answerButtons.children).forEach(btn => btn.disabled = true);
             scoreDisplay.innerText = `Score: ${score}`;
         }
@@ -361,9 +363,9 @@
         }
 
         function showCorrectAnswer() {
-            const correct = questions[currentQuestion].answers.find(a => a.correct).text;
+           
             Array.from(answerButtons.children).forEach(btn => {
-                if (btn.innerText === correct) {
+                if (btn.dataset.correct === "true") {
                     btn.classList.add('correct');
                 } else {
                     btn.classList.add('incorrect');
