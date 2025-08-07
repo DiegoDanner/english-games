@@ -152,11 +152,78 @@
         .hidden {
             display: none;
         }
+
+        #theme-toggle-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #4a5568;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        /* Light Mode */
+        body.light-mode {
+            background-color: #f7fafc;
+        }
+
+        body.light-mode .quiz-container {
+            background-color: #ffffff;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        body.light-mode h1,
+        body.light-mode h2 {
+            color: #1a202c;
+        }
+
+        body.light-mode p {
+            color: #4a5568;
+        }
+
+        body.light-mode .answer-btn {
+            background-color: #e2e8f0;
+            color: #1a202c;
+        }
+
+        body.light-mode .answer-btn:hover {
+            background-color: #cbd5e0;
+        }
+
+        body.light-mode .answer-btn.correct {
+            background-color: #48bb78;
+            color: white;
+        }
+
+        body.light-mode .answer-btn.incorrect {
+            background-color: #e53e3e;
+            color: white;
+        }
+
+        body.light-mode #timer-text {
+            color: #1a202c;
+        }
+
+        body.light-mode #score-display,
+        body.light-mode #question-counter {
+            color: #4a5568;
+        }
+
+        body.light-mode #theme-toggle-btn {
+            background-color: #edf2f7;
+            color: #1a202c;
+        }
     </style>
 </head>
 <body>
 
     <div class="quiz-container">
+        <button id="theme-toggle-btn">☀️</button>
         <div id="start-screen">
             <img src="img/LOGO_DANNER.png" alt="Logótipo Danner Idiomas" class="watermark-logo">
             <h1 style="text-align: center;" >Comparative and Superlative: Adjectives</h1>
@@ -203,6 +270,25 @@
         const timerText = document.getElementById('timer-text');
         const finalScoreDisplay = document.getElementById('final-score');
         const scoreMessage = document.getElementById('score-message');
+        const themeToggleBtn = document.getElementById('theme-toggle-btn');
+        const body = document.body;
+
+        themeToggleBtn.addEventListener('click', () => {
+            body.classList.toggle('light-mode');
+            const isLight = body.classList.contains('light-mode');
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+            themeToggleBtn.textContent = isLight ? '🌙' : '☀️';
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            if (savedTheme === 'light') {
+                body.classList.add('light-mode');
+                themeToggleBtn.textContent = '🌙';
+            } else {
+                themeToggleBtn.textContent = '☀️';
+            }
+        });
         
         const questions = [
             { question: "What is the comparative form of the adjective 'big'?", answers: [ { text: "Bigger", correct: true }, { text: "More big", correct: false }, { text: "Biger", correct: false }, { text: "Biggest", correct: false } ] },

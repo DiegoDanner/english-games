@@ -5,18 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Danner Idiomas - Quiz Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // On page load or when changing themes, best to add inline in `head` to avoid FOUC
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark')
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
+    </script>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+<body class="bg-gray-100 dark:bg-gray-900 flex items-center justify-center min-h-screen">
+    <button id="theme-toggle-btn" class="absolute top-4 right-4 p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white text-2xl">☀️</button>
+    <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg text-center max-w-md w-full">
+        <h1 class="text-3xl font-bold text-gray-800 dark:text-white mb-6">Welcome to Danner Idiomas Quizzes</h1>
 
-    <div class="bg-white p-8 rounded-2xl shadow-lg text-center max-w-md w-full">
-        <h1 class="text-3xl font-bold text-gray-800 mb-6">Welcome to Danner Idiomas Quizzes</h1>
+        <a href="quiz-english.html" class="block w-full bg-blue-500 text-white font-semibold py-3 px-6 rounded-lg hover:bg-blue-600 mb-4 transition">Quiz - English</a>
 
-        <a href="quiz1/index.html" class="block w-full bg-blue-500 text-white font-semibold py-3 px-6 rounded-lg hover:bg-blue-600 mb-4 transition">Quiz 1 - Adjectives</a>
+        <a href="quiz-super-comp.html" class="block w-full bg-green-500 text-white font-semibold py-3 px-6 rounded-lg hover:bg-green-600 mb-4 transition">Quiz - Super Comp</a>
 
-        <a href="quiz2/index.html" class="block w-full bg-green-500 text-white font-semibold py-3 px-6 rounded-lg hover:bg-green-600 mb-4 transition">Quiz 2 - Past Tense</a>
-
-        <a href="quiz3/index.html" class="block w-full bg-purple-500 text-white font-semibold py-3 px-6 rounded-lg hover:bg-purple-600 transition">Quiz 3 - Vocabulary</a>
+        <a href="index.html" class="block w-full bg-purple-500 text-white font-semibold py-3 px-6 rounded-lg hover:bg-purple-600 transition">Quiz - Comparative & Superlative</a>
     </div>
 
-</body>
+    <script>
+        const themeToggleBtn = document.getElementById('theme-toggle-btn');
+
+        const applyTheme = () => {
+            if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+                themeToggleBtn.textContent = '🌙';
+            } else {
+                document.documentElement.classList.remove('dark');
+                themeToggleBtn.textContent = '☀️';
+            }
+        };
+
+        themeToggleBtn.addEventListener('click', () => {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.theme = isDark ? 'dark' : 'light';
+            applyTheme();
+        });
+
+        document.addEventListener('DOMContentLoaded', applyTheme);
+    </doby>
 </html>
