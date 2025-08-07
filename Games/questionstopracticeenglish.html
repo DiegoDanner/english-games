@@ -157,7 +157,7 @@
 <body>
    
 
-   <div class="quiz-container" >
+   <div id="quiz-container" class="quiz-container" >
         <div id="start-screen">
             <img src="img/LOGO_DANNER.png" alt="Logótipo Danner Idiomas" class="watermark-logo">
             <h1 >QUESTIONS TO PRACTICE ENGLISH</h1>
@@ -207,6 +207,11 @@
             currentQuestion = 0;
             score = 0;
             showQuestion();
+        }
+
+        function startQuiz() {
+          console.log("Quiz started!");
+          // Aqui você colocaria a lógica de inicialização do quiz, como carregar a primeira pergunta
         }
 
         // Quiz data from the provided JSON
@@ -1653,5 +1658,6 @@
         };
 
     </script>
+    
 </body>
 </html>

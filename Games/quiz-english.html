@@ -3,9 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>English Grammar and Vocabulary Quiz</title>
-    <!-- Tailwind CSS CDN for styling -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>English Quiz</title>
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -18,18 +16,40 @@
             padding: 20px;
             box-sizing: border-box;
         }
+        
         .quiz-container {
-            background-color: #2d3748; /* Darker blue-gray */
+            background-color: #2d3748;
             border-radius: 15px;
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
             width: 100%;
-            max-width: 800px;
+            max-width: 800px;  
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            min-height: 500px; /* Ensure a minimum height */
-            position: relative; /* Needed for absolute positioning of watermark */
+            min-height: 500px;
+            position: relative;
+            margin: 40px auto; 
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease-in-out;
         }
+        .quiz-container::before {
+            content: "";
+            background-image: url('img/LOGO_DANNER.png');
+            background-size: 200px;
+            background-repeat: no-repeat;
+            background-position: bottom left;
+            opacity: 0.55;
+            position: absolute;
+            bottom: 20px;
+            left: -10px;
+            width: 130px;
+            height: auto;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        
         .question-area {
             background-color: #4299e1; /* Blue header */
             color: white;
@@ -41,25 +61,26 @@
             font-size: 1.8rem;
             font-weight: bold;
             flex-grow: 1;
+            border-radius: 15px;
             border-top-left-radius: 15px;
             border-top-right-radius: 15px;
         }
-        .options-grid {
-            display: grid;
-            grid-template-columns: 1fr; /* Single column for mobile */
-            gap: 15px;
-            padding: 20px;
-            flex-grow: 2; /* Allow options to take more space */
-        }
-        @media (min-width: 768px) {
-            .options-grid {
-                grid-template-columns: 1fr 1fr; /* Two columns for larger screens */
-            }
-        }
+          .options-grid {
+              display: grid;
+              grid-template-columns: 1fr; /* Single column for mobile */
+              gap: 15px;
+              padding: 20px;
+              flex-grow: absolute; /* Allow options to take more space */
+          }
+          @media (min-width: 768px) {
+              .options-grid {
+                  grid-template-columns: 1fr 1fr; /* Two columns for larger screens */
+              }
+          }
         .option-button {
             background-color: #a0aec0; /* Light gray */
             color: #2d3748; /* Dark text */
-            padding: 20px;
+            padding: 30px;
             border-radius: 10px;
             font-size: 1.2rem;
             font-weight: 600;
@@ -116,7 +137,7 @@
             background-color: #2d3748; /* Darker blue-gray */
             color: #a0aec0; /* Light gray for hint text */
             padding: 15px;
-            text-align: center;
+            text-align: bottom;
             font-size: 0.9rem;
             border-bottom-left-radius: 15px;
             border-bottom-right-radius: 15px;
@@ -139,68 +160,97 @@
         }
         .watermark-logo {
             position: absolute;
-            bottom: -20px; /* Small padding from top */
-            left: 1px; /* Small padding from left */
-            width: 130px; /* Adjust size as needed */
+            bottom: -10px; /* Small padding from top */
+            left: 10px; /* Small padding from left */
+            width: 100px; /* Adjust size as needed */
             height: auto;
             opacity: 0.55; /* Make it semi-transparent */
             z-index: 0; /* Ensure it's behind other content */
         }
-            .hidden {
-        display: none;
+
+          #start-screen {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          height: 400px;
+          text-align: center;
+          background-color: #2d3748;
+          color: #a5a7a8;
+          padding: 40px;
+          border-radius: 10px;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.0);
         }
+
+        #start-screen h1 {
+          font-size: 2rem;
+          margin-bottom: 10px;
+        }
+
+        #start-screen p {
+          font-size: 1rem;
+          margin-bottom: 20px;
+        }
+
+        #start-screen button {
+          background-color: #2578bd;
+          color: rgb(46, 27, 27);
+          border: none;
+          padding: 10px 20px;
+          border-radius: 8px;
+          cursor: pointer;
+          font-size: 1rem;
+          transition: background-color 0.3s;
+        }
+
+        #start-screen button:hover {
+          background-color: #043f7e;
+        }
+        .hidden {
+        display: none !important;
+      }
     </style>
 </head>
 <body>
-
+        <!-- Tela de início -->
+      
+      
+      <div class="quiz-container" >
+        <div id="start-screen"  >
+          <img src="img/LOGO_DANNER.png" alt="Logótipo Danner Idiomas" class="watermark-logo" >
+          <h1>QUESTIONS TO PRACTICE ENGLISH</h1>
+          <p>You'll have 20 seconds for each question. Good luck!</p>
+          <button id="start-btn">Start Quiz</button>
+        </div>
     
-    
-   
+          <!-- Tela do quiz (começa oculta) -->
+        <div id="quiz-screen" class="hidden" >
 
-    <div id="quiz-screen" class="quiz-container">
+          <!-- Watermark image -->
+          <img src="img/LOGO_DANNER.png" alt="Logótipo Danner Idiomas" class="watermark-logo">
 
-       <div id="start-screen">
-      <img src="img/LOGO_DANNER.png" alt="Logótipo Danner Idiomas" class="watermark-logo" >
-        <h1>QUESTIONS TO PRACTICE ENGLISH</h1>
-        <p>You'll have 20 seconds for each question. Good luck!</p>
-        <button id="start-btn">Start Quiz</button>
+          <div class="progress-bar-container">
+              <div id="progressBar" class="progress-bar"></div>
+          </div>
+          <div id="questionArea" class="question-area">
+              Loading Quiz...
+          </div>
+          <div id="optionsGrid" class="options-grid">
+              <!-- Options will be dynamically loaded here -->
+          </div>
+          <div id="hintArea" class="hint-area hidden">
+              <!-- Hint will be displayed here -->
+          </div>
+          <div id="resultsArea" class="results-area hidden">
+              <!-- Results will be displayed here -->
+              <button id="restartButton" class="restart-button hidden">Restart Quiz</button>
+          </div>
+      
+        </div>
     </div>
     
-        <!-- Watermark image -->
-        <img src="img/LOGO_DANNER.png" alt="Logótipo Danner Idiomas" class="watermark-logo" >
-
-        <div class="progress-bar-container">
-            <div id="progressBar" class="progress-bar"></div>
-        </div>
-        <div id="questionArea" class="question-area">
-            Loading Quiz...
-        </div>
-        <div id="optionsGrid" class="options-grid">
-            <!-- Options will be dynamically loaded here -->
-        </div>
-        <div id="hintArea" class="hint-area hidden">
-            <!-- Hint will be displayed here -->
-             
-        </div>
-        <div id="resultsArea" class="results-area hidden">
-            <!-- Results will be displayed here -->
-            <button id="restartButton" class="restart-button hidden">Restart Quiz</button>
-        </div>
-        
-    
-
-    </div>
 
     <script>
-        const startScreen = document.getElementById('start-screen');
-        const quizScreen = document.getElementById('quiz-screen');
-        const startBtn = document.getElementById('start-btn');
-
-        startBtn.addEventListener('click', () => {
-            startScreen.classList.add('hidden');
-            quizScreen.classList.remove('hidden');
-            // You can call your function to start the quiz here
-        });
 
         // Quiz data from the provided JSON
         const quizData = {
@@ -1512,6 +1562,9 @@
         let score = 0;
         let quizActive = true; // Flag to prevent multiple clicks
 
+        const startScreen = document.getElementById('start-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const startBtn = document.getElementById('start-btn');
         const questionArea = document.getElementById('questionArea');
         const optionsGrid = document.getElementById('optionsGrid');
         const resultsArea = document.getElementById('resultsArea');
@@ -1527,6 +1580,23 @@
             }
             return array;
         }
+
+
+
+      function startQuiz() {
+            startScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+            currentQuestion = 0;
+            score = 0;
+
+        }
+
+          startBtn.addEventListener('click', () => {
+          startScreen.classList.add('hidden');
+          quizScreen.classList.remove('hidden');
+          startQuiz();
+        });
+      
 
         function updateProgressBar() {
             const progress = (currentQuestionIndex / quizData.questions.length) * 100;
@@ -1598,7 +1668,7 @@
             setTimeout(() => {
                 currentQuestionIndex++;
                 displayQuestion();
-            }, 3000); // Increased pause to 3 seconds (3000 milliseconds)
+            }, 2000); // Increased pause to 2 seconds (2000 milliseconds)
         }
 
         function displayResults() {
@@ -1642,6 +1712,8 @@
             shuffleArray(quizData.questions); // Shuffle the order of questions
             displayQuestion();
         };
+
+
 
     </script>
 </body>
