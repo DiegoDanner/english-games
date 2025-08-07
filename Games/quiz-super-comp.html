@@ -1,161 +1,312 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Grammar Quiz</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        // On page load or when changing themes, best to add inline in `head` to avoid FOUC
-        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark')
-        } else {
-            document.documentElement.classList.remove('dark')
-        }
-    </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
+            background-color: #f7fafc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
         }
+
         .quiz-container {
-            max-width: none;
-            width: 95%;
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 900px;
+            min-height: 600px;
+            padding: 2rem;
+            text-align: center;
             position: relative;
             overflow: hidden;
-            padding-top: 12rem !important;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
+
+        .quiz-container::before {
+            content: "";
+            background-image: url('img/LOGO_DANNER.png');
+            background-size: 50%;
+            background-repeat: no-repeat;
+            background-position: top center;
+            opacity: 0.38;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        h1 {
+            font-size: 2.25rem;
+            font-weight: bold;
+            color: #1a202c;
+            margin-bottom: 1rem;
+            margin-top: 2rem;
+        }
+
+        p {
+            color: #4a5568;
+            margin-bottom: 4rem;
+        }
+
+        #start-btn, #restart-btn {
+            width: 12rem;
+            background-color: #4299e1;
+            color: white;
+            font-weight: bold;
+            padding: 0.75rem 0;
+            border-radius: 0.5rem;
+            transition: background-color 0.3s ease;
+            font-size: 1.125rem;
+            margin: 0 auto;
+            display: block;
+            border: none;
+            cursor: pointer;
+        }
+
+        #start-btn:hover, #restart-btn:hover {
+            background-color: #3182ce;
+        }
+
+        #feedback-message {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #4a5568;
+        }
+
+        #timer-container {
+            position: relative;
+            width: 5rem;
+            height: 5rem;
+            margin: 0 auto 1rem auto;
+        }
+
+        #timer-text {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1a202c;
+        }
+
+        #question-counter, #score-display {
+            color: #4a5568;
+            font-size: 1rem;
+        }
+
+        #score-display {
+            font-weight: 600;
+            color: #4299e1;
+        }
+
+        #question-text {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 1.5rem;
+            min-height: 50px;
+        }
+
+        #answer-buttons {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        @media (min-width: 640px) {
+            #answer-buttons {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
         .answer-btn {
+            width: 100%;
+            background-color: #cbd5e0;
+            color: #1a202c;
+            font-weight: 600;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
             transition: background-color 0.3s, transform 0.2s;
+            border: none;
+            cursor: pointer;
         }
+
         .answer-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
+
         .correct {
-            background-color: #22c55e !important; /* Tailwind green-500 */
+            background-color: #22c55e !important;
             color: white;
         }
+
         .incorrect {
-            background-color: #ef4444 !important; /* Tailwind red-500 */
+            background-color: #ef4444 !important;
             color: white;
         }
-        #timer-progress {
-            transition: stroke-dasharray 1s linear;
-        }
-        .quiz-container {
-            max-width: 900px;
-            width: 90%;
-            min-height: 600px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 2rem;  /* You can adjust this too */
-        }
-            .quiz-container {
-            position: relative;
-            overflow: hidden;
-            padding-top: 12rem;
+
+        #next-btn {
+            margin-top: 1rem;
+            background-color: #4299e1;
+            color: white;
+            font-weight: bold;
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            transition: background-color 0.3s ease;
+            border: none;
+            cursor: pointer;
         }
 
-            .quiz-container::before {
-                content: "";
-                background-image: url('img/LOGO_DANNER.png');
-                background-size: 50%;
-                background-repeat: no-repeat;
-                background-position: top center ;
-                opacity: 0.38;
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                z-index: 0;
-                pointer-events: none;
-            }
+        #next-btn:hover {
+            background-color: #3182ce;
+        }
 
+        #final-score {
+            font-size: 1.5rem;
+            color: #1a202c;
+            margin-bottom: 0.5rem;
+        }
+
+        #score-message {
+            color: #4a5568;
+            margin-bottom: 2rem;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #theme-toggle-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #edf2f7;
+            color: #1a202c;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        /* Dark Mode */
+        body.dark-mode {
+            background-color: #1a202c;
+        }
+
+        body.dark-mode .quiz-container {
+            background-color: #2d3748;
+        }
+
+        body.dark-mode h1,
+        body.dark-mode #timer-text,
+        body.dark-mode #question-text,
+        body.dark-mode #final-score {
+            color: white;
+        }
+
+        body.dark-mode p,
+        body.dark-mode #question-counter,
+        body.dark-mode #score-message {
+            color: #a0aec0;
+        }
+
+        body.dark-mode #score-display {
+            color: #63b3ed;
+        }
+
+        body.dark-mode .answer-btn {
+            background-color: #4a5568;
+            color: white;
+        }
+
+        body.dark-mode #theme-toggle-btn {
+            background-color: #4a5568;
+            color: white;
+        }
     </style>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 flex items-center justify-center min-h-screen">
-    <button id="theme-toggle-btn" class="absolute top-4 right-4 p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white text-2xl">☀️</button>
-    <div id="quiz-container" class="quiz-container bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-2xl shadow-lg text-center relative">
+<body class="flex items-center justify-center min-h-screen">
+    <button id="theme-toggle-btn">☀️</button>
+    <div id="quiz-container" class="quiz-container">
         
         <!-- Start Screen -->
         <div id="start-screen">
-            
-            <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-white mb-4 mt-8 text-center">Comparative and Superlative: Adjectives</h1>
-            <p class="text-gray-600 dark:text-gray-300 mb-16">You'll have 20 seconds for each question. Good luck!</p>
-            <button id="start-btn" class="w-48 bg-blue-500 text-white font-bold py-3 rounded-lg hover:bg-blue-600 transition-colors duration-300 text-lg mx-auto block">Start Quiz</button>
-            
+            <h1>Comparative and Superlative: Adjectives</h1>
+            <p>You'll have 20 seconds for each question. Good luck!</p>
+            <button id="start-btn">Start Quiz</button>
         </div>
 
         <!-- Quiz Screen -->
         <div id="quiz-screen" class="hidden">
-            
-            <p id="feedback-message" class="text-xl font-semibold mb-4 text-gray-700 dark:text-gray-200 hidden"></p>
-            <div id="timer-container" class="relative w-20 h-20 mx-auto mb-4">
+            <p id="feedback-message" class="hidden"></p>
+            <div id="timer-container">
                 <svg class="w-full h-full" viewBox="0 0 36 36" transform="rotate(-90)">
-                    <path class="text-gray-200 dark:text-gray-600"
+                    <path class="text-gray-200"
                         d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                        fill="none" stroke="currentColor" stroke-width="3" />
+                        fill="none" stroke="#e2e8f0" stroke-width="3" />
                     <path id="timer-progress" class="text-blue-500"
                         stroke-dasharray="100, 100"
                         d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                        fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
+                        fill="none" stroke="#4299e1" stroke-width="3" stroke-linecap="round" />
                 </svg>
-                <div id="timer-text" class="absolute inset-0 flex items-center justify-center text-2xl font-bold text-gray-800 dark:text-white"></div>
+                <div id="timer-text"></div>
             </div>
-            <div id="progress-container" class="flex justify-between items-center mb-4">
-                <p id="question-counter" class="text-gray-600 dark:text-gray-400"></p>
-                <p id="score-display" class="font-semibold text-blue-600 dark:text-blue-400"></p>
+            <div id="progress-container" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <p id="question-counter"></p>
+                <p id="score-display"></p>
             </div>
-            <button id="next-btn" class="hidden mt-4 bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600 transition-colors duration-300">
-                Next Question</button>
-            <h2 id="question-text" class="text-2xl font-semibold text-gray-800 dark:text-white mb-6 min-h-[50px]"></h2>
-            <div id="answer-buttons" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <!-- Answer buttons will be inserted here by JavaScript -->
-            
-            </div>  
+            <button id="next-btn" class="hidden">Next Question</button>
+            <h2 id="question-text"></h2>
+            <div id="answer-buttons"></div>
         </div>
 
         <!-- Result Screen -->
         <div id="result-screen" class="hidden">
-            <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-white mb-4">Quiz Complete!</h1>
-            <p id="final-score" class="text-2xl text-gray-700 dark:text-gray-200 mb-2"></p>
-            <p id="score-message" class="text-gray-600 dark:text-gray-400 mb-8"></p>
-            <button id="restart-btn" class="w-full bg-blue-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-600 transition-colors duration-300 text-lg">Play Again</button>
+            <h1>Quiz Complete!</h1>
+            <p id="final-score"></p>
+            <p id="score-message"></p>
+            <button id="restart-btn">Play Again</button>
         </div>
-
     </div>
 
-
     <script>
-        
-
-        // --- DOM Elements ---
         const nextBtn = document.getElementById('next-btn');
         const startScreen = document.getElementById('start-screen');
         const quizScreen = document.getElementById('quiz-screen');
         const resultScreen = document.getElementById('result-screen');
-
         const startBtn = document.getElementById('start-btn');
         const restartBtn = document.getElementById('restart-btn');
-        
         const questionCounter = document.getElementById('question-counter');
         const scoreDisplay = document.getElementById('score-display');
         const questionText = document.getElementById('question-text');
         const answerButtonsContainer = document.getElementById('answer-buttons');
-        
         const finalScoreDisplay = document.getElementById('final-score');
         const scoreMessage = document.getElementById('score-message');
-
         const timerText = document.getElementById('timer-text');
         const timerProgress = document.getElementById('timer-progress');
         const countdownAudio = new Audio('audio/countdown_beep.wav'); 
 
-
-        // --- Quiz Data (20 Questions) ---
         const quizQuestions = [
             { question: "What is the comparative form of the adjective 'big'?", answers: [ { text: "Bigger", correct: true }, { text: "More big", correct: false }, { text: "Biger", correct: false }, { text: "Biggest", correct: false } ] },
             { question: "Which adjective is the superlative form of 'good'?", answers: [ { text: "Goodest", correct: false }, { text: "Better", correct: false }, { text: "Best", correct: true }, { text: "More good", correct: false } ] },
@@ -179,7 +330,6 @@
             { question: "This is the ___ of my worries.", answers: [ { text: "Littlest", correct: false }, { text: "Less", correct: false }, { text: "Least", correct: true }, { text: "Little", correct: false } ] }
         ];
 
-        // --- State Variables ---
         let currentQuestionIndex;
         let score;
         let shuffledQuestions;
@@ -187,24 +337,20 @@
         let timeLeft;
         const TIME_LIMIT = 20;
 
-        // --- Event Listeners ---
         startBtn.addEventListener('click', startQuiz);
         restartBtn.addEventListener('click', () => {
             resultScreen.classList.add('hidden');
             startScreen.classList.remove('hidden');
         });
-            nextBtn.addEventListener('click', () => {
-                countdownAudio.pause();
-                countdownAudio.currentTime = 0;
-                countdownAudio.play();
-                currentQuestionIndex++;
-                nextBtn.classList.add('hidden');
-                showNextQuestion();
+        nextBtn.addEventListener('click', () => {
+            countdownAudio.pause();
+            countdownAudio.currentTime = 0;
+            countdownAudio.play();
+            currentQuestionIndex++;
+            nextBtn.classList.add('hidden');
+            showNextQuestion();
         });
 
-        /**
-         * Starts the quiz by resetting state, shuffling questions, and showing the first question.
-         */
         function startQuiz() {
             startScreen.classList.add('hidden');
             quizScreen.classList.remove('hidden');
@@ -213,14 +359,10 @@
             score = 0;
             updateScoreDisplay();
             showNextQuestion();
-
-                        countdownAudio.currentTime = 0;
+            countdownAudio.currentTime = 0;
             countdownAudio.play();
         }
 
-        /**
-         * Displays the current question and its answer options, and starts the timer.
-         */
         function showNextQuestion() {
             nextBtn.classList.add('hidden'); 
             resetState();
@@ -229,12 +371,12 @@
                 questionText.innerText = question.question;
                 questionCounter.innerText = `Question ${currentQuestionIndex + 1} of ${shuffledQuestions.length}`;
                 
-                shuffleArray(question.answers);// ✅ Shuffle answers here
+                shuffleArray(question.answers);
 
                 question.answers.forEach(answer => {
                     const button = document.createElement('button');
                     button.innerText = answer.text;
-                    button.classList.add('answer-btn', 'w-full', 'bg-gray-400', 'text-black', 'font-semibold', 'py-3', 'px-4', 'rounded-lg');
+                    button.classList.add('answer-btn');
                     button.dataset.correct = answer.correct;
                     button.addEventListener('click', selectAnswer);
                     answerButtonsContainer.appendChild(button);
@@ -245,16 +387,11 @@
             }
         }
 
-        /**
-         * Starts the countdown timer for the current question.
-         */
         function startTimer() {
-            
             timeLeft = TIME_LIMIT;
             timerText.textContent = timeLeft;
-            timerProgress.style.strokeDasharray = '100, 100'; // Reset progress bar
-                        
-            clearInterval(timer); // Clear any existing timer
+            timerProgress.style.strokeDasharray = '100, 100';
+            clearInterval(timer);
             timer = setInterval(() => {
                 timeLeft--;
                 timerText.textContent = timeLeft;
@@ -266,33 +403,18 @@
                     timeUp();
                 }
             }, 1000);
-            
         }
 
-    
-
-        /**
-         * Handles the situation when the timer runs out.
-         */
         function timeUp() {
-            
             clearInterval(timer);
-                countdownAudio.pause();
-                countdownAudio.currentTime = 0;
-            showFeedback(); // Show the correct answer
+            countdownAudio.pause();
+            countdownAudio.currentTime = 0;
+            showFeedback();
             nextBtn.classList.remove('hidden');
-           // Wait before moving to the next question
-
-            
         }
 
-        /**
-         * Handles the user's answer selection.
-         * @param {Event} e The click event from the answer button.
-         */
         function selectAnswer(e) {
-            
-            clearInterval(timer); // Stop the timer as soon as an answer is selected
+            clearInterval(timer);
             countdownAudio.pause();
             countdownAudio.currentTime = 0;
             const selectedBtn = e.target;
@@ -303,30 +425,18 @@
                 updateScoreDisplay();
             }
             
-
             showFeedback();
-
-              nextBtn.classList.remove('hidden');
-            
-            
+            nextBtn.classList.remove('hidden');
 
             const feedbackMessage = document.getElementById('feedback-message');
             if (isCorrect) {
                 feedbackMessage.innerText = "Correct!";
-                feedbackMessage.classList.remove('hidden');
-                feedbackMessage.classList.add('text-green-500');
             } else {
                 feedbackMessage.innerText = "Wrong!";
-                feedbackMessage.classList.remove('hidden');
-                feedbackMessage.classList.add('text-red-500');
             }
-
-           
+            feedbackMessage.classList.remove('hidden');
         }
 
-        /**
-         * Provides visual feedback (correct/incorrect) on all answer buttons.
-         */
         function showFeedback() {
             Array.from(answerButtonsContainer.children).forEach(button => {
                 if (button.dataset.correct === 'true') {
@@ -334,21 +444,17 @@
                 } else {
                     button.classList.add('incorrect');
                 }
-                button.disabled = true; // Disable all buttons after an answer is chosen or time is up
+                button.disabled = true;
             });
         }
 
-        /**
-         * Clears previous question's state (buttons).
-         */
         function resetState() {
             while (answerButtonsContainer.firstChild) {
                 answerButtonsContainer.removeChild(answerButtonsContainer.firstChild);
             }
             const feedbackMessage = document.getElementById('feedback-message');
-                feedbackMessage.innerText = '';
-                feedbackMessage.classList.add('hidden');
-                feedbackMessage.classList.remove('text-green-500', 'text-red-500');
+            feedbackMessage.innerText = '';
+            feedbackMessage.classList.add('hidden');
         }
 
         function shuffleArray(array) {
@@ -358,16 +464,10 @@
             }
         }
 
-        /**
-         * Updates the score display on the quiz screen.
-         */
         function updateScoreDisplay() {
             scoreDisplay.innerText = `Score: ${score}`;
         }
 
-        /**
-         * Displays the final results screen.
-         */
         function showResults() {
             quizScreen.classList.add('hidden');
             resultScreen.classList.remove('hidden');
@@ -386,27 +486,25 @@
         }
 
         const themeToggleBtn = document.getElementById('theme-toggle-btn');
-
-        const applyTheme = () => {
-            if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                document.documentElement.classList.add('dark');
-                themeToggleBtn.textContent = '🌙';
-            } else {
-                document.documentElement.classList.remove('dark');
-                themeToggleBtn.textContent = '☀️';
-            }
-        };
+        const body = document.body;
 
         themeToggleBtn.addEventListener('click', () => {
-            const isDark = document.documentElement.classList.toggle('dark');
-            localStorage.theme = isDark ? 'dark' : 'light';
-            applyTheme();
+            body.classList.toggle('dark-mode');
+            const isDark = body.classList.contains('dark-mode');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            themeToggleBtn.textContent = isDark ? '🌙' : '☀️';
         });
 
-        document.addEventListener('DOMContentLoaded', applyTheme);
-        
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                body.classList.add('dark-mode');
+                themeToggleBtn.textContent = '🌙';
+            } else {
+                body.classList.remove('dark-mode');
+                themeToggleBtn.textContent = '☀️';
+            }
+        });
     </script>
-
-    
 </body>
 </html>
