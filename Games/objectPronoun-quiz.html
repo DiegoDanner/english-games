@@ -35,13 +35,10 @@
         .drop-zone.filled {
             cursor: pointer;
         }
-        .drag-over {
-            transform: scale(1.05);
-        }
         .option-card {
             padding: 8px 16px;
             border-radius: 8px;
-            cursor: grab;
+            cursor: pointer;
             user-select: none;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
             transition: all 0.2s ease;
@@ -49,12 +46,7 @@
         .option-card:hover {
             transform: translateY(-2px);
         }
-        .dragging {
-            opacity: 0.5;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            transform: scale(1.05);
-        }
-        .dropped {
+        .option-card.used {
             visibility: hidden;
         }
 
@@ -500,7 +492,6 @@
 
         let currentQuestion = 0;
         let score = 0;
-        let draggedItem = null;
 
         const questionTextEl = document.getElementById('question-text');
         const optionsContainer = document.getElementById('options-container');
@@ -575,7 +566,6 @@
                 const optionEl = document.createElement('div');
                 optionEl.textContent = optionText;
                 optionEl.classList.add('option-card', 'bg-white', 'dark:bg-gray-700', 'border', 'border-gray-300', 'dark:border-gray-600', 'text-gray-900', 'dark:text-gray-100');
-                optionEl.draggable = true;
                 
                 // Adiciona o atributo title com a tradução para os cartões de opção
                 if (translations[optionText]) {
@@ -584,72 +574,52 @@
                 optionsContainer.appendChild(optionEl);
             });
 
-            addDragAndDropListeners();
+            addClickListeners();
             updateProgress();
         }
 
-        function addDragAndDropListeners() {
-            const draggables = document.querySelectorAll('.option-card');
+        function addClickListeners() {
+            const options = document.querySelectorAll('.option-card');
             const dropZones = document.querySelectorAll('.drop-zone');
 
-            draggables.forEach(draggable => {
-                draggable.addEventListener('dragstart', () => {
-                    draggedItem = draggable;
-                    setTimeout(() => {
-                        if(draggedItem) draggable.classList.add('dragging');
-                    }, 0);
-                });
-
-                draggable.addEventListener('dragend', () => {
-                    if(draggedItem) {
-                        draggedItem.classList.remove('dragging');
+            options.forEach(option => {
+                option.addEventListener('click', () => {
+                    if (option.classList.contains('used') || !checkBtn.disabled) {
+                        return;
                     }
-                    draggedItem = null;
+
+                    const firstEmptyZone = [...dropZones].find(zone => zone.textContent === '');
+
+                    if (firstEmptyZone) {
+                        firstEmptyZone.textContent = option.textContent;
+                        firstEmptyZone.classList.add('filled');
+                        option.classList.add('used');
+                        checkAllZonesFilled();
+                    }
                 });
             });
 
             dropZones.forEach(zone => {
-                zone.addEventListener('dragover', e => {
-                    e.preventDefault();
-                    zone.classList.add('drag-over', 'border-indigo-500');
-                });
-
-                zone.addEventListener('dragleave', () => {
-                    zone.classList.remove('drag-over', 'border-indigo-500');
-                });
-
-                zone.addEventListener('drop', e => {
-                    e.preventDefault();
-                    zone.classList.remove('drag-over', 'border-indigo-500');
-                    if (draggedItem && !zone.textContent) {
-                        zone.textContent = draggedItem.textContent;
-                        zone.classList.add('filled');
-                        draggedItem.classList.add('dropped');
-                        checkAllZonesFilled();
-                    }
-                });
-                
                 zone.addEventListener('click', () => {
                     if (zone.textContent && !nextBtn.classList.contains('hidden')) {
                         return;
                     }
+
                     if (zone.textContent) {
-                        const droppedText = zone.textContent;
+                        const optionText = zone.textContent;
                         zone.textContent = '';
                         zone.classList.remove('filled');
 
-                        const optionCards = document.querySelectorAll('.option-card');
-                        const cardToReturn = Array.from(optionCards).find(card => card.textContent === droppedText && card.classList.contains('dropped'));
-                        if (cardToReturn) {
-                            cardToReturn.classList.remove('dropped');
+                        const optionToReturn = [...options].find(opt => opt.textContent === optionText && opt.classList.contains('used'));
+                        if (optionToReturn) {
+                            optionToReturn.classList.remove('used');
                         }
-                        
                         checkAllZonesFilled();
                     }
                 });
             });
         }
-        
+
         function checkAllZonesFilled() {
             const dropZones = document.querySelectorAll('.drop-zone');
             const allFilled = [...dropZones].every(zone => zone.textContent !== '');
