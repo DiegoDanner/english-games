@@ -245,9 +245,6 @@
             <!-- Container da Questão -->
             <div id="question-container" class="mb-6">
                 <div class="flex justify-center items-center gap-2 mb-8">
-                    <button id="play-audio-btn" class="p-2 rounded-full text-indigo-600 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500" title="Ler em voz alta">
-                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-volume-2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
-                    </button>
                     <p id="question-text" class="text-lg sm:text-xl text-gray-700 dark:text-gray-200 leading-loose text-center"></p>
                 </div>
                 <div id="options-container" class="flex flex-wrap justify-center items-center gap-3 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg min-h-[60px]"></div>
@@ -426,67 +423,78 @@
                 story: "Mark is very busy today. What time can {dropzone} call&nbsp;{dropzone} to discuss {dropzone} project?",
                 inputs: 3,
                 answers: ["I", "him", "my"],
-                options: ["I", "him", "her", "my"]
+                options: ["I", "him", "her", "my"],
+                explanation: "Nesta frase, 'I' é o pronome sujeito (quem realiza a ação de ligar), 'him' é o pronome objeto (quem recebe a ligação) e 'my' é um adjetivo possessivo (indicando que o projeto é meu)."
             },
             {
                 story: "My brother can be stubborn sometimes. {dropzone} never listens to&nbsp{dropzone} when we try to give advice.",
                 inputs: 2,
                 answers: ["He", "us"],
-                options: ["He", "Him", "we", "us"]
+                options: ["He", "Him", "we", "us"],
+                explanation: "'He' é o pronome sujeito, pois é ele (meu irmão) quem pratica a ação de não ouvir. 'Us' é o pronome objeto, pois nós somos o objeto da ação de ouvir (ele não nos escuta)."
             },
             {
                 story: "My friend showed me her new glasses. 'Do you like my new glasses?' she asked. 'Yes, {dropzone} love {dropzone}. They look great on you!'",
                 inputs: 2,
                 answers: ["I", "them"],
-                options: ["I", "me", "they", "them"]
+                options: ["I", "me", "they", "them"],
+                explanation: "'I' é o pronome sujeito, a pessoa que ama os óculos. 'Them' é o pronome objeto que substitui 'glasses' (um substantivo plural), indicando o que é amado."
             },
             {
                 story: "Tom has two pet rabbits. {dropzone} loves to play with {dropzone} in the garden every afternoon.",
                 inputs: 2,
                 answers: ["He", "them"],
-                options: ["He", "Him", "they", "them"]
+                options: ["He", "Him", "they", "them"],
+                explanation: "'He' é o pronome sujeito que se refere a Tom. 'Them' é o pronome objeto que substitui 'rabbits' (plural), indicando com quem Tom brinca."
             },
             {
                 story: "My mom sounded upset on the phone. She said: 'Please, call&nbsp{dropzone} soon; {dropzone} am very worried about you.'",
                 inputs: 2,
                 answers: ["me", "I"],
-                options: ["I", "me", "my", "mine"]
+                options: ["I", "me", "my", "mine"],
+                explanation: "'call me' - 'me' é o pronome objeto, quem recebe a ação de ligar. 'I am' - 'I' é o pronome sujeito, quem está sentindo-se preocupada."
             },
             {
                 story: "We are at the concert. Look, Sara and Kevin are over there by the stage. Can {dropzone} see&nbsp{dropzone} from here, or are {dropzone} too far?",
                 inputs: 3,
                 answers: ["you", "them", "they"],
-                options: ["you", "them", "they", "us"]
+                options: ["you", "them", "they", "us"],
+                explanation: "'Can you' - 'you' é o sujeito da pergunta. 'see them' - 'them' é o pronome objeto para Sara e Kevin. 'are they' - 'they' é o sujeito da segunda pergunta."
             },
             {
                 story: "I need to talk to John about the meeting. Tell John that&nbsp{dropzone} can meet {dropzone} at the canteen after class.",
                 inputs: 2,
                 answers: ["we", "him"],
-                options: ["he", "him", "we", "us"]
+                options: ["he", "him", "we", "us"],
+                explanation: "'we can meet' - 'we' é o pronome sujeito, pois somos nós que vamos nos encontrar. 'meet him' - 'him' é o pronome objeto que se refere a John."
             },
             {
                 story: "Your new earrings are beautiful! I really like {dropzone}. Can&nbsp{dropzone} see&nbsp{dropzone} up close?",
                 inputs: 3,
                 answers: ["them", "I", "them"],
-                options: ["I", "me", "they", "them", "them"]
+                options: ["I", "me", "they", "them", "them"],
+                explanation: "O primeiro e o terceiro 'them' são pronomes objeto para 'earrings' (plural). O 'I' é o pronome sujeito (a pessoa que quer ver os brincos)."
             },
             {
                 story: "We saw someone familiar across the street. Look at that man. Who is&nbsp{dropzone}? Do {dropzone} know {dropzone}?",
                 inputs: 3,
                 answers: ["he", "you", "him"],
-                options: ["he", "him", "you", "it"]
+                options: ["he", "him", "you", "it"],
+                explanation: "'Who is he?' - 'he' é o pronome sujeito. 'Do you know' - 'you' é o sujeito da pergunta. 'know him' - 'him' é o pronome objeto."
             },
             {
                 story: "Do you know the new colleague? That man over there is David. {dropzone} work with&nbsp{dropzone} on the marketing team.",
                 inputs: 2,
                 answers: ["I", "him"],
-                options: ["I", "he", "him", "me"]
+                options: ["I", "he", "him", "me"],
+                explanation: "'I work' - 'I' é o pronome sujeito. 'with him' - 'him' é o pronome objeto que se refere a David."
             },
             {
                 story: "I need to talk to my sister. Can you give {dropzone} her new phone number?",
                 inputs: 1,
                 answers: ["me"],
-                options: ["me", "I", "my", "her"]
+                options: ["me", "I", "my", "her"],
+                explanation: "'give me' - 'me' é o pronome objeto, pois é a pessoa que recebe o número de telefone."
             }
         ];
 
@@ -704,174 +712,10 @@
             scoreEl.innerText = `${score} / ${quizData.length}`;
         }
 
-        // Gemini API calls
-        async function getExplanation() {
+        function getExplanation() {
             explanationModal.style.display = 'block';
-            explanationText.innerHTML = '<div class="flex justify-center items-center"><div class="loading-spinner"></div></div>'; // Loading spinner
-
             const currentQuizData = quizData[currentQuestion];
-            const dropZones = document.querySelectorAll('.drop-zone');
-            const userAnswers = [...dropZones].map(z => z.textContent.trim());
-            
-            const prompt = `For an English pronoun quiz, I got the following question wrong:
-            Question: "${currentQuizData.story.replace(/{dropzone}/g, '_____')}"
-            My answer was: "${userAnswers.join(', ')}".
-            The correct answer is: "${currentQuizData.answers.join(', ')}".
-            Provide a simple, clear, and concise explanation in Portuguese of why the correct answer is correct, focusing on the grammar rules for subject, object, or possessive pronouns/adjectives. Keep it short and to the point.`;
-
-            let chatHistory = [];
-            chatHistory.push({ role: "user", parts: [{ text: prompt }] });
-            const payload = { contents: chatHistory };
-            const apiKey = "" 
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
-
-            try {
-                let response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                
-                let result = await response.json();
-
-                if (result.candidates && result.candidates.length > 0 &&
-                    result.candidates[0].content && result.candidates[0].content.parts &&
-                    result.candidates[0].content.parts.length > 0) {
-                    const text = result.candidates[0].content.parts[0].text;
-                    explanationText.innerText = text;
-                } else {
-                    explanationText.innerText = 'Não foi possível obter uma explicação. Por favor, tente novamente.';
-                }
-            } catch (error) {
-                console.error('API Error:', error);
-                explanationText.innerText = 'Ocorreu um erro ao buscar a explicação. Por favor, tente novamente mais tarde.';
-            }
-        }
-        
-        async function playTTS() {
-            const currentQuizData = quizData[currentQuestion];
-            const textToSpeak = currentQuizData.story.replace(/{dropzone}/g, '_____');
-
-            playAudioBtn.disabled = true;
-            playAudioBtn.innerHTML = `<div class="loading-spinner"></div>`;
-
-            let retries = 0;
-            const maxRetries = 5;
-
-            while (retries < maxRetries) {
-                try {
-                    const payload = {
-                        contents: [{
-                            parts: [{ text: textToSpeak }]
-                        }],
-                        generationConfig: {
-                            responseModalities: ["AUDIO"],
-                            speechConfig: {
-                                voiceConfig: {
-                                    prebuiltVoiceConfig: { voiceName: "Puck" }
-                                }
-                            }
-                        },
-                        model: "gemini-2.5-flash-preview-tts"
-                    };
-                    const apiKey = "";
-                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`;
-                    
-                    const response = await fetch(apiUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-
-                    if (response.status === 429) { // Too Many Requests
-                        retries++;
-                        const delay = Math.pow(2, retries) * 1000;
-                        await new Promise(resolve => setTimeout(resolve, delay));
-                        continue;
-                    }
-
-                    const result = await response.json();
-                    const audioData = result?.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
-                    const mimeType = result?.candidates?.[0]?.content?.parts?.[0]?.inlineData?.mimeType;
-
-                    if (audioData && mimeType && mimeType.startsWith("audio/")) {
-                        const sampleRate = parseInt(mimeType.match(/rate=(\d+)/)[1], 10);
-                        const pcmData = base64ToArrayBuffer(audioData);
-                        const pcm16 = new Int16Array(pcmData);
-                        const wavBlob = pcmToWav(pcm16, sampleRate);
-                        const audioUrl = URL.createObjectURL(wavBlob);
-                        
-                        const audio = new Audio(audioUrl);
-                        audio.play();
-                    } else {
-                        console.error('Failed to get audio data from API response.');
-                    }
-                    break;
-
-                } catch (error) {
-                    console.error('TTS API Error:', error);
-                    break;
-                }
-            }
-
-            playAudioBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-volume-2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>`;
-            playAudioBtn.disabled = false;
-        }
-
-        // TTS helper functions
-        function base64ToArrayBuffer(base64) {
-            const binaryString = atob(base64);
-            const len = binaryString.length;
-            const bytes = new Uint8Array(len);
-            for (let i = 0; i < len; i++) {
-                bytes[i] = binaryString.charCodeAt(i);
-            }
-            return bytes.buffer;
-        }
-
-        function pcmToWav(pcmData, sampleRate) {
-            const numChannels = 1;
-            const bytesPerSample = 2;
-            const bitDepth = 16;
-            const byteRate = sampleRate * numChannels * bytesPerSample;
-            const blockAlign = numChannels * bytesPerSample;
-
-            const dataLength = pcmData.length * bytesPerSample;
-            const buffer = new ArrayBuffer(44 + dataLength);
-            const view = new DataView(buffer);
-            let offset = 0;
-
-            // RIFF chunk descriptor
-            writeString(view, offset, 'RIFF'); offset += 4;
-            view.setUint32(offset, 36 + dataLength, true); offset += 4;
-            writeString(view, offset, 'WAVE'); offset += 4;
-
-            // fmt chunk
-            writeString(view, offset, 'fmt '); offset += 4;
-            view.setUint32(offset, 16, true); offset += 4; // Subchunk1Size
-            view.setUint16(offset, 1, true); offset += 2; // AudioFormat (1 for PCM)
-            view.setUint16(offset, numChannels, true); offset += 2;
-            view.setUint32(offset, sampleRate, true); offset += 4;
-            view.setUint32(offset, byteRate, true); offset += 4;
-            view.setUint16(offset, blockAlign, true); offset += 2;
-            view.setUint16(offset, bitDepth, true); offset += 2;
-
-            // data chunk
-            writeString(view, offset, 'data'); offset += 4;
-            view.setUint32(offset, dataLength, true); offset += 4;
-
-            // Write PCM data
-            for (let i = 0; i < pcmData.length; i++, offset += bytesPerSample) {
-                view.setInt16(offset, pcmData[i], true);
-            }
-
-            return new Blob([view], { type: 'audio/wav' });
-        }
-
-        function writeString(view, offset, string) {
-            for (let i = 0; i < string.length; i++) {
-                view.setUint8(offset + i, string.charCodeAt(i));
-            }
+            explanationText.innerText = currentQuizData.explanation;
         }
 
         // Event listeners
@@ -920,7 +764,6 @@
                 explanationModal.style.display = 'none';
             }
         });
-        playAudioBtn.addEventListener('click', playTTS); // New
 
         applyTheme();
     </script>
