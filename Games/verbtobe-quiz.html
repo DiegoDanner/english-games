@@ -213,7 +213,7 @@
             <!-- Passo 10: Pergunta 10 (escondido) -->
             <div class="quiz-step hidden" data-step="9">
                 <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                    <p class="font-semibold text-gray-700 dark:text-gray-300 mb-3">10. At the Academy</p>
+                    <p class="font-semibold text-gray-700 dark:text-gray-300 mb-3">10. At the Gym</p>
                     <div class="space-y-2 text-gray-800 dark:text-gray-200">
                         <p>A: Look at that guy. He <span class="quiz-item"><select data-answer="'s,is" class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"><option value="">...</option><option value="am">am</option><option value="is">is</option><option value="are">are</option><option value="'m">'m</option><option value="'s">'s</option><option value="'re">'re</option></select></span> very strong.</p>
                         <p>B: Yeah, he <span class="quiz-item"><select data-answer="is" class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"><option value="">...</option><option value="am">am</option><option value="is">is</option><option value="are">are</option><option value="'m">'m</option><option value="'s">'s</option><option value="'re">'re</option></select></span>. What about them? <span class="quiz-item"><select data-answer="Are" class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"><option value="">...</option><option value="am">am</option><option value="is">is</option><option value="are">are</option><option value="'m">'m</option><option value="'s">'s</option><option value="'re">'re</option></select></span> they new members?</p>
@@ -338,7 +338,7 @@
                     steps[currentStep - 1].classList.add('hidden');
                 }
 
-                finalScoreEl.textContent = `Your final score: ${score} de ${totalCorrectAnswers}`;
+                finalScoreEl.textContent = `Your final score: ${score} out of ${totalCorrectAnswers}`;
 
                 let message = '';
                 if (score === totalCorrectAnswers) {

@@ -10,7 +10,7 @@ function App() {
   return (
     <>
     <div>
-      <Quiz1 />
+      <Quiz1 texto="HELLO!!"/>
     </div>
   );
 
