@@ -170,23 +170,23 @@
         <!-- Nova Tela de Introdução -->
         <div id="intro-screen" class="relative">
             <!-- Botão de alternância do tema na tela de introdução -->
-            <button id="theme-toggle" class="absolute top-4 right-4 p-2 rounded-full text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <button id="theme-toggle" class="absolute top-1 right-1 p-2 rounded-full text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                  <!-- Ícone de Sol (Modo Claro) -->
                  <svg id="theme-toggle-light-icon" class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="M4.93 4.93l1.41 1.41"/><path d="M17.66 17.66l1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="M4.93 19.07l1.41-1.41"/><path d="M17.66 6.34l1.41-1.41"/></svg>
                  <!-- Ícone de Lua (Modo Escuro) -->
                  <svg id="theme-toggle-dark-icon" class="hidden w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-moon"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
             </button>
 
-            <div class="text-center mb-8">
-                <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-4">Entendendo os Pronomes Objeto 🎯</h2>
-                <p class="text-lg text-gray-700 dark:text-gray-200 mb-4">
-                    Olá! Para começar nosso quiz, vamos revisar rapidamente o que são os **pronomes objeto** em inglês.
-                    Eles são palavras pequenas que substituem nomes para evitar repetição nas frases.
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-2"> Object Pronouns 🎯</h2>
+                <p class="text-lg text-gray-700 dark:text-gray-200 mb-2">
+                    "Object pronouns" 
+                    are small words that replace nouns to avoid repetition.
                 </p>
-                <p class="text-lg text-gray-700 dark:text-gray-200 mb-6">
-                    Lembre-se:
-                    <br>➡️ **Pronomes Sujeito** são aqueles que **fazem a ação** na frase.
-                    <br>➡️ **Pronomes Objeto** são aqueles que **recebem a ação** na frase.
+                <p class="text-lg text-gray-700 dark:text-gray-200 mb-4">
+                   
+                    <br>➡️ <bold>Subject Pronouns</bold> are those that <bold>do the action</bold> in the sentence.
+                    <br>➡️ Object Pronouns are those that receive the action in the sentence.
                 </p>
             </div>
 
@@ -194,19 +194,19 @@
                 <table class="min-w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm">
                     <thead>
                         <tr class="bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200">
-                            <th class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left">Pronome Sujeito</th>
-                            <th class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left">Pronome Objeto</th>
+                            <th class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left">Subject Pronoun(pronome pessoal)</th>
+                            <th class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left">Object Pronoun(pronome obliquo)</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr><td class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200">I</td><td class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200">me</td></tr>
-                        <tr><td class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200">you</td><td class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200">you</td></tr>
-                        <tr><td class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200">he</td><td class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200">him</td></tr>
-                        <tr><td class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200">she</td><td class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200">her</td></tr>
-                        <tr><td class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200">it</td><td class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200">it</td></tr>
-                        <tr><td class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200">we</td><td class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200">us</td></tr>
-                        <tr><td class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200">you</td><td class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200">you</td></tr>
-                        <tr><td class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200">they</td><td class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200">them</td></tr>
+                        <tr><td class="py-1 px-8 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200">I</td><td class="py-1 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200">me</td></tr>
+                        <tr><td class="py-1 px-8 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200">you</td><td class="py-1 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200">you</td></tr>
+                        <tr><td class="py-1 px-8 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200">he</td><td class="py-1 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200">him</td></tr>
+                        <tr><td class="py-1 px-8 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200">she</td><td class="py-1 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200">her</td></tr>
+                        <tr><td class="py-1 px-8 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200">it</td><td class="py-1 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200">it</td></tr>
+                        <tr><td class="py-1 px-8 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200">we</td><td class="py-1 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200">us</td></tr>
+                        <tr><td class="py-1 px-8 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200">you</td><td class="py-1 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200">you</td></tr>
+                        <tr><td class="py-1 px-8 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200">they</td><td class="py-1 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200">them</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -429,7 +429,7 @@
                 story: "My friend showed me her new glasses. 'Do you like my new glasses?' she asked. 'Yes, {dropzone} love {dropzone}. They look great on you!'",
                 inputs: 2,
                 answers: ["I", "them"],
-                options: ["I", "it", "they", "them"]
+                options: ["I", "it", "they", "them"],
                 options: ["I", "me", "they", "them"],
                 explanation: "'I' é o pronome sujeito, a pessoa que ama os óculos. 'Them' é o pronome objeto que substitui 'glasses' (um substantivo plural), indicando o que é amado."
             },
