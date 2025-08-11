@@ -1595,8 +1595,16 @@
             displayQuestion();
         }
 
+
+          startBtn.addEventListener('click', () => {
+          startScreen.classList.add('hidden');
+          quizScreen.classList.remove('hidden');
+          startQuiz();
+        });
+
         startBtn.addEventListener('click', startQuiz);
       
+
 
         function updateProgressBar() {
             const progress = (currentQuestionIndex / quizData.questions.length) * 100;
