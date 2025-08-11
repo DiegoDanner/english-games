@@ -17,7 +17,7 @@
             padding: 20px;
             box-sizing: border-box;
         }
-
+        
 
         .quiz-container {
             background-color: #2d3748;
@@ -230,8 +230,8 @@
             <p style="text-align: center;">You'll have 20 seconds for each question. Good luck!</p>
             <button id="start-btn">Start Quiz</button>
         </div>
-
-        <div id="quiz-screen" class="hidden">
+        
+        <div id="quiz-screen" class="hidden"> 
             <img src="img/LOGO_DANNER.png" alt="Logótipo Danner Idiomas" class="watermark-logo">
             <p id="feedback-message" class="hidden"></p>
             <div id="timer-text"></div>
@@ -242,7 +242,7 @@
             <button id="next-btn" class="hidden">Next Question</button>
             <h2 id="question-text"></h2>
             <div id="answer-buttons"></div>
-
+            
         </div>
 
         <div id="result-screen" class="hidden">
@@ -255,7 +255,7 @@
     </div>
 
     <script>
-
+        
         const startScreen = document.getElementById('start-screen');
         const quizScreen = document.getElementById('quiz-screen');
         const resultScreen = document.getElementById('result-screen');
@@ -289,7 +289,7 @@
                 themeToggleBtn.textContent = '🌞';
             }
         });
-
+        
         const questions = [
             { question: "What is the comparative form of the adjective 'big'?", answers: [ { text: "Bigger", correct: true }, { text: "More big", correct: false }, { text: "Biger", correct: false }, { text: "Biggest", correct: false } ] },
             { question: "Which adjective is the superlative form of 'good'?", answers: [ { text: "Goodest", correct: false }, { text: "Better", correct: false }, { text: "Best", correct: true }, { text: "More good", correct: false } ] },
@@ -343,7 +343,7 @@
             { question: "I feel ___ than yesterday. I need a rest.", answers: [ { text: "Worse", correct: true }, { text: "Badder", correct: false }, { text: "More bad", correct: false }, { text: "Worst", correct: false } ] },
 
         ];
-
+        
 
 
         let currentQuestion = 0;
@@ -403,7 +403,7 @@
         function selectAnswer(e) {
             clearInterval(timer);
             const selected = e.target;
-
+            
             const isCorrect = selected.dataset.correct === "true";
             if (isCorrect) {
                 selected.classList.add('correct');
@@ -417,11 +417,11 @@
                         btn.classList.add('correct');
                     }
                 });
-
+                
             }
             feedbackMessage.classList.remove('hidden');
             nextBtn.classList.remove('hidden');
-
+            
             Array.from(answerButtons.children).forEach(btn => btn.disabled = true);
             scoreDisplay.innerText = `Score: ${score}`;
         }
@@ -449,7 +449,7 @@
         }
 
         function showCorrectAnswer() {
-
+           
             Array.from(answerButtons.children).forEach(btn => {
                 if (btn.dataset.correct === "true") {
                     btn.classList.add('correct');
