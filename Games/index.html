@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Comparative & Superlative Quiz</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
@@ -273,12 +274,16 @@
         const themeToggleBtn = document.getElementById('theme-toggle-btn');
         const body = document.body;
 
-        themeToggleBtn.addEventListener('click', () => {
-            body.classList.toggle('light-mode');
-            const isLight = body.classList.contains('light-mode');
-            localStorage.setItem('theme', isLight ? 'light' : 'dark');
-            themeToggleBtn.textContent = isLight ? '🌙' : '🌞';
-        });
+    <title>Danner Idiomas - Quiz Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+
+    <div class="bg-white p-8 rounded-2xl shadow-lg text-center max-w-md w-full">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6">Welcome to Danner Idiomas Quizzes</h1>
+
+
+        <a href="quiz1/index.html" class="block w-full bg-blue-500 text-white font-semibold py-3 px-6 rounded-lg hover:bg-blue-600 mb-4 transition">Quiz 1 - Adjectives</a>
 
         document.addEventListener('DOMContentLoaded', () => {
             const savedTheme = localStorage.getItem('theme') || 'dark';
@@ -463,21 +468,11 @@
             nextBtn.classList.remove('hidden');
         }
 
-        function showResults() {
-            quizScreen.classList.add('hidden');
-            resultScreen.classList.remove('hidden');
-            finalScoreDisplay.innerText = `You scored ${score} out of ${questions.length}!`;
-            const percent = (score / questions.length) * 100;
-            if (percent === 100) {
-                scoreMessage.innerText = "Perfect score! You're a grammar master!";
-            } else if (percent >= 75) {
-                scoreMessage.innerText = "Great job! You really know your adjectives.";
-            } else if (percent >= 50) {
-                scoreMessage.innerText = "Not bad! A solid effort.";
-            } else {
-                scoreMessage.innerText = "Better luck next time! Keep practicing.";
-            }
-        }
-    </script>
+        <a href="quiz2/index.html" class="block w-full bg-green-500 text-white font-semibold py-3 px-6 rounded-lg hover:bg-green-600 mb-4 transition">Quiz 2 - Past Tense</a>
+
+        <a href="quiz3/index.html" class="block w-full bg-purple-500 text-white font-semibold py-3 px-6 rounded-lg hover:bg-purple-600 transition">Quiz 3 - Vocabulary</a>
+    </div>
+
+
 </body>
 </html>

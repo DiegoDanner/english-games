@@ -70,7 +70,7 @@
               grid-template-columns: 1fr; /* Single column for mobile */
               gap: 15px;
               padding: 20px;
-              flex-grow: absolute; /* Allow options to take more space */
+              flex-grow: 1; /* Allow options to take more space */
           }
           @media (min-width: 768px) {
               .options-grid {
@@ -1583,19 +1583,27 @@
 
 
 
-      function startQuiz() {
+        function startQuiz() {
             startScreen.classList.add('hidden');
             quizScreen.classList.remove('hidden');
-            currentQuestion = 0;
-            score = 0;
 
+            currentQuestionIndex = 0;
+            score = 0;
+            quizActive = true;
+
+            shuffleArray(quizData.questions);
+            displayQuestion();
         }
+
 
           startBtn.addEventListener('click', () => {
           startScreen.classList.add('hidden');
           quizScreen.classList.remove('hidden');
           startQuiz();
         });
+
+        startBtn.addEventListener('click', startQuiz);
+      
 
 
         function updateProgressBar() {
@@ -1707,10 +1715,9 @@
             displayQuestion();
         }
 
-        // Initial shuffle of questions and start the quiz
+        // The quiz is now started by the user clicking the button.
         window.onload = function() {
-            shuffleArray(quizData.questions); // Shuffle the order of questions
-            displayQuestion();
+            // Not shuffling here, so the order is the same until the user starts the quiz.
         };
 
 
