@@ -70,7 +70,7 @@
               grid-template-columns: 1fr; /* Single column for mobile */
               gap: 15px;
               padding: 20px;
-              flex-grow: 1; /* Allow options to take more space */
+              flex-grow: absolute; /* Allow options to take more space */
           }
           @media (min-width: 768px) {
               .options-grid {
@@ -158,33 +158,6 @@
             border-radius: 5px;
             transition: width 0.5s ease-in-out;
         }
-        #timer-text {
-            color: white;
-            font-size: 1.8rem;
-            font-weight: bold;
-        }
-        .top-bar {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-            margin-bottom: 10px;
-        }
-        #next-btn {
-            background-color: #4299e1;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-size: 0.9rem;
-            font-weight: bold;
-            cursor: pointer;
-            border: none;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-            transition: background-color 0.3s;
-        }
-        #next-btn:hover {
-            background-color: #3182ce;
-        }
         .watermark-logo {
             position: absolute;
             bottom: -10px; /* Small padding from top */
@@ -193,12 +166,6 @@
             height: auto;
             opacity: 0.55; /* Make it semi-transparent */
             z-index: 0; /* Ensure it's behind other content */
-        }
-
-        #quiz-screen {
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1; /* Make the quiz screen fill the container */
         }
 
           #start-screen {
@@ -242,96 +209,6 @@
         .hidden {
         display: none !important;
       }
-
-      #theme-toggle-btn {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background-color: #4a5568;
-            color: rgb(214, 205, 205);
-            border: none;
-            padding: 10px 15px;
-            border-radius: 50%;
-            font-size: 1.5rem;
-            cursor: pointer;
-            z-index: 10;
-        }
-
-        /* Light Mode */
-        body.light-mode {
-            background-color: #e2e8f0; /* Lighter background */
-        }
-
-        body.light-mode .quiz-container {
-            background-color: #ffffff;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-            color: #1a202c;
-        }
-
-        body.light-mode .question-area {
-            background-color: #4299e1; /* Keep this blue */
-            color: white;
-        }
-
-        body.light-mode .options-grid .option-button {
-            background-color: #cbd5e0;
-            color: #1a202c;
-        }
-
-        body.light-mode .options-grid .option-button:hover {
-            background-color: #a0aec0;
-        }
-
-        body.light-mode .option-button.correct {
-            background-color: #48bb78;
-            color: white;
-        }
-
-        body.light-mode .option-button.incorrect {
-            background-color: #e53e3e;
-            color: white;
-        }
-
-        body.light-mode #start-screen {
-            background-color: #ffffff;
-            color: #1a202c;
-        }
-
-        body.light-mode #start-screen h1 {
-            color: #1a202c;
-        }
-
-        body.light-mode #start-screen p {
-            color: #4a5568;
-        }
-
-        body.light-mode .results-area {
-             background-color: #ffffff;
-             color: #1a202c;
-        }
-
-        body.light-mode .hint-area {
-            background-color: #f7fafc;
-            color: #4a5568;
-        }
-
-        body.light-mode #timer-text {
-            color: #1a202c;
-        }
-
-        body.light-mode #next-btn {
-            background-color: #a0aec0;
-            color: #1a202c;
-        }
-
-        body.light-mode #next-btn:hover {
-            background-color: #718096;
-        }
-
-        body.light-mode #theme-toggle-btn {
-            background-color: #a0aec0;
-            color: #1a202c;
-        }
     </style>
 </head>
 <body>
@@ -339,7 +216,6 @@
       
       
       <div class="quiz-container" >
-        <button id="theme-toggle-btn">🌞</button>
         <div id="start-screen"  >
           <img src="img/LOGO_DANNER.png" alt="Logótipo Danner Idiomas" class="watermark-logo" >
           <h1>QUESTIONS TO PRACTICE ENGLISH</h1>
@@ -353,10 +229,6 @@
           <!-- Watermark image -->
           <img src="img/LOGO_DANNER.png" alt="Logótipo Danner Idiomas" class="watermark-logo">
 
-          <div class="top-bar">
-            <div id="timer-text"></div>
-            <button id="next-btn" class="hidden">Next Question</button>
-          </div>
           <div class="progress-bar-container">
               <div id="progressBar" class="progress-bar"></div>
           </div>
@@ -368,9 +240,6 @@
           </div>
           <div id="hintArea" class="hint-area hidden">
               <!-- Hint will be displayed here -->
-          </div>
-          <div id="rationale-area" class="hint-area hidden" style="margin-top: 5px; color: #a0aec0;">
-              <!-- Rationale will be displayed here -->
           </div>
           <div id="resultsArea" class="results-area hidden">
               <!-- Results will be displayed here -->
@@ -1691,108 +1560,43 @@
 
         let currentQuestionIndex = 0;
         let score = 0;
-        let quizActive = true;
-        let timer;
-        let timeLeft = 20;
+        let quizActive = true; // Flag to prevent multiple clicks
 
         const startScreen = document.getElementById('start-screen');
         const quizScreen = document.getElementById('quiz-screen');
         const startBtn = document.getElementById('start-btn');
-        const nextBtn = document.getElementById('next-btn');
         const questionArea = document.getElementById('questionArea');
         const optionsGrid = document.getElementById('optionsGrid');
         const resultsArea = document.getElementById('resultsArea');
         const restartButton = document.getElementById('restartButton');
         const hintArea = document.getElementById('hintArea');
-        const rationaleArea = document.getElementById('rationale-area');
         const progressBar = document.getElementById('progressBar');
-        const themeToggleBtn = document.getElementById('theme-toggle-btn');
-        const body = document.body;
-        const timerText = document.getElementById('timer-text');
 
-        themeToggleBtn.addEventListener('click', () => {
-            body.classList.toggle('light-mode');
-            const isLight = body.classList.contains('light-mode');
-            localStorage.setItem('theme', isLight ? 'light' : 'dark');
-            themeToggleBtn.textContent = isLight ? '🌙' : '🌞';
-        });
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const savedTheme = localStorage.getItem('theme') || 'dark';
-            if (savedTheme === 'light') {
-                body.classList.add('light-mode');
-                themeToggleBtn.textContent = '🌙';
-            } else {
-                themeToggleBtn.textContent = '🌞';
-            }
-        });
-
+        // Function to shuffle array (Fisher-Yates algorithm)
         function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
+                [array[i], array[j]] = [array[j], array[i]]; // Swap elements
             }
             return array;
         }
 
-        function startQuiz() {
+
+
+      function startQuiz() {
             startScreen.classList.add('hidden');
             quizScreen.classList.remove('hidden');
-            currentQuestionIndex = 0;
+            currentQuestion = 0;
             score = 0;
-            shuffleArray(quizData.questions);
-            displayQuestion();
+
         }
 
-        startBtn.addEventListener('click', startQuiz);
-        nextBtn.addEventListener('click', () => {
-            currentQuestionIndex++;
-            displayQuestion();
+          startBtn.addEventListener('click', () => {
+          startScreen.classList.add('hidden');
+          quizScreen.classList.remove('hidden');
+          startQuiz();
         });
 
-        function resetState() {
-            clearInterval(timer);
-            timerText.textContent = '';
-            hintArea.classList.add('hidden');
-            rationaleArea.classList.add('hidden');
-            nextBtn.classList.add('hidden');
-            optionsGrid.innerHTML = '';
-            quizActive = true;
-        }
-
-        function startTimer() {
-            timeLeft = 20;
-            timerText.textContent = timeLeft;
-            timer = setInterval(() => {
-                timeLeft--;
-                timerText.textContent = timeLeft;
-                if (timeLeft <= 0) {
-                    clearInterval(timer);
-                    timeUp();
-                }
-            }, 1000);
-        }
-
-        function timeUp() {
-            rationaleArea.textContent = "Time's up!";
-            rationaleArea.classList.remove('hidden');
-            showCorrectAnswer();
-        }
-
-        function showCorrectAnswer() {
-            quizActive = false;
-            Array.from(optionsGrid.children).forEach(button => {
-                const optionText = button.textContent;
-                const correctOption = quizData.questions[currentQuestionIndex].answerOptions.find(opt => opt.text === optionText && opt.isCorrect);
-                if (correctOption) {
-                    button.classList.add('correct');
-                } else {
-                    button.classList.add('incorrect');
-                }
-                button.disabled = true;
-            });
-            nextBtn.classList.remove('hidden');
-        }
 
         function updateProgressBar() {
             const progress = (currentQuestionIndex / quizData.questions.length) * 100;
@@ -1800,10 +1604,14 @@
         }
 
         function displayQuestion() {
-            resetState();
             if (currentQuestionIndex < quizData.questions.length) {
+                quizActive = true;
                 const question = quizData.questions[currentQuestionIndex];
                 questionArea.textContent = question.question;
+                optionsGrid.innerHTML = ''; // Clear previous options
+                hintArea.classList.add('hidden'); // Hide hint for new question
+
+                // Shuffle answer options for the current question
                 const shuffledOptions = shuffleArray([...question.answerOptions]);
 
                 shuffledOptions.forEach(option => {
@@ -1814,23 +1622,22 @@
                     optionsGrid.appendChild(button);
                 });
 
-                if (question.hint) {
+                // Display hint for the current question
+                if (question.hint) { // Check if a hint exists
                     hintArea.textContent = 'Hint: ' + question.hint;
                     hintArea.classList.remove('hidden');
                 }
-
-                updateProgressBar();
-                startTimer();
+                updateProgressBar(); // Update progress bar
             } else {
                 displayResults();
             }
         }
 
         function handleAnswerClick(selectedButton, isCorrect) {
-            if (!quizActive) return;
-            quizActive = false;
-            clearInterval(timer);
+            if (!quizActive) return; // Prevent double clicking
+            quizActive = false; // Deactivate quiz until next question
 
+            // Disable all buttons to prevent further clicks
             Array.from(optionsGrid.children).forEach(button => {
                 button.disabled = true;
             });
@@ -1840,33 +1647,38 @@
                 score++;
             } else {
                 selectedButton.classList.add('incorrect');
-                const correctOption = quizData.questions[currentQuestionIndex].answerOptions.find(opt => opt.isCorrect);
+                // Find and highlight the correct answer
                 Array.from(optionsGrid.children).forEach(button => {
-                    if(button.textContent === correctOption.text) {
+                    const optionText = button.textContent;
+                    const correctOption = quizData.questions[currentQuestionIndex].answerOptions.find(opt => opt.text === optionText && opt.isCorrect);
+                    if (correctOption) {
                         button.classList.add('correct');
                     }
                 });
             }
 
+            // Display rationale as hint after answer
             const currentQuestion = quizData.questions[currentQuestionIndex];
-            const rationale = currentQuestion.answerOptions.find(opt => opt.text === selectedButton.textContent).rationale;
-            rationaleArea.textContent = rationale;
-            rationaleArea.classList.remove('hidden');
+            if (currentQuestion.rationale) {
+                hintArea.textContent = 'Explanation: ' + currentQuestion.rationale;
+                hintArea.classList.remove('hidden');
+            }
 
-            nextBtn.classList.remove('hidden');
+
+            setTimeout(() => {
+                currentQuestionIndex++;
+                displayQuestion();
+            }, 2000); // Increased pause to 2 seconds (2000 milliseconds)
         }
 
         function displayResults() {
-            clearInterval(timer);
             questionArea.classList.add('hidden');
             optionsGrid.classList.add('hidden');
             hintArea.classList.add('hidden');
-            rationaleArea.classList.add('hidden');
-            timerText.classList.add('hidden');
-            nextBtn.classList.add('hidden');
             resultsArea.classList.remove('hidden');
             restartButton.classList.remove('hidden');
-            progressBar.style.width = '100%';
+            progressBar.style.width = '100%'; // Ensure progress bar is full at the end
+
 
             const totalQuestions = quizData.questions.length;
             const incorrectAnswers = totalQuestions - score;
@@ -1885,18 +1697,20 @@
             score = 0;
             quizActive = true;
 
-            timerText.classList.remove('hidden');
             questionArea.classList.remove('hidden');
             optionsGrid.classList.remove('hidden');
             resultsArea.classList.add('hidden');
             restartButton.classList.add('hidden');
+            hintArea.classList.add('hidden');
 
-            shuffleArray(quizData.questions);
+            shuffleArray(quizData.questions); // Reshuffle questions for a new game
             displayQuestion();
         }
 
+        // Initial shuffle of questions and start the quiz
         window.onload = function() {
-            // Quiz starts on button click
+            shuffleArray(quizData.questions); // Shuffle the order of questions
+            displayQuestion();
         };
 
 
