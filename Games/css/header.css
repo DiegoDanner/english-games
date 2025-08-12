@@ -1,0 +1,53 @@
+/* Games/css/header.css */
+.page-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 10;
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+}
+
+.page-header .logo-placeholder {
+  font-weight: bold;
+  font-size: 1.25rem;
+  transition: color 0.3s;
+}
+
+.page-header .menu-link {
+  font-size: 1rem;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+/* Default Light Mode Styles */
+.page-header {
+  background-color: #fff;
+  border-bottom: 1px solid #dee2e6;
+}
+.page-header .logo-placeholder {
+  color: #212529;
+}
+.page-header .menu-link {
+  color: #495057;
+}
+
+/* Dark Mode Styles */
+html.dark .page-header,
+body:not(.light-mode) .page-header {
+  background-color: #2d3748;
+  border-bottom-color: #4a5568;
+}
+html.dark .page-header .logo-placeholder,
+body:not(.light-mode) .page-header .logo-placeholder {
+  color: #e2e8f0;
+}
+html.dark .page-header .menu-link,
+body:not(.light-mode) .page-header .menu-link {
+  color: #cbd5e0;
+}

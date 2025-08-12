@@ -76,8 +76,53 @@
             }
 
     </style>
+    <style>
+      .page-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 10;
+        padding: 0.75rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        transition: background-color 0.3s, border-color 0.3s;
+        /* Default light mode styles */
+        background-color: #fff;
+        border-bottom: 1px solid #dee2e6;
+      }
+      .page-header .logo-placeholder {
+        font-weight: bold;
+        font-size: 1.25rem;
+        color: #212529;
+        transition: color 0.3s;
+      }
+      .page-header .menu-link {
+        font-size: 1rem;
+        text-decoration: none;
+        color: #495057;
+        font-weight: 500;
+        transition: color 0.3s;
+      }
+      /* Dark Mode Styles */
+      html.dark .page-header {
+        background-color: #1a202c;
+        border-bottom-color: #4a5568;
+      }
+      html.dark .page-header .logo-placeholder {
+        color: #e2e8f0;
+      }
+      html.dark .page-header .menu-link {
+        color: #cbd5e0;
+      }
+    </style>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 flex items-center justify-center min-h-screen">
+<body class="bg-gray-100 dark:bg-gray-900 flex items-center justify-center min-h-screen pt-20">
+    <header class="page-header">
+        <div class="logo-placeholder">[LOGO]</div>
+        <a href="/index.html" class="menu-link" title="Back to Home">Menu</a>
+    </header>
     <button id="theme-toggle-btn" class="absolute top-4 right-4 p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white text-2xl">☀️</button>
     <div id="quiz-container" class="quiz-container bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-2xl shadow-lg text-center relative">
         
