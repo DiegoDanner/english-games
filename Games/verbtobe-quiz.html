@@ -1,46 +1,55 @@
 <!DOCTYPE html>
 <html lang="pt-BR" class="light">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Quiz Interativo: Verbo "To Be" (Passo a Passo)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        // Configuração do Tailwind para suportar dark mode via classe no HTML
-        tailwind.config = {
-            darkMode: 'class',
-        }
+      // Configuração do Tailwind para suportar dark mode via classe no HTML
+      tailwind.config = {
+        darkMode: "class",
+      };
     </script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      /* Estilos para o feedback */
+      .feedback-correct {
+        color: #16a34a; /* green-600 */
+        font-weight: 600;
+      }
+      .feedback-incorrect {
+        color: #dc2626; /* red-600 */
+        text-decoration: line-through;
+        font-weight: 500;
+      }
+      .correct-answer-text {
+        color: #16a34a; /* green-600 */
+        font-weight: 600;
+        margin-left: 0.25rem;
+      }
+      /* Animação de fade-in */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
         }
-        /* Estilos para o feedback */
-        .feedback-correct {
-            color: #16a34a; /* green-600 */
-            font-weight: 600;
+        to {
+          opacity: 1;
+          transform: translateY(0);
         }
-        .feedback-incorrect {
-            color: #dc2626; /* red-600 */
-            text-decoration: line-through;
-            font-weight: 500;
-        }
-        .correct-answer-text {
-            color: #16a34a; /* green-600 */
-            font-weight: 600;
-            margin-left: 0.25rem;
-        }
-        /* Animação de fade-in */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .fade-in {
-            animation: fadeIn 0.5s ease-in-out forwards;
-        }
+      }
+      .fade-in {
+        animation: fadeIn 0.5s ease-in-out forwards;
+      }
     </style>
     <style>
       .page-header {
@@ -48,22 +57,26 @@
         top: 0;
         left: 0;
         width: 100%;
-        z-index: 10;
-        padding: 0.75rem 1.5rem;
+        z-index: 0;
+        height: 50px; /* altura fixa do header */
+        padding: 0 1.5rem; /* bem pouco padding vertical */
         display: flex;
-        align-items: center;
-        gap: 1.5rem;
-        transition: background-color 0.3s, border-color 0.3s;
-        /* Default light mode styles */
+        align-items: center; /* centraliza verticalmente */
+        align-items: center; /* centraliza verticalmente */
+        gap: 2rem;
+        transition: background-color 0.5s, border-color 0.5s;
         background-color: #fff;
         border-bottom: 1px solid #dee2e6;
+        line-height: 1; /* evita espaço extra causado pelo texto */
       }
-      .page-header .logo-placeholder {
-        font-weight: bold;
-        font-size: 1.25rem;
-        color: #212529;
-        transition: color 0.3s;
+
+      .page-header .logo-placeholder img {
+        max-height: 100px; /* logo grande sem exagerar */
+        height: auto;
+        width: auto;
+        display: block;
       }
+
       .page-header .menu-link {
         font-size: 1rem;
         text-decoration: none;
@@ -71,6 +84,7 @@
         font-weight: 500;
         transition: color 0.3s;
       }
+
       /* Dark Mode Styles */
       html.dark .page-header {
         background-color: #1a202c;
@@ -83,325 +97,1114 @@
         color: #cbd5e0;
       }
     </style>
-</head>
-<body class="bg-gray-100 dark:bg-gray-900 flex items-center justify-center min-h-screen pt-20 p-4 transition-colors duration-300">
+  </head>
+  <body
+    class="bg-gray-100 dark:bg-gray-900 flex items-center justify-center min-h-screen pt-20 p-4 transition-colors duration-300"
+  >
     <header class="page-header">
-        <div class="logo-placeholder">[LOGO]</div>
-        <a href="/index.html" class="menu-link" title="Back to Home">Menu</a>
+      <div class="logo-placeholder">
+        <img src="img/LOGO_DANNER.png" alt="Danner Idiomas Logo" />
+      </div>
+      <a href="/index.html" class="menu-link" title="Back to Home">Menu</a>
     </header>
 
-    <div id="quiz-container" class="bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-xl shadow-lg w-full max-w-2xl relative">
-        
-        <!-- Botão de Dark Mode -->
-        <button id="theme-toggle" class="absolute top-4 right-4 p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none">
-            <svg id="theme-toggle-dark-icon" class="hidden h-6 w-6" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
-            <svg id="theme-toggle-light-icon" class="hidden h-6 w-6" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
-        </button>
+    <div
+      id="quiz-container"
+      class="bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-xl shadow-lg w-full max-w-2xl relative"
+    >
+      <!-- Botão de Dark Mode -->
+      <button
+        id="theme-toggle"
+        class="absolute top-4 right-4 p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none"
+      >
+        <svg
+          id="theme-toggle-dark-icon"
+          class="hidden h-6 w-6"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path
+            d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"
+          ></path>
+        </svg>
+        <svg
+          id="theme-toggle-light-icon"
+          class="hidden h-6 w-6"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path
+            d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+          ></path>
+        </svg>
+      </button>
 
-        <!-- Cabeçalho do Quiz -->
-        <div class="text-center mb-6">
-            <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-gray-100">Quiz: O Verbo "To Be"</h1>
-            <p class="text-gray-600 dark:text-gray-400 mt-2">🔤 Complete one conversation at a time.</p>
+      <!-- Cabeçalho do Quiz -->
+      <div class="text-center mb-6">
+        <h1
+          class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-gray-100"
+        >
+          Quiz: O Verbo "To Be"
+        </h1>
+        <p class="text-gray-600 dark:text-gray-400 mt-2">
+          🔤 Complete one conversation at a time.
+        </p>
+      </div>
+
+      <!-- Conteúdo do Quiz -->
+      <div id="quiz-content">
+        <!-- Passo 1: Pergunta 1 -->
+        <div class="quiz-step fade-in" data-step="0">
+          <div
+            class="p-4 border border-gray-200 dark:border-gray-700 rounded-lg"
+          >
+            <p class="font-semibold text-gray-700 dark:text-gray-300 mb-3">
+              1. Conversation at the Cafe
+            </p>
+            <div class="space-y-2 text-gray-800 dark:text-gray-200">
+              <p>
+                A:
+                <span class="quiz-item"
+                  ><select
+                    data-answer="Are"
+                    class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"
+                  >
+                    <option value="">...</option>
+                    <option value="am">am</option>
+                    <option value="is">is</option>
+                    <option value="are">are</option>
+                    <option value="'m">'m</option>
+                    <option value="'s">'s</option>
+                    <option value="'re">'re</option>
+                  </select></span
+                >
+                you from Canada?
+              </p>
+              <p>
+                B: No, I
+                <span class="quiz-item"
+                  ><select
+                    data-answer="'m,am"
+                    class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"
+                  >
+                    <option value="">...</option>
+                    <option value="am">am</option>
+                    <option value="is">is</option>
+                    <option value="are">are</option>
+                    <option value="'m">'m</option>
+                    <option value="'s">'s</option>
+                    <option value="'re">'re</option>
+                  </select></span
+                >
+                not. I
+                <span class="quiz-item"
+                  ><select
+                    data-answer="am,'m"
+                    class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"
+                  >
+                    <option value="">...</option>
+                    <option value="am">am</option>
+                    <option value="is">is</option>
+                    <option value="are">are</option>
+                    <option value="'m">'m</option>
+                    <option value="'s">'s</option>
+                    <option value="'re">'re</option>
+                  </select></span
+                >
+                from Ireland.
+              </p>
+              <p>
+                A: Oh, that
+                <span class="quiz-item"
+                  ><select
+                    data-answer="'s,is"
+                    class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"
+                  >
+                    <option value="">...</option>
+                    <option value="am">am</option>
+                    <option value="is">is</option>
+                    <option value="are">are</option>
+                    <option value="'m">'m</option>
+                    <option value="'s">'s</option>
+                    <option value="'re">'re</option>
+                  </select></span
+                >
+                interesting!
+              </p>
+            </div>
+          </div>
+          <div class="mt-6 text-center">
+            <button
+              class="check-step-btn bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700"
+            >
+              Check Answer
+            </button>
+            <button
+              class="next-step-btn hidden bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700"
+            >
+              Next
+            </button>
+          </div>
         </div>
 
-        <!-- Conteúdo do Quiz -->
-        <div id="quiz-content">
-
-            <!-- Passo 1: Pergunta 1 -->
-            <div class="quiz-step fade-in" data-step="0">
-                <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                    <p class="font-semibold text-gray-700 dark:text-gray-300 mb-3">1. Conversation at the Cafe</p>
-                    <div class="space-y-2 text-gray-800 dark:text-gray-200">
-                        <p>A: <span class="quiz-item"><select data-answer="Are" class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"><option value="">...</option><option value="am">am</option><option value="is">is</option><option value="are">are</option><option value="'m">'m</option><option value="'s">'s</option><option value="'re">'re</option></select></span> you from Canada?</p>
-                        <p>B: No, I <span class="quiz-item"><select data-answer="'m,am" class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"><option value="">...</option><option value="am">am</option><option value="is">is</option><option value="are">are</option><option value="'m">'m</option><option value="'s">'s</option><option value="'re">'re</option></select></span> not. I <span class="quiz-item"><select data-answer="am,'m" class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"><option value="">...</option><option value="am">am</option><option value="is">is</option><option value="are">are</option><option value="'m">'m</option><option value="'s">'s</option><option value="'re">'re</option></select></span> from Ireland.</p>
-                        <p>A: Oh, that <span class="quiz-item"><select data-answer="'s,is" class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"><option value="">...</option><option value="am">am</option><option value="is">is</option><option value="are">are</option><option value="'m">'m</option><option value="'s">'s</option><option value="'re">'re</option></select></span> interesting!</p>
-                    </div>
-                </div>
-                <div class="mt-6 text-center">
-                    <button class="check-step-btn bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700">Check Answer</button>
-                    <button class="next-step-btn hidden bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700">Next</button>
-                </div>
+        <!-- Passo 2: Pergunta 2 (escondido) -->
+        <div class="quiz-step hidden" data-step="1">
+          <div
+            class="p-4 border border-gray-200 dark:border-gray-700 rounded-lg"
+          >
+            <p class="font-semibold text-gray-700 dark:text-gray-300 mb-3">
+              2. Weekend Plans
+            </p>
+            <div class="space-y-2 text-gray-800 dark:text-gray-200">
+              <p>
+                A: Where
+                <span class="quiz-item"
+                  ><select
+                    data-answer="are"
+                    class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"
+                  >
+                    <option value="">...</option>
+                    <option value="am">am</option>
+                    <option value="is">is</option>
+                    <option value="are">are</option>
+                    <option value="'m">'m</option>
+                    <option value="'s">'s</option>
+                    <option value="'re">'re</option>
+                  </select></span
+                >
+                your brother and sister?
+              </p>
+              <p>
+                B: They
+                <span class="quiz-item"
+                  ><select
+                    data-answer="'re,are"
+                    class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"
+                  >
+                    <option value="">...</option>
+                    <option value="am">am</option>
+                    <option value="is">is</option>
+                    <option value="are">are</option>
+                    <option value="'m">'m</option>
+                    <option value="'s">'s</option>
+                    <option value="'re">'re</option>
+                  </select></span
+                >
+                at the park.
+              </p>
+              <p>A: What about your mom?</p>
+              <p>
+                B: She
+                <span class="quiz-item"
+                  ><select
+                    data-answer="'s,is"
+                    class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"
+                  >
+                    <option value="">...</option>
+                    <option value="am">am</option>
+                    <option value="is">is</option>
+                    <option value="are">are</option>
+                    <option value="'m">'m</option>
+                    <option value="'s">'s</option>
+                    <option value="'re">'re</option>
+                  </select></span
+                >
+                at home. I think she
+                <span class="quiz-item"
+                  ><select
+                    data-answer="is,'s"
+                    class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"
+                  >
+                    <option value="">...</option>
+                    <option value="am">am</option>
+                    <option value="is">is</option>
+                    <option value="are">are</option>
+                    <option value="'m">'m</option>
+                    <option value="'s">'s</option>
+                    <option value="'re">'re</option>
+                  </select></span
+                >
+                cooking lunch.
+              </p>
             </div>
-
-            <!-- Passo 2: Pergunta 2 (escondido) -->
-            <div class="quiz-step hidden" data-step="1">
-                <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                    <p class="font-semibold text-gray-700 dark:text-gray-300 mb-3">2. Weekend Plans</p>
-                    <div class="space-y-2 text-gray-800 dark:text-gray-200">
-                        <p>A: Where <span class="quiz-item"><select data-answer="are" class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"><option value="">...</option><option value="am">am</option><option value="is">is</option><option value="are">are</option><option value="'m">'m</option><option value="'s">'s</option><option value="'re">'re</option></select></span> your brother and sister?</p>
-                        <p>B: They <span class="quiz-item"><select data-answer="'re,are" class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"><option value="">...</option><option value="am">am</option><option value="is">is</option><option value="are">are</option><option value="'m">'m</option><option value="'s">'s</option><option value="'re">'re</option></select></span> at the park.</p>
-                        <p>A: What about your mom?</p>
-                        <p>B: She <span class="quiz-item"><select data-answer="'s,is" class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"><option value="">...</option><option value="am">am</option><option value="is">is</option><option value="are">are</option><option value="'m">'m</option><option value="'s">'s</option><option value="'re">'re</option></select></span> at home. I think she <span class="quiz-item"><select data-answer="is,'s" class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"><option value="">...</option><option value="am">am</option><option value="is">is</option><option value="are">are</option><option value="'m">'m</option><option value="'s">'s</option><option value="'re">'re</option></select></span> cooking lunch.</p>
-                    </div>
-                </div>
-                <div class="mt-6 text-center">
-                    <button class="check-step-btn bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700">Check Answer</button>
-                    <button class="next-step-btn hidden bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700">Next</button>
-                </div>
-            </div>
-            
-            <!-- Passo 3: Pergunta 3 (escondido) -->
-            <div class="quiz-step hidden" data-step="2">
-                <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                    <p class="font-semibold text-gray-700 dark:text-gray-300 mb-3">3. First Day of School</p>
-                    <div class="space-y-2 text-gray-800 dark:text-gray-200">
-                        <p>A: Hi! I <span class="quiz-item"><select data-answer="'m,am" class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"><option value="">...</option><option value="am">am</option><option value="is">is</option><option value="are">are</option><option value="'m">'m</option><option value="'s">'s</option><option value="'re">'re</option></select></span> Sarah.</p>
-                        <p>B: Nice to meet you, Sarah. I <span class="quiz-item"><select data-answer="'m,am" class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"><option value="">...</option><option value="am">am</option><option value="is">is</option><option value="are">are</option><option value="'m">'m</option><option value="'s">'s</option><option value="'re">'re</option></select></span> Daniel.</p>
-                        <p>A: <span class="quiz-item"><select data-answer="Are" class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"><option value="">...</option><option value="am">am</option><option value="is">is</option><option value="are">are</option><option value="'m">'m</option><option value="'s">'s</option><option value="'re">'re</option></select></span> you new here?</p>
-                        <p>B: Yes, I <span class="quiz-item"><select data-answer="am" class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"><option value="">...</option><option value="am">am</option><option value="is">is</option><option value="are">are</option><option value="'m">'m</option><option value="'s">'s</option><option value="'re">'re</option></select></span>. I just moved last week.</p>
-                    </div>
-                </div>
-                <div class="mt-6 text-center">
-                    <button class="check-step-btn bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700">Check Answer</button>
-                    <button class="next-step-btn hidden bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700">Next</button>
-                </div>
-            </div>
-
-            <!-- Passo 4: Pergunta 4 (escondido) -->
-            <div class="quiz-step hidden" data-step="3">
-                <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                    <p class="font-semibold text-gray-700 dark:text-gray-300 mb-3">4. Late For Class</p>
-                    <div class="space-y-2 text-gray-800 dark:text-gray-200">
-                        <p>A: What time <span class="quiz-item"><select data-answer="is,'s" class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"><option value="">...</option><option value="am">am</option><option value="is">is</option><option value="are">are</option><option value="'m">'m</option><option value="'s">'s</option><option value="'re">'re</option></select></span> it now?</p>
-                        <p>B: It <span class="quiz-item"><select data-answer="'s,is" class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"><option value="">...</option><option value="am">am</option><option value="is">is</option><option value="are">are</option><option value="'m">'m</option><option value="'s">'s</option><option value="'re">'re</option></select></span> 3:45.</p>
-                        <p>A: We <span class="quiz-item"><select data-answer="'re,are" class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"><option value="">...</option><option value="am">am</option><option value="is">is</option><option value="are">are</option><option value="'m">'m</option><option value="'s">'s</option><option value="'re">'re</option></select></span> late for class!</p>
-                        <p>B: Let’s go! The teacher <span class="quiz-item"><select data-answer="is,'s" class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"><option value="">...</option><option value="am">am</option><option value="is">is</option><option value="are">are</option><option value="'m">'m</option><option value="'s">'s</option><option value="'re">'re</option></select></span> very strict about time.</p>
-                    </div>
-                </div>
-                <div class="mt-6 text-center">
-                    <button class="check-step-btn bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700">Check Answer</button>
-                    <button class="next-step-btn hidden bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700">Next</button>
-                </div>
-            </div>
-
-            <!-- Passo 5: Pergunta 5 (escondido) -->
-            <div class="quiz-step hidden" data-step="4">
-                <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                    <p class="font-semibold text-gray-700 dark:text-gray-300 mb-3">5. Talking About Time</p>
-                    <div class="space-y-2 text-gray-800 dark:text-gray-200">
-                        <p>A: How<span class="quiz-item"><select data-answer="'s,is" class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"><option value="">...</option><option value="am">am</option><option value="is">is</option><option value="are">are</option><option value="'m">'m</option><option value="'s">'s</option><option value="'re">'re</option></select></span> the weather today?</p>
-                        <p>B: It <span class="quiz-item"><select data-answer="'s,is" class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"><option value="">...</option><option value="am">am</option><option value="is">is</option><option value="are">are</option><option value="'m">'m</option><option value="'s">'s</option><option value="'re">'re</option></select></span> sunny, but I <span class="quiz-item"><select data-answer="'m,am" class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"><option value="">...</option><option value="am">am</option><option value="is">is</option><option value="are">are</option><option value="'m">'m</option><option value="'s">'s</option><option value="'re">'re</option></select></span> a little cold.</p>
-                        <p>A: Really? I think it <span class="quiz-item"><select data-answer="is,'s" class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"><option value="">...</option><option value="am">am</option><option value="is">is</option><option value="are">are</option><option value="'m">'m</option><option value="'s">'s</option><option value="'re">'re</option></select></span> perfect.</p>
-                    </div>
-                </div>
-                <div class="mt-6 text-center">
-                    <button class="check-step-btn bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700">Check Answer</button>
-                    <button class="next-step-btn hidden bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700">Next</button>
-                </div>
-            </div>
-
-            <!-- Passo 6: Pergunta 6 (escondido) -->
-            <div class="quiz-step hidden" data-step="5">
-                <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                    <p class="font-semibold text-gray-700 dark:text-gray-300 mb-3">6. At the Restaurant</p>
-                    <div class="space-y-2 text-gray-800 dark:text-gray-200">
-                        <p>A: This food <span class="quiz-item"><select data-answer="is,'s" class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"><option value="">...</option><option value="am">am</option><option value="is">is</option><option value="are">are</option><option value="'m">'m</option><option value="'s">'s</option><option value="'re">'re</option></select></span> delicious!</p>
-                        <p>B: I agree. <span class="quiz-item"><select data-answer="Are" class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"><option value="">...</option><option value="am">am</option><option value="is">is</option><option value="are">are</option><option value="'m">'m</option><option value="'s">'s</option><option value="'re">'re</option></select></span> the drinks expensive?</p>
-                        <p>A: No, they <span class="quiz-item"><select data-answer="'re,are" class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"><option value="">...</option><option value="am">am</option><option value="is">is</option><option value="are">are</option><option value="'m">'m</option><option value="'s">'s</option><option value="'re">'re</option></select></span> quite cheap.</p>
-                    </div>
-                </div>
-                <div class="mt-6 text-center">
-                    <button class="check-step-btn bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700">Check Answer</button>
-                    <button class="next-step-btn hidden bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700">Next</button>
-                </div>
-            </div>
-
-            <!-- Passo 7: Pergunta 7 (escondido) -->
-            <div class="quiz-step hidden" data-step="6">
-                <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                    <p class="font-semibold text-gray-700 dark:text-gray-300 mb-3">7. About a Movie</p>
-                    <div class="space-y-2 text-gray-800 dark:text-gray-200">
-                        <p>A: What do you think about the movie?</p>
-                        <p>B: It <span class="quiz-item"><select data-answer="is,'s" class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"><option value="">...</option><option value="am">am</option><option value="is">is</option><option value="are">are</option><option value="'m">'m</option><option value="'s">'s</option><option value="'re">'re</option></select></span> a bit long. <span class="quiz-item"><select data-answer="Is" class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"><option value="">...</option><option value="am">am</option><option value="is">is</option><option value="are">are</option><option value="'m">'m</option><option value="'s">'s</option><option value="'re">'re</option></select></span> it almost over?</p>
-                        <p>A: I think so. The final scene <span class="quiz-item"><select data-answer="is,'s" class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"><option value="">...</option><option value="am">am</option><option value="is">is</option><option value="are">are</option><option value="'m">'m</option><option value="'s">'s</option><option value="'re">'re</option></select></span> next.</p>
-                    </div>
-                </div>
-                <div class="mt-6 text-center">
-                    <button class="check-step-btn bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700">Check Answer</button>
-                    <button class="next-step-btn hidden bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700">Next</button>
-                </div>
-            </div>
-
-            <!-- Passo 8: Pergunta 8 (escondido) -->
-            <div class="quiz-step hidden" data-step="7">
-                <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                    <p class="font-semibold text-gray-700 dark:text-gray-300 mb-3">8. Planning a Trip</p>
-                    <div class="space-y-2 text-gray-800 dark:text-gray-200">
-                        <p>A: We <span class="quiz-item"><select data-answer="'re,are" class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"><option value="">...</option><option value="am">am</option><option value="is">is</option><option value="are">are</option><option value="'m">'m</option><option value="'s">'s</option><option value="'re">'re</option></select></span> so excited about the trip!</p>
-                        <p>B: Me too! <span class="quiz-item"><select data-answer="Is" class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"><option value="">...</option><option value="am">am</option><option value="is">is</option><option value="are">are</option><option value="'m">'m</option><option value="'s">'s</option><option value="'re">'re</option></select></span> the hotel far from the beach?</p>
-                        <p>A: No, it <span class="quiz-item"><select data-answer="'s,is" class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"><option value="">...</option><option value="am">am</option><option value="is">is</option><option value="are">are</option><option value="'m">'m</option><option value="'s">'s</option><option value="'re">'re</option></select></span> very close.</p>
-                    </div>
-                </div>
-                <div class="mt-6 text-center">
-                    <button class="check-step-btn bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700">Check Answer</button>
-                    <button class="next-step-btn hidden bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700">Next</button>
-                </div>
-            </div>
-
-            <!-- Passo 9: Pergunta 9 (escondido) -->
-            <div class="quiz-step hidden" data-step="8">
-                <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                    <p class="font-semibold text-gray-700 dark:text-gray-300 mb-3">9. In the Library</p>
-                    <div class="space-y-2 text-gray-800 dark:text-gray-200">
-                        <p>A: Excuse me, I <span class="quiz-item"><select data-answer="'m,am" class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"><option value="">...</option><option value="am">am</option><option value="is">is</option><option value="are">are</option><option value="'m">'m</option><option value="'s">'s</option><option value="'re">'re</option></select></span> looking for a history book.</p>
-                        <p>B: The history section <span class="quiz-item"><select data-answer="is,'s" class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"><option value="">...</option><option value="am">am</option><option value="is">is</option><option value="are">are</option><option value="'m">'m</option><option value="'s">'s</option><option value="'re">'re</option></select></span> on the second floor.</p>
-                        <p>A: Thanks! <span class="quiz-item"><select data-answer="Are" class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"><option value="">...</option><option value="am">am</option><option value="is">is</option><option value="are">are</option><option value="'m">'m</option><option value="'s">'s</option><option value="'re">'re</option></select></span> you a student here?</p>
-                        <p>B: Yes, I <span class="quiz-item"><select data-answer="am" class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"><option value="">...</option><option value="am">am</option><option value="is">is</option><option value="are">are</option><option value="'m">'m</option><option value="'s">'s</option><option value="'re">'re</option></select></span>.</p>
-                    </div>
-                </div>
-                <div class="mt-6 text-center">
-                    <button class="check-step-btn bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700">Check Answer</button>
-                    <button class="next-step-btn hidden bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700">Next</button>
-                </div>
-            </div>
-
-            <!-- Passo 10: Pergunta 10 (escondido) -->
-            <div class="quiz-step hidden" data-step="9">
-                <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                    <p class="font-semibold text-gray-700 dark:text-gray-300 mb-3">10. At the Gym</p>
-                    <div class="space-y-2 text-gray-800 dark:text-gray-200">
-                        <p>A: Look at that guy. He <span class="quiz-item"><select data-answer="'s,is" class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"><option value="">...</option><option value="am">am</option><option value="is">is</option><option value="are">are</option><option value="'m">'m</option><option value="'s">'s</option><option value="'re">'re</option></select></span> very strong.</p>
-                        <p>B: Yeah, he <span class="quiz-item"><select data-answer="is" class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"><option value="">...</option><option value="am">am</option><option value="is">is</option><option value="are">are</option><option value="'m">'m</option><option value="'s">'s</option><option value="'re">'re</option></select></span>. What about them? <span class="quiz-item"><select data-answer="Are" class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"><option value="">...</option><option value="am">am</option><option value="is">is</option><option value="are">are</option><option value="'m">'m</option><option value="'s">'s</option><option value="'re">'re</option></select></span> they new members?</p>
-                        <p>A: I think they <span class="quiz-item"><select data-answer="are" class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"><option value="">...</option><option value="am">am</option><option value="is">is</option><option value="are">are</option><option value="'m">'m</option><option value="'s">'s</option><option value="'re">'re</option></select></span>.</p>
-                    </div>
-                </div>
-                <div class="mt-6 text-center">
-                    <button class="check-step-btn bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700">Check Answer</button>
-                    <button class="next-step-btn hidden bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700">Next</button>
-                </div>
-            </div>
-
-            <!-- Passo 11: Tela de Resultados (escondido) -->
-            <div id="results-screen" class="quiz-step hidden text-center" data-step="10">
-                 <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100">Quiz Complete!</h2>
-                 <p id="final-score" class="text-xl mt-4"></p>
-                 <p id="final-message" class="text-gray-600 dark:text-gray-400 mt-2"></p>
-                 <button id="retry-btn" class="mt-8 bg-gray-500 text-white font-bold py-3 px-8 rounded-lg hover:bg-gray-600">Tentar Novamente</button>
-            </div>
+          </div>
+          <div class="mt-6 text-center">
+            <button
+              class="check-step-btn bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700"
+            >
+              Check Answer
+            </button>
+            <button
+              class="next-step-btn hidden bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700"
+            >
+              Next
+            </button>
+          </div>
         </div>
+
+        <!-- Passo 3: Pergunta 3 (escondido) -->
+        <div class="quiz-step hidden" data-step="2">
+          <div
+            class="p-4 border border-gray-200 dark:border-gray-700 rounded-lg"
+          >
+            <p class="font-semibold text-gray-700 dark:text-gray-300 mb-3">
+              3. First Day of School
+            </p>
+            <div class="space-y-2 text-gray-800 dark:text-gray-200">
+              <p>
+                A: Hi! I
+                <span class="quiz-item"
+                  ><select
+                    data-answer="'m,am"
+                    class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"
+                  >
+                    <option value="">...</option>
+                    <option value="am">am</option>
+                    <option value="is">is</option>
+                    <option value="are">are</option>
+                    <option value="'m">'m</option>
+                    <option value="'s">'s</option>
+                    <option value="'re">'re</option>
+                  </select></span
+                >
+                Sarah.
+              </p>
+              <p>
+                B: Nice to meet you, Sarah. I
+                <span class="quiz-item"
+                  ><select
+                    data-answer="'m,am"
+                    class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"
+                  >
+                    <option value="">...</option>
+                    <option value="am">am</option>
+                    <option value="is">is</option>
+                    <option value="are">are</option>
+                    <option value="'m">'m</option>
+                    <option value="'s">'s</option>
+                    <option value="'re">'re</option>
+                  </select></span
+                >
+                Daniel.
+              </p>
+              <p>
+                A:
+                <span class="quiz-item"
+                  ><select
+                    data-answer="Are"
+                    class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"
+                  >
+                    <option value="">...</option>
+                    <option value="am">am</option>
+                    <option value="is">is</option>
+                    <option value="are">are</option>
+                    <option value="'m">'m</option>
+                    <option value="'s">'s</option>
+                    <option value="'re">'re</option>
+                  </select></span
+                >
+                you new here?
+              </p>
+              <p>
+                B: Yes, I
+                <span class="quiz-item"
+                  ><select
+                    data-answer="am"
+                    class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"
+                  >
+                    <option value="">...</option>
+                    <option value="am">am</option>
+                    <option value="is">is</option>
+                    <option value="are">are</option>
+                    <option value="'m">'m</option>
+                    <option value="'s">'s</option>
+                    <option value="'re">'re</option>
+                  </select></span
+                >. I just moved last week.
+              </p>
+            </div>
+          </div>
+          <div class="mt-6 text-center">
+            <button
+              class="check-step-btn bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700"
+            >
+              Check Answer
+            </button>
+            <button
+              class="next-step-btn hidden bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+
+        <!-- Passo 4: Pergunta 4 (escondido) -->
+        <div class="quiz-step hidden" data-step="3">
+          <div
+            class="p-4 border border-gray-200 dark:border-gray-700 rounded-lg"
+          >
+            <p class="font-semibold text-gray-700 dark:text-gray-300 mb-3">
+              4. Late For Class
+            </p>
+            <div class="space-y-2 text-gray-800 dark:text-gray-200">
+              <p>
+                A: What time
+                <span class="quiz-item"
+                  ><select
+                    data-answer="is,'s"
+                    class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"
+                  >
+                    <option value="">...</option>
+                    <option value="am">am</option>
+                    <option value="is">is</option>
+                    <option value="are">are</option>
+                    <option value="'m">'m</option>
+                    <option value="'s">'s</option>
+                    <option value="'re">'re</option>
+                  </select></span
+                >
+                it now?
+              </p>
+              <p>
+                B: It
+                <span class="quiz-item"
+                  ><select
+                    data-answer="'s,is"
+                    class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"
+                  >
+                    <option value="">...</option>
+                    <option value="am">am</option>
+                    <option value="is">is</option>
+                    <option value="are">are</option>
+                    <option value="'m">'m</option>
+                    <option value="'s">'s</option>
+                    <option value="'re">'re</option>
+                  </select></span
+                >
+                3:45.
+              </p>
+              <p>
+                A: We
+                <span class="quiz-item"
+                  ><select
+                    data-answer="'re,are"
+                    class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"
+                  >
+                    <option value="">...</option>
+                    <option value="am">am</option>
+                    <option value="is">is</option>
+                    <option value="are">are</option>
+                    <option value="'m">'m</option>
+                    <option value="'s">'s</option>
+                    <option value="'re">'re</option>
+                  </select></span
+                >
+                late for class!
+              </p>
+              <p>
+                B: Let’s go! The teacher
+                <span class="quiz-item"
+                  ><select
+                    data-answer="is,'s"
+                    class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"
+                  >
+                    <option value="">...</option>
+                    <option value="am">am</option>
+                    <option value="is">is</option>
+                    <option value="are">are</option>
+                    <option value="'m">'m</option>
+                    <option value="'s">'s</option>
+                    <option value="'re">'re</option>
+                  </select></span
+                >
+                very strict about time.
+              </p>
+            </div>
+          </div>
+          <div class="mt-6 text-center">
+            <button
+              class="check-step-btn bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700"
+            >
+              Check Answer
+            </button>
+            <button
+              class="next-step-btn hidden bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+
+        <!-- Passo 5: Pergunta 5 (escondido) -->
+        <div class="quiz-step hidden" data-step="4">
+          <div
+            class="p-4 border border-gray-200 dark:border-gray-700 rounded-lg"
+          >
+            <p class="font-semibold text-gray-700 dark:text-gray-300 mb-3">
+              5. Talking About Time
+            </p>
+            <div class="space-y-2 text-gray-800 dark:text-gray-200">
+              <p>
+                A: How<span class="quiz-item"
+                  ><select
+                    data-answer="'s,is"
+                    class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"
+                  >
+                    <option value="">...</option>
+                    <option value="am">am</option>
+                    <option value="is">is</option>
+                    <option value="are">are</option>
+                    <option value="'m">'m</option>
+                    <option value="'s">'s</option>
+                    <option value="'re">'re</option>
+                  </select></span
+                >
+                the weather today?
+              </p>
+              <p>
+                B: It
+                <span class="quiz-item"
+                  ><select
+                    data-answer="'s,is"
+                    class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"
+                  >
+                    <option value="">...</option>
+                    <option value="am">am</option>
+                    <option value="is">is</option>
+                    <option value="are">are</option>
+                    <option value="'m">'m</option>
+                    <option value="'s">'s</option>
+                    <option value="'re">'re</option>
+                  </select></span
+                >
+                sunny, but I
+                <span class="quiz-item"
+                  ><select
+                    data-answer="'m,am"
+                    class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"
+                  >
+                    <option value="">...</option>
+                    <option value="am">am</option>
+                    <option value="is">is</option>
+                    <option value="are">are</option>
+                    <option value="'m">'m</option>
+                    <option value="'s">'s</option>
+                    <option value="'re">'re</option>
+                  </select></span
+                >
+                a little cold.
+              </p>
+              <p>
+                A: Really? I think it
+                <span class="quiz-item"
+                  ><select
+                    data-answer="is,'s"
+                    class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"
+                  >
+                    <option value="">...</option>
+                    <option value="am">am</option>
+                    <option value="is">is</option>
+                    <option value="are">are</option>
+                    <option value="'m">'m</option>
+                    <option value="'s">'s</option>
+                    <option value="'re">'re</option>
+                  </select></span
+                >
+                perfect.
+              </p>
+            </div>
+          </div>
+          <div class="mt-6 text-center">
+            <button
+              class="check-step-btn bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700"
+            >
+              Check Answer
+            </button>
+            <button
+              class="next-step-btn hidden bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+
+        <!-- Passo 6: Pergunta 6 (escondido) -->
+        <div class="quiz-step hidden" data-step="5">
+          <div
+            class="p-4 border border-gray-200 dark:border-gray-700 rounded-lg"
+          >
+            <p class="font-semibold text-gray-700 dark:text-gray-300 mb-3">
+              6. At the Restaurant
+            </p>
+            <div class="space-y-2 text-gray-800 dark:text-gray-200">
+              <p>
+                A: This food
+                <span class="quiz-item"
+                  ><select
+                    data-answer="is,'s"
+                    class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"
+                  >
+                    <option value="">...</option>
+                    <option value="am">am</option>
+                    <option value="is">is</option>
+                    <option value="are">are</option>
+                    <option value="'m">'m</option>
+                    <option value="'s">'s</option>
+                    <option value="'re">'re</option>
+                  </select></span
+                >
+                delicious!
+              </p>
+              <p>
+                B: I agree.
+                <span class="quiz-item"
+                  ><select
+                    data-answer="Are"
+                    class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"
+                  >
+                    <option value="">...</option>
+                    <option value="am">am</option>
+                    <option value="is">is</option>
+                    <option value="are">are</option>
+                    <option value="'m">'m</option>
+                    <option value="'s">'s</option>
+                    <option value="'re">'re</option>
+                  </select></span
+                >
+                the drinks expensive?
+              </p>
+              <p>
+                A: No, they
+                <span class="quiz-item"
+                  ><select
+                    data-answer="'re,are"
+                    class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"
+                  >
+                    <option value="">...</option>
+                    <option value="am">am</option>
+                    <option value="is">is</option>
+                    <option value="are">are</option>
+                    <option value="'m">'m</option>
+                    <option value="'s">'s</option>
+                    <option value="'re">'re</option>
+                  </select></span
+                >
+                quite cheap.
+              </p>
+            </div>
+          </div>
+          <div class="mt-6 text-center">
+            <button
+              class="check-step-btn bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700"
+            >
+              Check Answer
+            </button>
+            <button
+              class="next-step-btn hidden bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+
+        <!-- Passo 7: Pergunta 7 (escondido) -->
+        <div class="quiz-step hidden" data-step="6">
+          <div
+            class="p-4 border border-gray-200 dark:border-gray-700 rounded-lg"
+          >
+            <p class="font-semibold text-gray-700 dark:text-gray-300 mb-3">
+              7. About a Movie
+            </p>
+            <div class="space-y-2 text-gray-800 dark:text-gray-200">
+              <p>A: What do you think about the movie?</p>
+              <p>
+                B: It
+                <span class="quiz-item"
+                  ><select
+                    data-answer="is,'s"
+                    class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"
+                  >
+                    <option value="">...</option>
+                    <option value="am">am</option>
+                    <option value="is">is</option>
+                    <option value="are">are</option>
+                    <option value="'m">'m</option>
+                    <option value="'s">'s</option>
+                    <option value="'re">'re</option>
+                  </select></span
+                >
+                a bit long.
+                <span class="quiz-item"
+                  ><select
+                    data-answer="Is"
+                    class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"
+                  >
+                    <option value="">...</option>
+                    <option value="am">am</option>
+                    <option value="is">is</option>
+                    <option value="are">are</option>
+                    <option value="'m">'m</option>
+                    <option value="'s">'s</option>
+                    <option value="'re">'re</option>
+                  </select></span
+                >
+                it almost over?
+              </p>
+              <p>
+                A: I think so. The final scene
+                <span class="quiz-item"
+                  ><select
+                    data-answer="is,'s"
+                    class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"
+                  >
+                    <option value="">...</option>
+                    <option value="am">am</option>
+                    <option value="is">is</option>
+                    <option value="are">are</option>
+                    <option value="'m">'m</option>
+                    <option value="'s">'s</option>
+                    <option value="'re">'re</option>
+                  </select></span
+                >
+                next.
+              </p>
+            </div>
+          </div>
+          <div class="mt-6 text-center">
+            <button
+              class="check-step-btn bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700"
+            >
+              Check Answer
+            </button>
+            <button
+              class="next-step-btn hidden bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+
+        <!-- Passo 8: Pergunta 8 (escondido) -->
+        <div class="quiz-step hidden" data-step="7">
+          <div
+            class="p-4 border border-gray-200 dark:border-gray-700 rounded-lg"
+          >
+            <p class="font-semibold text-gray-700 dark:text-gray-300 mb-3">
+              8. Planning a Trip
+            </p>
+            <div class="space-y-2 text-gray-800 dark:text-gray-200">
+              <p>
+                A: We
+                <span class="quiz-item"
+                  ><select
+                    data-answer="'re,are"
+                    class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"
+                  >
+                    <option value="">...</option>
+                    <option value="am">am</option>
+                    <option value="is">is</option>
+                    <option value="are">are</option>
+                    <option value="'m">'m</option>
+                    <option value="'s">'s</option>
+                    <option value="'re">'re</option>
+                  </select></span
+                >
+                so excited about the trip!
+              </p>
+              <p>
+                B: Me too!
+                <span class="quiz-item"
+                  ><select
+                    data-answer="Is"
+                    class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"
+                  >
+                    <option value="">...</option>
+                    <option value="am">am</option>
+                    <option value="is">is</option>
+                    <option value="are">are</option>
+                    <option value="'m">'m</option>
+                    <option value="'s">'s</option>
+                    <option value="'re">'re</option>
+                  </select></span
+                >
+                the hotel far from the beach?
+              </p>
+              <p>
+                A: No, it
+                <span class="quiz-item"
+                  ><select
+                    data-answer="'s,is"
+                    class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"
+                  >
+                    <option value="">...</option>
+                    <option value="am">am</option>
+                    <option value="is">is</option>
+                    <option value="are">are</option>
+                    <option value="'m">'m</option>
+                    <option value="'s">'s</option>
+                    <option value="'re">'re</option>
+                  </select></span
+                >
+                very close.
+              </p>
+            </div>
+          </div>
+          <div class="mt-6 text-center">
+            <button
+              class="check-step-btn bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700"
+            >
+              Check Answer
+            </button>
+            <button
+              class="next-step-btn hidden bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+
+        <!-- Passo 9: Pergunta 9 (escondido) -->
+        <div class="quiz-step hidden" data-step="8">
+          <div
+            class="p-4 border border-gray-200 dark:border-gray-700 rounded-lg"
+          >
+            <p class="font-semibold text-gray-700 dark:text-gray-300 mb-3">
+              9. In the Library
+            </p>
+            <div class="space-y-2 text-gray-800 dark:text-gray-200">
+              <p>
+                A: Excuse me, I
+                <span class="quiz-item"
+                  ><select
+                    data-answer="'m,am"
+                    class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"
+                  >
+                    <option value="">...</option>
+                    <option value="am">am</option>
+                    <option value="is">is</option>
+                    <option value="are">are</option>
+                    <option value="'m">'m</option>
+                    <option value="'s">'s</option>
+                    <option value="'re">'re</option>
+                  </select></span
+                >
+                looking for a history book.
+              </p>
+              <p>
+                B: The history section
+                <span class="quiz-item"
+                  ><select
+                    data-answer="is,'s"
+                    class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"
+                  >
+                    <option value="">...</option>
+                    <option value="am">am</option>
+                    <option value="is">is</option>
+                    <option value="are">are</option>
+                    <option value="'m">'m</option>
+                    <option value="'s">'s</option>
+                    <option value="'re">'re</option>
+                  </select></span
+                >
+                on the second floor.
+              </p>
+              <p>
+                A: Thanks!
+                <span class="quiz-item"
+                  ><select
+                    data-answer="Are"
+                    class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"
+                  >
+                    <option value="">...</option>
+                    <option value="am">am</option>
+                    <option value="is">is</option>
+                    <option value="are">are</option>
+                    <option value="'m">'m</option>
+                    <option value="'s">'s</option>
+                    <option value="'re">'re</option>
+                  </select></span
+                >
+                you a student here?
+              </p>
+              <p>
+                B: Yes, I
+                <span class="quiz-item"
+                  ><select
+                    data-answer="am"
+                    class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"
+                  >
+                    <option value="">...</option>
+                    <option value="am">am</option>
+                    <option value="is">is</option>
+                    <option value="are">are</option>
+                    <option value="'m">'m</option>
+                    <option value="'s">'s</option>
+                    <option value="'re">'re</option>
+                  </select></span
+                >.
+              </p>
+            </div>
+          </div>
+          <div class="mt-6 text-center">
+            <button
+              class="check-step-btn bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700"
+            >
+              Check Answer
+            </button>
+            <button
+              class="next-step-btn hidden bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+
+        <!-- Passo 10: Pergunta 10 (escondido) -->
+        <div class="quiz-step hidden" data-step="9">
+          <div
+            class="p-4 border border-gray-200 dark:border-gray-700 rounded-lg"
+          >
+            <p class="font-semibold text-gray-700 dark:text-gray-300 mb-3">
+              10. At the Gym
+            </p>
+            <div class="space-y-2 text-gray-800 dark:text-gray-200">
+              <p>
+                A: Look at that guy. He
+                <span class="quiz-item"
+                  ><select
+                    data-answer="'s,is"
+                    class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"
+                  >
+                    <option value="">...</option>
+                    <option value="am">am</option>
+                    <option value="is">is</option>
+                    <option value="are">are</option>
+                    <option value="'m">'m</option>
+                    <option value="'s">'s</option>
+                    <option value="'re">'re</option>
+                  </select></span
+                >
+                very strong.
+              </p>
+              <p>
+                B: Yeah, he
+                <span class="quiz-item"
+                  ><select
+                    data-answer="is"
+                    class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"
+                  >
+                    <option value="">...</option>
+                    <option value="am">am</option>
+                    <option value="is">is</option>
+                    <option value="are">are</option>
+                    <option value="'m">'m</option>
+                    <option value="'s">'s</option>
+                    <option value="'re">'re</option>
+                  </select></span
+                >. What about them?
+                <span class="quiz-item"
+                  ><select
+                    data-answer="Are"
+                    class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"
+                  >
+                    <option value="">...</option>
+                    <option value="am">am</option>
+                    <option value="is">is</option>
+                    <option value="are">are</option>
+                    <option value="'m">'m</option>
+                    <option value="'s">'s</option>
+                    <option value="'re">'re</option>
+                  </select></span
+                >
+                they new members?
+              </p>
+              <p>
+                A: I think they
+                <span class="quiz-item"
+                  ><select
+                    data-answer="are"
+                    class="quiz-select bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2"
+                  >
+                    <option value="">...</option>
+                    <option value="am">am</option>
+                    <option value="is">is</option>
+                    <option value="are">are</option>
+                    <option value="'m">'m</option>
+                    <option value="'s">'s</option>
+                    <option value="'re">'re</option>
+                  </select></span
+                >.
+              </p>
+            </div>
+          </div>
+          <div class="mt-6 text-center">
+            <button
+              class="check-step-btn bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700"
+            >
+              Check Answer
+            </button>
+            <button
+              class="next-step-btn hidden bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+
+        <!-- Passo 11: Tela de Resultados (escondido) -->
+        <div
+          id="results-screen"
+          class="quiz-step hidden text-center"
+          data-step="10"
+        >
+          <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100">
+            Quiz Complete!
+          </h2>
+          <p id="final-score" class="text-xl mt-4"></p>
+          <p
+            id="final-message"
+            class="text-gray-600 dark:text-gray-400 mt-2"
+          ></p>
+          <button
+            id="retry-btn"
+            class="mt-8 bg-gray-500 text-white font-bold py-3 px-8 rounded-lg hover:bg-gray-600"
+          >
+            Tentar Novamente
+          </button>
+        </div>
+      </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const quizContent = document.getElementById('quiz-content');
-            const steps = document.querySelectorAll('.quiz-step');
-            const totalCorrectAnswers = document.querySelectorAll('.quiz-item').length;
-            let currentStep = 0;
-            let score = 0;
+      document.addEventListener("DOMContentLoaded", () => {
+        const quizContent = document.getElementById("quiz-content");
+        const steps = document.querySelectorAll(".quiz-step");
+        const totalCorrectAnswers =
+          document.querySelectorAll(".quiz-item").length;
+        let currentStep = 0;
+        let score = 0;
 
-            // --- Lógica do Dark Mode ---
-            const themeToggleBtn = document.getElementById('theme-toggle');
-            const darkIcon = document.getElementById('theme-toggle-dark-icon');
-            const lightIcon = document.getElementById('theme-toggle-light-icon');
+        // --- Lógica do Dark Mode ---
+        const themeToggleBtn = document.getElementById("theme-toggle");
+        const darkIcon = document.getElementById("theme-toggle-dark-icon");
+        const lightIcon = document.getElementById("theme-toggle-light-icon");
 
-            // Verifica a preferência do usuário no carregamento da página
-            if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                document.documentElement.classList.add('dark');
-                lightIcon.classList.remove('hidden');
-            } else {
-                document.documentElement.classList.remove('dark');
-                darkIcon.classList.remove('hidden');
-            }
+        // Verifica a preferência do usuário no carregamento da página
+        if (
+          localStorage.getItem("theme") === "dark" ||
+          (!("theme" in localStorage) &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches)
+        ) {
+          document.documentElement.classList.add("dark");
+          lightIcon.classList.remove("hidden");
+        } else {
+          document.documentElement.classList.remove("dark");
+          darkIcon.classList.remove("hidden");
+        }
 
-            themeToggleBtn.addEventListener('click', () => {
-                // Alterna a classe 'dark' no elemento <html>
-                document.documentElement.classList.toggle('dark');
-                
-                // Salva a preferência no localStorage
-                if (document.documentElement.classList.contains('dark')) {
-                    localStorage.setItem('theme', 'dark');
-                    lightIcon.classList.remove('hidden');
-                    darkIcon.classList.add('hidden');
-                } else {
-                    localStorage.setItem('theme', 'light');
-                    darkIcon.classList.remove('hidden');
-                    lightIcon.classList.add('hidden');
-                }
-            });
+        themeToggleBtn.addEventListener("click", () => {
+          // Alterna a classe 'dark' no elemento <html>
+          document.documentElement.classList.toggle("dark");
 
-            // --- Lógica do Quiz ---
-            quizContent.addEventListener('click', (e) => {
-                if (e.target.classList.contains('check-step-btn')) {
-                    handleCheckStep(e.target);
-                }
-                if (e.target.classList.contains('next-step-btn')) {
-                    goToNextStep();
-                }
-            });
-            
-            document.getElementById('retry-btn').addEventListener('click', () => {
-                window.location.reload();
-            });
-
-            function handleCheckStep(checkButton) {
-                const stepElement = checkButton.closest('.quiz-step');
-                const itemsInStep = stepElement.querySelectorAll('.quiz-item');
-                
-                itemsInStep.forEach(item => {
-                    const select = item.querySelector('select');
-                    if (select) {
-                        const userAnswer = select.value;
-                        const correctAnswers = select.dataset.answer.toLowerCase().split(',');
-                        const primaryCorrectAnswer = select.dataset.answer.split(',')[0];
-                        
-                        let feedbackHTML = '';
-                        if (correctAnswers.includes(userAnswer.toLowerCase())) {
-                            score++;
-                            feedbackHTML = `<span class="feedback-correct">${userAnswer} ✔️</span>`;
-                        } else {
-                            const displayAnswer = userAnswer || '...';
-                            feedbackHTML = `<span class="feedback-incorrect">${displayAnswer} ❌</span> <span class="correct-answer-text">(${primaryCorrectAnswer})</span>`;
-                        }
-                        item.innerHTML = feedbackHTML;
-                    }
-                });
-
-                const nextButton = stepElement.querySelector('.next-step-btn');
-                checkButton.classList.add('hidden');
-                nextButton.classList.remove('hidden');
-            }
-
-            function goToNextStep() {
-                steps[currentStep].classList.add('hidden');
-                currentStep++;
-                if (currentStep < steps.length -1) {
-                    steps[currentStep].classList.remove('hidden');
-                    steps[currentStep].classList.add('fade-in');
-                } else {
-                    showFinalResults();
-                }
-            }
-
-            function showFinalResults() {
-                const resultsScreen = document.getElementById('results-screen');
-                const finalScoreEl = document.getElementById('final-score');
-                const finalMessageEl = document.getElementById('final-message');
-
-                if(steps[currentStep]) {
-                    steps[currentStep].classList.add('hidden');
-                } else if (steps[currentStep - 1]) {
-                    steps[currentStep - 1].classList.add('hidden');
-                }
-
-                finalScoreEl.textContent = `Your final score: ${score} out of ${totalCorrectAnswers}`;
-
-                let message = '';
-                if (score === totalCorrectAnswers) {
-                    message = '🎉 Excellent! You got everything right!';
-                    finalScoreEl.classList.add('text-green-600');
-                } else if (score > totalCorrectAnswers / 2) {
-                    message = '👍 Good job! Keep practicing.';
-                    finalScoreEl.classList.add('text-blue-600');
-                } else {
-                    message = '🤔 Keep trying! Practice makes perfect.';
-                    finalScoreEl.classList.add('text-red-600');
-                }
-                finalMessageEl.textContent = message;
-                
-                resultsScreen.classList.remove('hidden');
-                resultsScreen.classList.add('fade-in');
-            }
+          // Salva a preferência no localStorage
+          if (document.documentElement.classList.contains("dark")) {
+            localStorage.setItem("theme", "dark");
+            lightIcon.classList.remove("hidden");
+            darkIcon.classList.add("hidden");
+          } else {
+            localStorage.setItem("theme", "light");
+            darkIcon.classList.remove("hidden");
+            lightIcon.classList.add("hidden");
+          }
         });
+
+        // --- Lógica do Quiz ---
+        quizContent.addEventListener("click", (e) => {
+          if (e.target.classList.contains("check-step-btn")) {
+            handleCheckStep(e.target);
+          }
+          if (e.target.classList.contains("next-step-btn")) {
+            goToNextStep();
+          }
+        });
+
+        document.getElementById("retry-btn").addEventListener("click", () => {
+          window.location.reload();
+        });
+
+        function handleCheckStep(checkButton) {
+          const stepElement = checkButton.closest(".quiz-step");
+          const itemsInStep = stepElement.querySelectorAll(".quiz-item");
+
+          itemsInStep.forEach((item) => {
+            const select = item.querySelector("select");
+            if (select) {
+              const userAnswer = select.value;
+              const correctAnswers = select.dataset.answer
+                .toLowerCase()
+                .split(",");
+              const primaryCorrectAnswer = select.dataset.answer.split(",")[0];
+
+              let feedbackHTML = "";
+              if (correctAnswers.includes(userAnswer.toLowerCase())) {
+                score++;
+                feedbackHTML = `<span class="feedback-correct">${userAnswer} ✔️</span>`;
+              } else {
+                const displayAnswer = userAnswer || "...";
+                feedbackHTML = `<span class="feedback-incorrect">${displayAnswer} ❌</span> <span class="correct-answer-text">(${primaryCorrectAnswer})</span>`;
+              }
+              item.innerHTML = feedbackHTML;
+            }
+          });
+
+          const nextButton = stepElement.querySelector(".next-step-btn");
+          checkButton.classList.add("hidden");
+          nextButton.classList.remove("hidden");
+        }
+
+        function goToNextStep() {
+          steps[currentStep].classList.add("hidden");
+          currentStep++;
+          if (currentStep < steps.length - 1) {
+            steps[currentStep].classList.remove("hidden");
+            steps[currentStep].classList.add("fade-in");
+          } else {
+            showFinalResults();
+          }
+        }
+
+        function showFinalResults() {
+          const resultsScreen = document.getElementById("results-screen");
+          const finalScoreEl = document.getElementById("final-score");
+          const finalMessageEl = document.getElementById("final-message");
+
+          if (steps[currentStep]) {
+            steps[currentStep].classList.add("hidden");
+          } else if (steps[currentStep - 1]) {
+            steps[currentStep - 1].classList.add("hidden");
+          }
+
+          finalScoreEl.textContent = `Your final score: ${score} out of ${totalCorrectAnswers}`;
+
+          let message = "";
+          if (score === totalCorrectAnswers) {
+            message = "🎉 Excellent! You got everything right!";
+            finalScoreEl.classList.add("text-green-600");
+          } else if (score > totalCorrectAnswers / 2) {
+            message = "👍 Good job! Keep practicing.";
+            finalScoreEl.classList.add("text-blue-600");
+          } else {
+            message = "🤔 Keep trying! Practice makes perfect.";
+            finalScoreEl.classList.add("text-red-600");
+          }
+          finalMessageEl.textContent = message;
+
+          resultsScreen.classList.remove("hidden");
+          resultsScreen.classList.add("fade-in");
+        }
+      });
     </script>
-</body>
+  </body>
 </html>
