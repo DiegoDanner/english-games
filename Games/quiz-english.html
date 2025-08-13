@@ -13,7 +13,7 @@
         align-items: center;
         min-height: 100vh;
         margin: 0;
-        padding: 20px;
+        padding: 80px 20px 20px;
         box-sizing: border-box;
       }
 
@@ -333,8 +333,71 @@
         color: #1a202c;
       }
     </style>
+    <style>
+      .page-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 0;
+        height: 50px; /* altura fixa do header */
+        padding: 0 1.5rem; /* bem pouco padding vertical */
+        display: flex;
+        align-items: center; /* centraliza verticalmente */
+        align-items: center; /* centraliza verticalmente */
+        gap: 2rem;
+        transition: background-color 0.5s, border-color 0.5s;
+        background-color: #fff;
+        border-bottom: 1px solid #dee2e6;
+        line-height: 1; /* evita espaço extra causado pelo texto */
+        /* Default dark mode styles */
+        background-color: #2d3748;
+        border-bottom: 1px solid #4a5568;
+      }
+      .page-header .logo-placeholder img {
+        font-weight: bold;
+        font-size: 1.25rem;
+        color: #e2e8f0;
+        transition: color 0.3s;
+      }
+      header img {
+        max-height: 100px; /* controla altura no header */
+        height: auto;
+        width: auto;
+      }
+      .page-header .menu-link {
+        font-size: 1rem;
+        text-decoration: none;
+        color: #cbd5e0;
+        font-weight: 500;
+        transition: color 0.3s;
+      }
+      /* Light Mode Styles */
+      body.light-mode .page-header {
+        background-color: #fff;
+        border-bottom-color: #dee2e6;
+      }
+      body.light-mode .page-header .logo-placeholder {
+        color: #212529;
+      }
+      body.light-mode .page-header .menu-link {
+        color: #495057;
+      }
+    </style>
   </head>
   <body>
+    <header class="page-header">
+      <div class="logo-placeholder">
+        <img src="img/LOGO_DANNER.png" alt="Logo" />
+      </div>
+      <a
+        href="https://game-quizzes.netlify.app/"
+        class="menu-link"
+        title="Back to Home"
+        >Menu</a
+      >
+    </header>
+
     <!-- Tela de início -->
 
     <div class="quiz-container">
