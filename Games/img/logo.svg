@@ -1,0 +1,132 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 760 260"
+  role="img"
+  aria-labelledby="title desc"
+>
+  <title id="title">Danner Idiomas logo (vector)</title>
+  <desc id="desc">
+    Speech bubble with a globe icon at left and the words Danner Idiomas at
+    right.
+  </desc>
+
+  <!-- ===== Colors you can tweak ===== -->
+  <defs>
+    <style>
+      :root {
+        --blue-dark: #0f3d91;
+        --blue: rgb(31, 102, 229);
+        --blue-light: #9ec5ff;
+        --text-dark: #1f56c4;
+      }
+      .bubble {
+        fill: var(--blue);
+      }
+      .bubble-edge {
+        fill: var(--blue-dark);
+      }
+      .globe-ring,
+      .globe-lines {
+        stroke: white;
+      }
+      .globe-fill {
+        fill: var(--blue);
+      }
+      .brand {
+        fill: var(--text-dark);
+        font-family: "Inter", "Segoe UI", Arial, sans-serif;
+        font-weight: 800;
+        letter-spacing: 0.5px;
+      }
+      .brand-sub {
+        fill: var(--blue);
+        font-weight: 900;
+        letter-spacing: 1.5px;
+      }
+    </style>
+    <style
+      xmlns="http://www.w3.org/2000/svg"
+      xmlns:bx="https://boxy-svg.com"
+      bx:fonts="Bayon"
+      bx:pinned="true"
+    >
+      @import url(https://fonts.googleapis.com/css2?family=Bayon%3Aital%2Cwght%400%2C400&amp;display=swap);
+    </style>
+  </defs>
+
+  <!-- ===== Left icon: speech bubble + globe ===== -->
+  <g transform="translate(15,15)">
+    <!-- subtle shadow/edge -->
+    <path
+      class="bubble-edge"
+      d="M40 0h138c22 0 40 18 40 40v92c0 22-18 40-40 40H110l-44 27c-4 2-9-1-9-6v-21H40c-22 0-40-18-40-40V40C0 18 18 0 40 0z"
+      opacity="0.18"
+    />
+    <!-- bubble body -->
+    <path
+      class="bubble"
+      d="M40 10h138c17 0 30 13 30 30v90c0 17-13 30-30 30H112l-46 28c-3 2-7-1-7-5v-23H40c-17 0-30-13-30-30V40C10 23 23 10 40 10z"
+    />
+    <!-- globe -->
+    <g transform="translate(44,28)">
+      <circle cx="70" cy="56" r="60" class="globe-fill" />
+      <circle
+        cx="70"
+        cy="56"
+        r="60"
+        class="globe-ring"
+        stroke-width="6"
+        fill="none"
+      />
+      <!-- meridians -->
+      <path
+        transform="scale(1.4)"
+        class="globe-lines"
+        stroke-width="3.5"
+        fill="none"
+        d="M50 -3c-16 9-24 24-24 43s10 34 24 43m0-86c14 9 24 24 24 43s-10 34-24 43"
+      />
+      <!-- parallels -->
+      <path
+        transform="scale(1.4)"
+        class="globe-lines"
+        stroke-width="3.5"
+        fill="none"
+        d="M8 40h86M16 15c22 9 46 9 68 0M18 66c22-9 46-9 68 0"
+      />
+    </g>
+  </g>
+
+  <!-- ===== Right side: brand text ===== -->
+  <g transform="translate(122,69)">
+    <text
+      style="
+        fill: rgb(31, 102, 229);
+        font-family: Arial, sans-serif;
+        font-size: 69px;
+        paint-order: stroke;
+        white-space: pre;
+        pointer-events: none;
+      "
+      transform="matrix(1, 0, 0, 1, -120, -120)"
+    >
+      <tspan
+        style="font-family: Forte; stroke: rgba(0, 36, 218, 0.843)"
+        x="63.353"
+        y="148.148"
+      >
+        Danner
+      </tspan>
+      <tspan x="0em" dy="1em">​</tspan>
+      <tspan
+        style="
+          font-family: 'Bauhaus 93';
+          stroke: rgb(23, 99, 232);
+          mix-blend-mode: darken;
+        "
+      >
+        Idiomas
+      </tspan>
+    </text>
+  </g>
+</svg>
