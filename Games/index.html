@@ -6,8 +6,64 @@
     <title>Danner Idiomas - Quiz Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+        .page-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 0;
+      height: 50px; /* altura fixa do header */
+      padding: 0 1.5rem; /* bem pouco padding vertical */
+      display: flex;
+      align-items: center; /* centraliza verticalmente */
+      align-items: center; /* centraliza verticalmente */
+      gap: 2rem;
+      transition: background-color 0.5s, border-color 0.5s;
+      background-color: #fff;
+      border-bottom: 1px solid #dee2e6;
+      line-height: 1; /* evita espaço extra causado pelo texto */
+      /* Default dark mode styles */
+      background-color: #f7f8fa;
+      border-bottom: 1px solid #4a5568;
+    }
+    .page-header .logo-placeholder img {
+      font-weight: bold;
+      font-size: 1.25rem;
+      color: #72757a;
+      transition: color 0.3s;
+    }
+    header img {
+      max-height: 100px; /* controla altura no header */
+      height: auto;
+      width: auto;
+    }
+    .page-header .menu-link {
+      font-size: 1rem;
+      text-decoration: none;
+      color: #303031;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+    .logo {
+      width: 150px;
+      height: 80px; /* defina a caixa */
+      background: url("img/logo.svg") no-repeat center;
+      background-size: contain; /* mantém proporção */
+    }
+  </style>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <header class="page-header">
+      <div class="logo-placeholder">
+        <div class="logo"></div>
+      </div>
 
+      <a
+        href="https://game-quizzes.netlify.app/"
+        class="menu-link"
+        title="Back to Home"
+        >Menu</a
+      >
+    </header>
     <div class="bg-white p-10 rounded-2xl shadow-lg text-center max-w-md w-full">
         <h1 class="text-3xl font-bold text-gray-800 mb-6">Welcome to Danner Idiomas Quizzes</h1>
 
