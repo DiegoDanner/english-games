@@ -1,427 +1,394 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vocabulary Memory Match with Audio (Dynamic Words)</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocabulary Memory Match with Audio </title>
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-      /* Define a custom font */
-      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap");
-      body {
-        font-family: "Inter", sans-serif;
-        background-color: #f0f4f8; /* Light blue-gray background */
-      }
-      .card-container {
-        perspective: 1000px; /* For 3D flip effect */
-      }
-      .card {
-        width: 100%;
-        height: 100%;
-        transition: transform 0.6s;
-        transform-style: preserve-3d;
-        cursor: pointer;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-          0 2px 4px -2px rgba(0, 0, 0, 0.06);
-        border-radius: 12px;
-      }
-      .card.is-flipped {
-        transform: rotateY(180deg);
-      }
-      .card-face {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        backface-visibility: hidden;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        padding: 10px;
-        transition: background-color 0.3s;
-      }
-      /* Card Back (Hidden content) */
-      .card-back {
-        background-color: #3b82f6; /* Blue for the back */
-        color: white;
-        font-size: 1rem; /* Slightly smaller for more text */
-        font-weight: 700;
-        border: 4px solid #1d4ed8;
-      }
-      /* Card Front (Revealed content) */
-      .card-front {
-        background-color: #ffffff;
-        color: #1f2937; /* Dark gray text */
-        transform: rotateY(180deg);
-        /* Updated to use flex-direction: column for stacked layout */
-        flex-direction: column;
-        font-size: 0.85rem; /* Reduced font size to make room for the icon */
-        font-weight: 600;
-        border: 2px solid #e5e7eb;
-        gap: 4px; /* Space between icon and text */
-      }
-      .card-icon {
-        font-size: 2.2rem; /* Large size for the emoji/icon */
-        line-height: 1; /* Ensures tight packing */
-      }
-      .matched .card-front,
-      .matched .card-back {
-        background-color: #4ade80; /* Green for matched */
-        border-color: #16a34a;
-        color: #16a34a;
-      }
-      .matched .card-back {
-        background-color: #16a34a;
-        color: white;
-      }
-
-      /* Responsive grid adjustments */
-      #game-board {
-        /* 4 columns for 24 cards (4x6 layout) */
-        grid-template-columns: repeat(4, 1fr);
-        gap: 12px;
-        width: 100%;
-        max-width: 600px; /* Max width for desktop */
-        margin: 0 auto;
-      }
-      @media (max-width: 640px) {
-        /* Adjust for mobile to maintain card size */
-        #game-board {
-          grid-template-columns: repeat(4, 1fr);
-          gap: 8px;
-          padding: 0 8px;
+        /* Define a custom font */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8; /* Light blue-gray background */
+            /* OTIMIZAÇÃO: Usar flexbox para gerenciar o espaço vertical e horizontal */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh; 
+            padding: 1rem;
         }
-      }
-      .cell {
-        aspect-ratio: 1 / 1; /* Ensures square cards */
-      }
+        .card-container {
+            perspective: 1000px; /* For 3D flip effect */
+        }
+        .card {
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            cursor: pointer;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+            border-radius: 12px;
+        }
+        .card.is-flipped {
+            transform: rotateY(180deg);
+        }
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 10px;
+            transition: background-color 0.3s;
+        }
+        /* Card Back (Hidden content) */
+        .card-back {
+            background-color: #3b82f6; /* Blue for the back */
+            color: white;
+            font-size: 1rem; /* Slightly smaller for more text */
+            font-weight: 700;
+            border: 4px solid #1d4ed8;
+        }
+        /* Card Front (Revealed content) */
+        .card-front {
+            background-color: #ffffff;
+            color: #1f2937; /* Dark gray text */
+            transform: rotateY(180deg);
+            flex-direction: column; 
+            /* OTIMIZAÇÃO: Fonte menor para caber 6 linhas */
+            font-size: 0.75rem; 
+            font-weight: 600;
+            border: 2px solid #e5e7eb;
+            gap: 2px; /* Smaller space between icon and text */
+        }
+        .card-icon {
+            /* OTIMIZAÇÃO: Ícone menor para caber 6 linhas */
+            font-size: 1.6rem; 
+            line-height: 1; /* Ensures tight packing */
+        }
+        .matched .card-front, .matched .card-back {
+            background-color: #4ade80; /* Green for matched */
+            border-color: #16a34a;
+            color: #16a34a;
+        }
+        .matched .card-back {
+            background-color: #16a34a;
+            color: white;
+        }
+
+        /* Responsive grid adjustments: 5 columns for 30 cards (5x6 layout) */
+        #game-board {
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            width: 100%;
+            /* OTIMIZAÇÃO: Permitir que o tabuleiro cresça mais para caber na altura */
+            max-width: 800px; 
+            margin: 0 auto;
+            flex-grow: 1; /* Permite que o tabuleiro ocupe o espaço restante */
+        }
+        @media (max-width: 640px) {
+             /* Adjust for mobile: keep 4 columns to maintain card size */
+            #game-board {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 8px;
+                padding: 0 8px;
+            }
+        }
+        .cell {
+            aspect-ratio: 1 / 1; /* Ensures square cards */
+        }
+        /* OTIMIZAÇÃO: Estilo para o contêiner principal para usar o espaço disponível */
+        #main-game-container {
+             width: 100%;
+             height: 100%;
+             display: flex;
+             flex-direction: column;
+             max-width: 800px; /* Limite máximo para telas muito largas */
+        }
     </style>
-  </head>
-  <body class="p-4 flex flex-col items-center min-h-screen">
-    <div class="max-w-xl w-full">
-      <h1 class="text-3xl font-extrabold text-center text-gray-800 mb-2">
-        Dynamic Food Vocabulary Match (24 Cards)
-      </h1>
-      <p class="text-center text-gray-500 mb-6">
-        A new set of 12 words is chosen every time you restart. Click a card to
-        hear the word!
-      </p>
+</head>
+<body class="p-4 flex flex-col items-center min-h-screen">
 
-      <!-- Stats and Controls -->
-      <div
-        class="flex justify-between items-center bg-white p-4 rounded-xl shadow-lg mb-6"
-      >
-        <p class="text-lg font-medium text-gray-700">
-          Tries: <span id="tries" class="text-blue-600 font-bold">0</span>
-        </p>
-        <p class="text-lg font-medium text-gray-700">
-          Matches:
-          <span id="matches" class="text-green-600 font-bold">0 / 12</span>
-        </p>
-        <button
-          id="reset-button"
-          class="px-4 py-2 bg-pink-500 text-white font-bold rounded-lg shadow-md hover:bg-pink-600 transition duration-150 transform hover:scale-105"
-        >
-          Restart
-        </button>
-      </div>
+    <!-- Adicionando um ID para melhor controle do layout -->
+    <div id="main-game-container" class="w-full">
+        <h1 class="text-3xl font-extrabold text-center text-gray-800 mb-2"> Food Vocabulary Match </h1>
+        <p class="text-center text-gray-500 mb-6">15 words are randomly chosen from a total of 30 each round. Click to listen!</p>
 
-      <!-- Game Board -->
-      <div id="game-board" class="grid auto-rows-auto">
-        <!-- Cards will be generated here by JavaScript -->
-      </div>
+        <!-- Stats and Controls -->
+        <div class="flex justify-between items-center bg-white p-4 rounded-xl shadow-lg mb-4">
+            <p class="text-lg font-medium text-gray-700">Tries: <span id="tries" class="text-blue-600 font-bold">0</span></p>
+            <p class="text-lg font-medium text-gray-700">Matches: <span id="matches" class="text-green-600 font-bold">0 / 15</span></p>
+            <button id="reset-button" class="px-4 py-2 bg-pink-500 text-white font-bold rounded-lg shadow-md hover:bg-pink-600 transition duration-150 transform hover:scale-105">
+                Restart
+            </button>
+        </div>
+
+        <!-- Game Board - Ocupa o espaço restante -->
+        <div id="game-board" class="grid auto-rows-auto flex-grow">
+            <!-- Cards will be generated here by JavaScript -->
+        </div>
     </div>
 
     <!-- Win Modal (Custom alert) -->
-    <div
-      id="win-modal"
-      class="fixed inset-0 bg-gray-900 bg-opacity-75 z-50 hidden flex items-center justify-center p-4"
-    >
-      <div
-        class="bg-white p-8 rounded-xl shadow-2xl text-center max-w-sm w-full transform transition-all duration-300 scale-95 opacity-0"
-        id="modal-content"
-      >
-        <div class="text-6xl mb-4" role="img" aria-label="Tada">🎉</div>
-        <h2 class="text-3xl font-bold text-green-600 mb-2">Congratulations!</h2>
-        <p id="win-message" class="text-gray-700 mb-6 text-lg">
-          You found all the matches in 0 tries!
-        </p>
-        <button
-          id="close-modal"
-          class="w-full py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition"
-        >
-          Play Again
-        </button>
-      </div>
+    <div id="win-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white p-8 rounded-xl shadow-2xl text-center max-w-sm w-full transform transition-all duration-300 scale-95 opacity-0" id="modal-content">
+            <div class="text-6xl mb-4" role="img" aria-label="Tada">🎉</div>
+            <h2 class="text-3xl font-bold text-green-600 mb-2">Congratulations!</h2>
+            <p id="win-message" class="text-gray-700 mb-6 text-lg">You found all the matches in 0 tries!</p>
+            <button id="close-modal" class="w-full py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition">
+                Play Again
+            </button>
+        </div>
     </div>
 
     <script>
-      // --- Game Setup ---
-      const gameBoard = document.getElementById("game-board");
-      const triesDisplay = document.getElementById("tries");
-      const matchesDisplay = document.getElementById("matches");
-      const resetButton = document.getElementById("reset-button");
-      const winModal = document.getElementById("win-modal");
-      const modalContent = document.getElementById("modal-content");
-      const winMessage = document.getElementById("win-message");
-      const closeModalButton = document.getElementById("close-modal");
+        // --- Game Setup ---
+        const gameBoard = document.getElementById('game-board');
+        const triesDisplay = document.getElementById('tries');
+        const matchesDisplay = document.getElementById('matches');
+        const resetButton = document.getElementById('reset-button');
+        const winModal = document.getElementById('win-modal');
+        const modalContent = document.getElementById('modal-content');
+        const winMessage = document.getElementById('win-message');
+        const closeModalButton = document.getElementById('close-modal');
 
-      // Master list of 20 words extracted DIRECTLY from the food pyramid image:
-      const masterWordList = [
-        "Apples",
-        "Blueberries",
-        "Tomatoes",
-        "Lettuce",
-        "Carrots",
-        "Onions",
-        "Broccoli",
-        "Potatoes",
-        "Bananas",
-        "Kiwis",
-        "Lemons",
-        "Oranges",
-        "Milk",
-        "Cheese",
-        "Yogurt",
-        "Cream",
-        "Oil",
-        "Butter",
-        "Mayonnaise",
-        "Nuts",
-      ];
-
-      // Map to link words (lowercase) to their corresponding emojis
-      const wordToIconMap = {
-        apples: "🍎",
-        blueberries: "🫐",
-        tomatoes: "🍅",
-        lettuce: "🥬",
-        carrots: "🥕",
-        onions: "🧅",
-        broccoli: "🥦",
-        potatoes: "🥔",
-        bananas: "🍌",
-        kiwis: "🥝",
-        lemons: "🍋",
-        oranges: "🍊",
-        milk: "🥛",
-        cheese: "🧀",
-        yogurt: "🍦",
-        cream: "🍶",
-        oil: "🫒",
-        butter: "🧈",
-        mayonnaise: "🥚",
-        nuts: "🥜",
-      };
-
-      // Game State Variables
-      let gameCards = [];
-      let firstCard = null;
-      let secondCard = null;
-      let lockBoard = false;
-      let tries = 0;
-      let matchesFound = 0;
-      const targetWordCount = 12; // 12 unique words for 24 cards
-      const totalMatches = targetWordCount;
-
-      // --- TTS Helper Functions for PCM to WAV Conversion ---
-
-      function writeString(view, offset, string) {
-        for (let i = 0; i < string.length; i++) {
-          view.setUint8(offset + i, string.charCodeAt(i));
-        }
-      }
-
-      function base64ToArrayBuffer(base64) {
-        const binaryString = atob(base64);
-        const len = binaryString.length;
-        const bytes = new Uint8Array(len);
-        for (let i = 0; i < len; i++) {
-          bytes[i] = binaryString.charCodeAt(i);
-        }
-        return bytes.buffer;
-      }
-
-      function pcmToWav(pcmData, sampleRate) {
-        const numChannels = 1;
-        const bytesPerSample = 2; // 16-bit PCM
-        const buffer = new ArrayBuffer(44 + pcmData.length * bytesPerSample);
-        const view = new DataView(buffer);
-
-        /* RIFF identifier */
-        writeString(view, 0, "RIFF");
-        /* file length */
-        view.setUint32(4, 36 + pcmData.length * bytesPerSample, true);
-        /* RIFF type */
-        writeString(view, 8, "WAVE");
-        /* format chunk identifier */
-        writeString(view, 12, "fmt ");
-        /* format chunk length */
-        view.setUint32(16, 16, true);
-        /* sample format (raw) */
-        view.setUint16(20, 1, true);
-        /* channel count */
-        view.setUint16(22, numChannels, true);
-        /* sample rate */
-        view.setUint32(24, sampleRate, true);
-        /* byte rate (sample rate * block align) */
-        view.setUint32(28, sampleRate * numChannels * bytesPerSample, true);
-        /* block align (channels * bytes per sample) */
-        view.setUint16(32, numChannels * bytesPerSample, true);
-        /* bits per sample */
-        view.setUint16(34, 8 * bytesPerSample, true);
-        /* data chunk identifier */
-        writeString(view, 36, "data");
-        /* data chunk length */
-        view.setUint32(40, pcmData.length * bytesPerSample, true);
-
-        // Write PCM data
-        let offset = 44;
-        for (let i = 0; i < pcmData.length; i++) {
-          view.setInt16(offset, pcmData[i], true);
-          offset += 2;
-        }
-
-        return new Blob([view], { type: "audio/wav" });
-      }
-
-      // --- TTS API Function ---
-      async function speakWord(word) {
-        const maxRetries = 3;
-        // ATENÇÃO: Se estiver rodando no VSCode ou localmente, você DEVE obter
-        // uma chave de API válida do Google AI Studio e inseri-la aqui.
-        // Exemplo: const apiKey = "SUA_CHAVE_DE_API";
-        const apiKey = "SUA_CHAVE_DE_API_AQUI"; // SUBSTITUA PELA SUA CHAVE DE API
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`;
-        const displayWord = word.charAt(0).toUpperCase() + word.slice(1); // Capitalize for better pronunciation
-
-        const payload = {
-          contents: [
-            {
-              parts: [{ text: displayWord }],
-            },
-          ],
-          generationConfig: {
-            responseModalities: ["AUDIO"],
-            speechConfig: {
-              voiceConfig: {
-                prebuiltVoiceConfig: { voiceName: "Kore" }, // Using Kore for clear pronunciation
-              },
-            },
-          },
-          model: "gemini-2.5-flash-preview-tts",
+        // Master list of 30 words extracted DIRECTLY from the food pyramid image:
+        const masterWordList = [
+            "Apples", "Blueberries", "Tomatoes", "Lettuce",
+            "Carrots", "Onions", "Broccoli", "Potatoes", 
+            "Bananas", "Kiwis", "Lemons", "Oranges",
+            "Oil", "Butter", "Mayonnaise", // Fats and Oils
+            "Milk", "Cheese", "Yogurt", // Dairy (excluding Cream for even total)
+            "Nuts", "Chicken", "Eggs", "Fish", "Beans", "Beef", // Proteins
+            "Rice", "Noodles", "Bread", "Cereal", "Crackers", "Pasta" // Grains
+        ];
+        
+        // Map to link words (lowercase) to their corresponding emojis
+        const wordToIconMap = {
+            // Fruits & Vegetables
+            "apples": "🍎", "blueberries": "🫐", "tomatoes": "🍅", "lettuce": "🥬",
+            "carrots": "🥕", "onions": "🧅", "broccoli": "🥦", "potatoes": "🥔",
+            "bananas": "🍌", "kiwis": "🥝", "lemons": "🍋", "oranges": "🍊",
+            // Fats & Oils
+            "oil": "🫒", "butter": "🧈", "mayonnaise": "🥫", 
+            // Dairy
+            "milk": "🥛", "cheese": "🧀", "yogurt": "🍦", 
+            // Meat and other Proteins
+            "nuts": "🥜", "chicken": "🍗", "eggs": "🥚", "fish": "🐟", 
+            "beans": "🫘", "beef": "🥩", 
+            // Grains
+            "rice": "🍚", "noodles": "🍜", "bread": "🥖", "cereal": "🥣", 
+            "crackers": "🍪", "pasta": "🍝"
         };
 
-        for (let attempt = 0; attempt < maxRetries; attempt++) {
-          try {
-            const response = await fetch(apiUrl, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(payload),
-            });
+        // Game State Variables
+        let gameCards = [];
+        let firstCard = null;
+        let secondCard = null;
+        let lockBoard = false;
+        let tries = 0;
+        let matchesFound = 0;
+        const targetWordCount = 15; // 15 unique words for 30 cards
+        const totalMatches = targetWordCount; 
 
-            if (!response.ok) {
-              throw new Error(`HTTP error! status: ${response.status}`);
+        // --- TTS Helper Functions for PCM to WAV Conversion (No change, retained for functionality) ---
+
+        function writeString(view, offset, string) {
+            for (let i = 0; i < string.length; i++) {
+                view.setUint8(offset + i, string.charCodeAt(i));
             }
-
-            const result = await response.json();
-            const part = result?.candidates?.[0]?.content?.parts?.[0];
-            const audioData = part?.inlineData?.data;
-            const mimeType = part?.inlineData?.mimeType;
-
-            if (audioData && mimeType && mimeType.startsWith("audio/")) {
-              const rateMatch = mimeType.match(/rate=(\d+)/);
-              if (!rateMatch) {
-                throw new Error(
-                  "Could not determine sample rate from mimeType."
-                );
-              }
-              const sampleRate = parseInt(rateMatch[1], 10);
-              const pcmDataBuffer = base64ToArrayBuffer(audioData);
-
-              // API returns signed PCM16 audio data.
-              const pcm16 = new Int16Array(pcmDataBuffer);
-              const wavBlob = pcmToWav(pcm16, sampleRate);
-              const audioUrl = URL.createObjectURL(wavBlob);
-
-              // Play the audio
-              const audio = new Audio(audioUrl);
-              audio
-                .play()
-                .catch((e) => console.error("Audio playback error:", e));
-
-              return; // Success, exit function
-            } else {
-              console.error("TTS failed to return audio data.", result);
-              throw new Error("Invalid TTS response structure.");
-            }
-          } catch (error) {
-            // console.warn(`TTS API call failed on attempt ${attempt + 1}:`, error.message); // Silent retry logging
-            if (attempt < maxRetries - 1) {
-              // Exponential backoff: 1s, 2s, 4s
-              const delay = Math.pow(2, attempt) * 1000;
-              await new Promise((resolve) => setTimeout(resolve, delay));
-            }
-          }
         }
-        console.error("Failed to generate TTS audio after all retries.");
-      }
 
-      // --- Game Logic Functions ---
-
-      /**
-       * Shuffles an array in place using the Fisher-Yates algorithm.
-       * @param {Array} array - The array to shuffle.
-       */
-      function shuffle(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [array[i], array[j]] = [array[j], array[i]];
+        function base64ToArrayBuffer(base64) {
+            const binaryString = atob(base64);
+            const len = binaryString.length;
+            const bytes = new Uint8Array(len);
+            for (let i = 0; i < len; i++) {
+                bytes[i] = binaryString.charCodeAt(i);
+            }
+            return bytes.buffer;
         }
-      }
 
-      /**
-       * Selects a random subset of words from the master list.
-       * @returns {Array<string>} A new list of words for the current game.
-       */
-      function selectRandomWords() {
-        // 1. Create a shuffled copy of the master list
-        const shuffledList = [...masterWordList];
-        shuffle(shuffledList);
+        function pcmToWav(pcmData, sampleRate) {
+            const numChannels = 1;
+            const bytesPerSample = 2; // 16-bit PCM
+            const buffer = new ArrayBuffer(44 + pcmData.length * bytesPerSample);
+            const view = new DataView(buffer);
 
-        // 2. Select the first N words (12 words for 24 cards)
-        return shuffledList.slice(0, targetWordCount);
-      }
+            /* RIFF identifier */
+            writeString(view, 0, 'RIFF');
+            /* file length */
+            view.setUint32(4, 36 + pcmData.length * bytesPerSample, true);
+            /* RIFF type */
+            writeString(view, 8, 'WAVE');
+            /* format chunk identifier */
+            writeString(view, 12, 'fmt ');
+            /* format chunk length */
+            view.setUint32(16, 16, true);
+            /* sample format (raw) */
+            view.setUint16(20, 1, true);
+            /* channel count */
+            view.setUint16(22, numChannels, true);
+            /* sample rate */
+            view.setUint32(24, sampleRate, true);
+            /* byte rate (sample rate * block align) */
+            view.setUint32(28, sampleRate * numChannels * bytesPerSample, true);
+            /* block align (channels * bytes per sample) */
+            view.setUint16(32, numChannels * bytesPerSample, true);
+            /* bits per sample */
+            view.setUint16(34, 8 * bytesPerSample, true);
+            /* data chunk identifier */
+            writeString(view, 36, 'data');
+            /* data chunk length */
+            view.setUint32(40, pcmData.length * bytesPerSample, true);
 
-      /**
-       * Initializes the game board by duplicating, shuffling, and rendering the cards.
-       */
-      function initializeGame() {
-        // 1. SELECT NEW WORDS FOR THIS ROUND
-        const currentWordList = selectRandomWords();
+            // Write PCM data
+            let offset = 44;
+            for (let i = 0; i < pcmData.length; i++) {
+                view.setInt16(offset, pcmData[i], true);
+                offset += 2;
+            }
 
-        // 2. Reset state
-        tries = 0;
-        matchesFound = 0;
-        firstCard = null;
-        secondCard = null;
-        lockBoard = false;
-        gameBoard.innerHTML = "";
+            return new Blob([view], { type: 'audio/wav' });
+        }
 
-        // 3. Create the double-word array and assign IDs
-        const pairedWords = [...currentWordList, ...currentWordList];
-        shuffle(pairedWords);
 
-        // 4. Render cards
-        gameCards = pairedWords.map((word, index) => {
-          const icon = wordToIconMap[word.toLowerCase()]; // Get the corresponding emoji
+        // --- TTS API Function (No change, retained for functionality) ---
+        async function speakWord(word) {
+            const maxRetries = 3;
+            // ATENÇÃO: Se estiver rodando no VSCode ou localmente, você DEVE obter
+            // uma chave de API válida do Google AI Studio e inseri-la aqui.
+            // Exemplo: const apiKey = "SUA_CHAVE_DE_API";
+            const apiKey = "AIzaSyDItJ_PyXgrfXap0c_gQBQNCe8kvDB8_EY"; // Deixado vazio para funcionar no ambiente Canvas
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`;
+            const displayWord = word.charAt(0).toUpperCase() + word.slice(1); // Capitalize for better pronunciation
 
-          const cell = document.createElement("div");
-          cell.className = "cell";
-          // Using toLowerCase() for data-word to ensure case-insensitive matching logic
-          cell.innerHTML = `
+            const payload = {
+                contents: [{
+                    parts: [{ text: displayWord }]
+                }],
+                generationConfig: {
+                    responseModalities: ["AUDIO"],
+                    speechConfig: {
+                        voiceConfig: {
+                            prebuiltVoiceConfig: { voiceName: "Kore" } // Using Kore for clear pronunciation
+                        }
+                    }
+                },
+                model: "gemini-2.5-flash-preview-tts"
+            };
+
+            for (let attempt = 0; attempt < maxRetries; attempt++) {
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const result = await response.json();
+                    const part = result?.candidates?.[0]?.content?.parts?.[0];
+                    const audioData = part?.inlineData?.data;
+                    const mimeType = part?.inlineData?.mimeType;
+
+                    if (audioData && mimeType && mimeType.startsWith("audio/")) {
+                        const rateMatch = mimeType.match(/rate=(\d+)/);
+                        if (!rateMatch) {
+                            throw new Error("Could not determine sample rate from mimeType.");
+                        }
+                        const sampleRate = parseInt(rateMatch[1], 10);
+                        const pcmDataBuffer = base64ToArrayBuffer(audioData);
+                        
+                        // API returns signed PCM16 audio data.
+                        const pcm16 = new Int16Array(pcmDataBuffer);
+                        const wavBlob = pcmToWav(pcm16, sampleRate);
+                        const audioUrl = URL.createObjectURL(wavBlob);
+                        
+                        // Play the audio
+                        const audio = new Audio(audioUrl);
+                        audio.play().catch(e => console.error("Audio playback error:", e));
+
+                        return; // Success, exit function
+                    } else {
+                         console.error("TTS failed to return audio data.", result);
+                         throw new Error("Invalid TTS response structure.");
+                    }
+                } catch (error) {
+                    // console.warn(`TTS API call failed on attempt ${attempt + 1}:`, error.message); // Silent retry logging
+                    if (attempt < maxRetries - 1) {
+                        // Exponential backoff: 1s, 2s, 4s
+                        const delay = Math.pow(2, attempt) * 1000;
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                    }
+                }
+            }
+            console.error("Failed to generate TTS audio after all retries.");
+        }
+
+
+        // --- Game Logic Functions ---
+
+        /**
+         * Shuffles an array in place using the Fisher-Yates algorithm.
+         * @param {Array} array - The array to shuffle.
+         */
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+        
+        /**
+         * Selects a random subset of words from the master list.
+         * @returns {Array<string>} A new list of words for the current game.
+         */
+        function selectRandomWords() {
+            // 1. Create a shuffled copy of the master list
+            const shuffledList = [...masterWordList];
+            shuffle(shuffledList);
+            
+            // 2. Select the first N words (15 words for 30 cards)
+            return shuffledList.slice(0, targetWordCount);
+        }
+
+        /**
+         * Initializes the game board by duplicating, shuffling, and rendering the cards.
+         */
+        function initializeGame() {
+            // 1. SELECT NEW WORDS FOR THIS ROUND
+            const currentWordList = selectRandomWords();
+
+            // 2. Reset state
+            tries = 0;
+            matchesFound = 0;
+            firstCard = null;
+            secondCard = null;
+            lockBoard = false;
+            gameBoard.innerHTML = '';
+
+            // 3. Create the double-word array and assign IDs
+            const pairedWords = [...currentWordList, ...currentWordList];
+            shuffle(pairedWords);
+
+            // 4. Render cards
+            gameCards = pairedWords.map((word, index) => {
+                const icon = wordToIconMap[word.toLowerCase()]; // Get the corresponding emoji
+                
+                const cell = document.createElement('div');
+                cell.className = 'cell';
+                // Using toLowerCase() for data-word to ensure case-insensitive matching logic
+                cell.innerHTML = `
                     <div class="card-container h-full w-full">
                         <div class="card h-full w-full" data-word="${word.toLowerCase()}" data-index="${index}">
                             <div class="card-face card-front">
@@ -432,146 +399,141 @@
                         </div>
                     </div>
                 `;
-          gameBoard.appendChild(cell);
-          return cell.querySelector(".card");
-        });
+                gameBoard.appendChild(cell);
+                return cell.querySelector('.card');
+            });
 
-        // 5. Attach event listeners
-        gameCards.forEach((card) =>
-          card.addEventListener("click", handleCardClick)
-        );
-
-        // 6. Update UI
-        updateStats();
-      }
-
-      /**
-       * Updates the tries and matches display on the screen.
-       */
-      function updateStats() {
-        triesDisplay.textContent = tries;
-        matchesDisplay.textContent = `${matchesFound} / ${totalMatches}`;
-      }
-
-      /**
-       * Handles the click event on a card.
-       * @param {Event} e - The click event.
-       */
-      function handleCardClick(e) {
-        const clickedCard = e.currentTarget;
-        const wordToSpeak = clickedCard.dataset.word;
-
-        // Ignore clicks if the board is locked, card is already flipped, or card is already matched
-        if (
-          lockBoard ||
-          clickedCard === firstCard ||
-          clickedCard.classList.contains("is-flipped")
-        ) {
-          return;
+            // 5. Attach event listeners
+            gameCards.forEach(card => card.addEventListener('click', handleCardClick));
+            
+            // 6. Update UI
+            updateStats();
         }
 
-        // Flip the card
-        clickedCard.classList.add("is-flipped");
-
-        // Speak the word using the TTS API
-        speakWord(wordToSpeak);
-
-        if (!firstCard) {
-          // First card flipped
-          firstCard = clickedCard;
-        } else {
-          // Second card flipped
-          secondCard = clickedCard;
-          lockBoard = true; // Lock the board until check is done
-          tries++;
-          updateStats();
-
-          checkForMatch();
-        }
-      }
-
-      /**
-       * Checks if the two flipped cards have the same word.
-       */
-      function checkForMatch() {
-        const isMatch = firstCard.dataset.word === secondCard.dataset.word;
-
-        if (isMatch) {
-          disableCards();
-        } else {
-          unflipCards();
-        }
-      }
-
-      /**
-       * If the cards match, they are permanently set as matched and removed from clickability.
-       */
-      function disableCards() {
-        // Apply matched styling and remove event listeners
-        firstCard.classList.add("matched");
-        secondCard.classList.add("matched");
-
-        firstCard.removeEventListener("click", handleCardClick);
-        secondCard.removeEventListener("click", handleCardClick);
-
-        matchesFound++;
-        updateStats();
-
-        // Check for game win
-        if (matchesFound === totalMatches) {
-          showWinModal();
+        /**
+         * Updates the tries and matches display on the screen.
+         */
+        function updateStats() {
+            triesDisplay.textContent = tries;
+            matchesDisplay.textContent = `${matchesFound} / ${totalMatches}`;
         }
 
-        resetBoard();
-      }
+        /**
+         * Handles the click event on a card.
+         * @param {Event} e - The click event.
+         */
+        function handleCardClick(e) {
+            const clickedCard = e.currentTarget;
+            const wordToSpeak = clickedCard.dataset.word;
 
-      /**
-       * If the cards don't match, they are flipped back after a short delay.
-       */
-      function unflipCards() {
-        setTimeout(() => {
-          firstCard.classList.remove("is-flipped");
-          secondCard.classList.remove("is-flipped");
-          resetBoard();
-        }, 1000); // Wait 1 second before flipping back
-      }
+            // Ignore clicks if the board is locked, card is already flipped, or card is already matched
+            if (lockBoard || clickedCard === firstCard || clickedCard.classList.contains('is-flipped')) {
+                return;
+            }
 
-      /**
-       * Resets the flipped card state and unlocks the board.
-       */
-      function resetBoard() {
-        [firstCard, secondCard, lockBoard] = [null, null, false];
-      }
+            // Flip the card
+            clickedCard.classList.add('is-flipped');
+            
+            // Speak the word using the TTS API
+            speakWord(wordToSpeak);
 
-      /**
-       * Shows the custom win modal.
-       */
-      function showWinModal() {
-        winMessage.textContent = `You found all the matches in ${tries} tries!`;
-        winModal.classList.remove("hidden");
-        // Animate in
-        setTimeout(() => {
-          modalContent.classList.remove("scale-95", "opacity-0");
-        }, 50);
-      }
+            if (!firstCard) {
+                // First card flipped
+                firstCard = clickedCard;
+            } else {
+                // Second card flipped
+                secondCard = clickedCard;
+                lockBoard = true; // Lock the board until check is done
+                tries++;
+                updateStats();
+                
+                checkForMatch();
+            }
+        }
 
-      /**
-       * Hides the custom win modal and restarts the game.
-       */
-      function hideWinModal() {
-        modalContent.classList.add("scale-95", "opacity-0");
-        setTimeout(() => {
-          winModal.classList.add("hidden");
-        }, 300); // Wait for animation to finish
-        initializeGame();
-      }
+        /**
+         * Checks if the two flipped cards have the same word.
+         */
+        function checkForMatch() {
+            const isMatch = firstCard.dataset.word === secondCard.dataset.word;
 
-      // --- Event Listeners ---
-      resetButton.addEventListener("click", initializeGame);
-      closeModalButton.addEventListener("click", hideWinModal);
+            if (isMatch) {
+                disableCards();
+            } else {
+                unflipCards();
+            }
+        }
 
-      // --- Start Game on Load ---
-      window.onload = initializeGame;
+        /**
+         * If the cards match, they are permanently set as matched and removed from clickability.
+         */
+        function disableCards() {
+            // Apply matched styling and remove event listeners
+            firstCard.classList.add('matched');
+            secondCard.classList.add('matched');
+
+            firstCard.removeEventListener('click', handleCardClick);
+            secondCard.removeEventListener('click', handleCardClick);
+
+            matchesFound++;
+            updateStats();
+
+            // Check for game win
+            if (matchesFound === totalMatches) {
+                showWinModal();
+            }
+
+            resetBoard();
+        }
+
+        /**
+         * If the cards don't match, they are flipped back after a short delay.
+         */
+        function unflipCards() {
+            setTimeout(() => {
+                firstCard.classList.remove('is-flipped');
+                secondCard.classList.remove('is-flipped');
+                resetBoard();
+            }, 1000); // Wait 1 second before flipping back
+        }
+
+        /**
+         * Resets the flipped card state and unlocks the board.
+         */
+        function resetBoard() {
+            [firstCard, secondCard, lockBoard] = [null, null, false];
+        }
+
+        /**
+         * Shows the custom win modal.
+         */
+        function showWinModal() {
+            winMessage.textContent = `You found all the matches in ${tries} tries!`;
+            winModal.classList.remove('hidden');
+            // Animate in
+            setTimeout(() => {
+                modalContent.classList.remove('scale-95', 'opacity-0');
+            }, 50);
+        }
+
+        /**
+         * Hides the custom win modal and restarts the game.
+         */
+        function hideWinModal() {
+            modalContent.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                winModal.classList.add('hidden');
+            }, 300); // Wait for animation to finish
+            initializeGame();
+        }
+
+        // --- Event Listeners ---
+        resetButton.addEventListener('click', initializeGame);
+        closeModalButton.addEventListener('click', hideWinModal);
+
+        // --- Start Game on Load ---
+        window.onload = initializeGame;
+
     </script>
-  </body>
+</body>
 </html>
