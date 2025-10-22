@@ -12,46 +12,7 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <style>
-      .page-header {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        z-index: 0;
-        height: 50px;
-        padding: 0 1.5rem;
-        display: flex;
-        align-items: center;
-        gap: 2rem;
-        transition: background-color 0.5s, border-color 0.5s;
-        line-height: 1;
-        /* Light mode by default */
-        background-color: #fff;
-        border-bottom: 1px solid #dee2e6;
-      }
-      .page-header .logo-placeholder img {
-          max-height: 100px;
-          height: auto;
-          width: auto;
-      }
-      .page-header .menu-link {
-          font-size: 1rem;
-          text-decoration: none;
-          font-weight: 500;
-          transition: color 0.3s;
-          color: #333;
-      }
-
-      /* Dark Mode Styles */
-      html.dark .page-header {
-        background-color: #2d3748;
-        border-bottom-color: #4a5568;
-      }
-      html.dark .page-header .menu-link {
-        color: #cbd5e0;
-      }
-    </style>
+    <link rel="stylesheet" href="css/style.css" />
     <style>
       body {
         font-family: "Inter", sans-serif;
@@ -235,6 +196,7 @@
             <img src="img/LOGO_DANNER.png" alt="Logo">
         </div>
         <a href="https://game-quizzes.netlify.app/" class="menu-link" title="Back to Home">Menu</a>
+        <button id="theme-toggle-btn">🌞</button>
     </header>
     <main class="main-content">
         <div
@@ -543,6 +505,7 @@
       </div>
     </div>
 
+    <script src="js/main.js"></script>
     <script>
       // Dicionário de traduções para palavras-chave e pronomes
       const translations = {
