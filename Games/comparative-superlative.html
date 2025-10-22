@@ -8,46 +8,7 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
       rel="stylesheet"
     />
-    <style>
-      .page-header {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        z-index: 10;
-        height: 50px;
-        padding: 0 1.5rem;
-        display: flex;
-        align-items: center;
-        gap: 2rem;
-        transition: background-color 0.5s, border-color 0.5s;
-        line-height: 1;
-        /* Light mode by default */
-        background-color: #fff;
-        border-bottom: 1px solid #dee2e6;
-      }
-      .page-header .logo-placeholder img {
-        max-height: 100px;
-        height: auto;
-        width: auto;
-      }
-      .page-header .menu-link {
-        font-size: 1rem;
-        text-decoration: none;
-        font-weight: 500;
-        transition: color 0.3s;
-        color: #333;
-      }
-
-      /* Dark Mode Styles */
-      body:not(.light-mode) .page-header {
-        background-color: #2d3748;
-        border-bottom-color: #4a5568;
-      }
-      body:not(.light-mode) .page-header .menu-link {
-        color: #cbd5e0;
-      }
-    </style>
+    <link rel="stylesheet" href="css/style.css" />
     <style>
       body {
         font-family: "Inter", sans-serif;
@@ -197,20 +158,6 @@
         display: none;
       }
 
-      #theme-toggle-btn {
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        background-color: #4a5568;
-        color: rgb(214, 205, 205);
-        border: none;
-        padding: 10px 15px;
-        border-radius: 50%;
-        font-size: 1.5rem;
-        cursor: pointer;
-        z-index: 10;
-      }
-
       body.light-mode {
         background-color: #fff;
       }
@@ -257,10 +204,6 @@
         color: #4a5568;
       }
 
-      body.light-mode #theme-toggle-btn {
-        background-color: #899aad;
-        color: #1a202c;
-      }
     </style>
   </head>
   <body>
@@ -274,9 +217,9 @@
         title="Back to Home"
         >Menu</a
       >
+      <button id="theme-toggle-btn">🌞</button>
     </header>
     <div class="quiz-container">
-      <button id="theme-toggle-btn">🌞</button>
       <div id="start-screen">
         <img
           src="img/LOGO_DANNER.png"
@@ -319,6 +262,7 @@
         <button id="restart-btn">Play Again</button>
       </div>
     </div>
+    <script src="js/main.js"></script>
     <script>
       const startScreen = document.getElementById("start-screen");
       const quizScreen = document.getElementById("quiz-screen");
@@ -336,21 +280,7 @@
       const scoreMessage = document.getElementById("score-message");
       const themeToggleBtn = document.getElementById("theme-toggle-btn");
       const body = document.body;
-      themeToggleBtn.addEventListener("click", () => {
-        body.classList.toggle("light-mode");
-        const isLight = body.classList.contains("light-mode");
-        localStorage.setItem("theme", isLight ? "light" : "dark");
-        themeToggleBtn.textContent = isLight ? "🌙" : "🌞";
-      });
-      document.addEventListener("DOMContentLoaded", () => {
-        const savedTheme = localStorage.getItem("theme") || "dark";
-        if (savedTheme === "light") {
-          body.classList.add("light-mode");
-          themeToggleBtn.textContent = "🌙";
-        } else {
-          themeToggleBtn.textContent = "🌞";
-        }
-      });
+
       const questions = [
         {
           question: "What is the comparative form of the adjective 'big'?",

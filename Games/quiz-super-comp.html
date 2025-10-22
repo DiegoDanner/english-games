@@ -15,6 +15,7 @@
         }
     </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css" />
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -78,7 +79,13 @@
     </style>
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 flex items-center justify-center min-h-screen">
-    <button id="theme-toggle-btn" class="absolute top-4 right-4 p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white text-2xl">☀️</button>
+    <header class="page-header">
+        <div class="logo-placeholder">
+            <img src="img/LOGO_DANNER.png" alt="Logo">
+        </div>
+        <a href="https://game-quizzes.netlify.app/" class="menu-link" title="Back to Home">Menu</a>
+        <button id="theme-toggle-btn">🌞</button>
+    </header>
     <div id="quiz-container" class="quiz-container bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-2xl shadow-lg text-center relative">
         
         <!-- Start Screen -->
@@ -407,6 +414,6 @@
         
     </script>
 
-    
+    <script src="js/main.js"></script>
 </body>
 </html>

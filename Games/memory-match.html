@@ -6,6 +6,7 @@
     <title>Vocabulary Memory Match with Audio </title>
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/style.css" />
     <style>
         /* Define a custom font */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
@@ -114,7 +115,18 @@
     </style>
 </head>
 <body class="p-4 flex flex-col items-center min-h-screen">
-
+    <header class="page-header">
+        <div class="logo-placeholder">
+          <img src="img/LOGO_DANNER.png" alt="Logo" />
+        </div>
+        <a
+          href="https://game-quizzes.netlify.app/"
+          class="menu-link"
+          title="Back to Home"
+          >Menu</a
+        >
+        <button id="theme-toggle-btn">🌞</button>
+      </header>
     <!-- Adicionando um ID para melhor controle do layout -->
     <div id="main-game-container" class="w-full">
         <h1 class="text-3xl font-extrabold text-center text-gray-800 mb-2"> Food Vocabulary Match </h1>
@@ -535,5 +547,6 @@
         window.onload = initializeGame;
 
     </script>
+    <script src="js/main.js"></script>
 </body>
 </html>
