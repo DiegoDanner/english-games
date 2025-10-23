@@ -485,16 +485,17 @@
       // FUNÇÕES HELPER PARA REFERÊNCIAS DO FIRESTORE
       // ----------------------------------------------------------------------
 
-      // Logs de Produção: Dados PRIVADOS do usuário
-      function getPrivateLogsCollectionRef() {
+      // Logs de Produção: Dados COMPARTILHADOS/PÚBLICOS
+      function getLogsCollectionRef() {
         return collection(
             db,
-            `/artifacts/${finalAppId}/users/${userId}/${LOGS_COLLECTION}`
+            // O caminho agora aponta para a pasta PÚBLICA, acessível por todos.
+            `/artifacts/${finalAppId}/public/data/${LOGS_COLLECTION}`
         );
       }
 
-      // Operadores: Dados PÚBLICOS/COMPARTILHADOS entre todos os usuários do app
-      function getPublicOperatorsCollectionRef() {
+      // Operadores: Dados COMPARTILHADOS/PÚBLICOS
+      function getOperatorsCollectionRef() {
         return collection(
             db,
             `/artifacts/${finalAppId}/public/data/${OPERATORS_COLLECTION}`
@@ -689,7 +690,7 @@
         }
 
         try {
-          const operatorsCollection = getPublicOperatorsCollectionRef();
+          const operatorsCollection = getOperatorsCollectionRef();
           await addDoc(operatorsCollection, {
             name: name,
             timestamp: Date.now(),
@@ -722,7 +723,7 @@
 
             try {
               const operatorDocRef = doc(
-                getPublicOperatorsCollectionRef(),
+                getOperatorsCollectionRef(),
                 id
               );
               await deleteDoc(operatorDocRef);
@@ -742,7 +743,7 @@
         if (!db) return;
 
         try {
-          const operatorsCollection = getPublicOperatorsCollectionRef();
+          const operatorsCollection = getOperatorsCollectionRef();
           const snapshot = await getDocs(operatorsCollection);
 
           // Se não houver operadores, adiciona a lista inicial
@@ -764,7 +765,7 @@
       function loadOperators() {
         if (!db) return; // Não depende mais do userId, apenas do db
 
-        const operatorsRef = getPublicOperatorsCollectionRef();
+        const operatorsRef = getOperatorsCollectionRef();
         const q = query(operatorsRef); 
 
         onSnapshot(
@@ -809,7 +810,7 @@
 
             try {
               const logDocRef = doc(
-                getPrivateLogsCollectionRef(),
+                getLogsCollectionRef(),
                 id
               );
               await deleteDoc(logDocRef);
@@ -864,7 +865,7 @@
             console.log(`%c--- DADOS DO FIREBASE ---`, 'font-weight: bold; color: blue;');
             console.log(`[FIREBASE INFO] App ID (Path): ${finalAppId}`);
             console.log(`[FIREBASE INFO] User ID: ${userId}`);
-            console.log(`[FIREBASE INFO] Caminho Logs (PRIVADO): /artifacts/${finalAppId}/users/${userId}/${LOGS_COLLECTION}`);
+            console.log(`[FIREBASE INFO] Caminho Logs (PÚBLICO): /artifacts/${finalAppId}/public/data/${LOGS_COLLECTION}`);
             console.log(`[FIREBASE INFO] Caminho Operadores (PÚBLICO): /artifacts/${finalAppId}/public/data/${OPERATORS_COLLECTION}`);
             console.log(`--------------------------`);
 
@@ -943,7 +944,7 @@
           };
 
           try {
-            const logsCollection = getPrivateLogsCollectionRef(); // Usa a referência privada
+            const logsCollection = getLogsCollectionRef(); // Usa a referência pública
             await addDoc(logsCollection, logData);
 
             // Feedback de sucesso
@@ -969,7 +970,7 @@
       function loadLogs() {
         if (!db || !userId) return;
 
-        const logsRef = getPrivateLogsCollectionRef(); // Usa a referência privada
+        const logsRef = getLogsCollectionRef(); // Usa a referência pública
         const q = query(logsRef); 
 
         onSnapshot(
