@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Apontamento de Maquinas</title>
+    <!-- Carregamento do Tailwind CSS para estilização rápida e responsiva -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /* Configuração da fonte Inter e estilo de fundo */
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f7f9fb;
+      }
+      /* Estilo para a tabela */
+      th,
+      td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #e2e8f0;
+      }
+      th {
+        background-color: #edf2f7;
+        font-weight: 600;
+        color: #2d3748;
+        cursor: pointer; /* Indica que colunas são clicáveis (para futura ordenação) */
+      }
+      /* Estilo para ícones de delete */
+      .delete-icon {
+        cursor: pointer;
+        transition: color 0.15s;
+        color: #ef4444; /* Ícone vermelho por padrão */
+      }
+      .delete-icon:hover {
+        color: #dc2626; /* Cor mais escura ao passar o mouse */
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Cabeçalho (Header) -->
+    <header class="bg-indigo-600 shadow-xl p-4 md:p-6 text-white">
+      <div class="max-w-7xl mx-auto flex justify-between items-center">
+        <h1 class="text-2xl md:text-3xl font-bold">Registro de Produção</h1>
+        <span
+          id="user-id-display"
+          class="text-sm bg-indigo-700 py-1 px-3 rounded-full hidden md:block"
+          title="Seu ID de Usuário (Necessário para o armazenamento de dados)"
+        >
+          ID: Carregando........
+        </span>
+      </div>
+    </header>
+
+    <!-- Conteúdo Principal (Dashboard) -->
+    <main class="max-w-7xl mx-auto p-4 md:p-6 space-y-8">
+      <!-- Seção de Formulário de Registro (Card de Entrada de Dados) -->
+      <section class="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+        <h2 class="text-xl font-semibold text-gray-800 mb-6 border-b pb-2">
+          1. Registro de Novo Lote
+        </h2>
+
+        <form id="production-form" class="space-y-6">
+          <!-- Layout responsivo de 2 colunas para desktop -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Coluna 1: Dados de Tempo e Identificação -->
+            <div class="space-y-4">
+              <label class="block">
+                <span class="text-sm font-medium text-gray-700">DATA *</span>
+                <input
+                  type="date"
+                  id="data"
+                  required
+                  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2.5 focus:ring-indigo-500 focus:border-indigo-500"
+                />
+              </label>
+              <label class="block">
+                <span class="text-sm font-medium text-gray-700">MÁQUINA *</span>
+                <!-- CAMPO PARA SELEÇÃO DA MÁQUINA -->
+                <select
+                  id="maquina"
+                  required
+                  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2.5 focus:ring-indigo-500 focus:border-indigo-500"
+                >
+                  <option value="" disabled selected>
+                    Selecione a Máquina
+                  </option>
+                  <option value="VBS">VBS</option>
+                  <option value="1613">1613</option>
+                  <option value="COSEN">COSEN</option>
+                  <option value="FRANHO">FRANHO</option>
+                  <option value="4235">4235</option>
+                  <option value="HB260">HB260</option>
+                  <option value="4540">4540</option>
+                </select>
+              </label>
+              <div class="flex space-x-4">
+                <label class="block flex-1">
+                  <span class="text-sm font-medium text-gray-700"
+                    >INÍCIO DO CORTE *</span
+                  >
+                  <input
+                    type="time"
+                    id="inicioCorte"
+                    required
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2.5 focus:ring-indigo-500 focus:border-indigo-500"
+                  />
+                </label>
+                <label class="block flex-1">
+                  <span class="text-sm font-medium text-gray-700"
+                    >FIM DO CORTE *</span
+                  >
+                  <input
+                    type="time"
+                    id="fimCorte"
+                    required
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2.5 focus:ring-indigo-500 focus:border-indigo-500"
+                  />
+                </label>
+              </div>
+
+              <div class="relative">
+                <span class="text-sm font-medium text-gray-700"
+                  >OPERADOR *</span
+                >
+                <!-- BOTÃO DE GERENCIAMENTO DE OPERADORES -->
+                <button
+                  type="button"
+                  onclick="openOperatorManagementModal()"
+                  class="absolute top-0 right-0 h-full p-2 text-indigo-600 hover:text-indigo-800 transition duration-150 rounded-r-md"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    class="w-5 h-5"
+                  >
+                    <path
+                      d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z"
+                    />
+                  </svg>
+                </button>
+                <!-- CAMPO PARA SELEÇÃO DO OPERADOR (DINÂMICO) -->
+                <select
+                  id="operador"
+                  required
+                  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm pr-10 p-2.5 focus:ring-indigo-500 focus:border-indigo-500"
+                >
+                  <option value="" disabled selected>
+                    Carregando Operadores...
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Coluna 2: Dados de Dimensão e Peso -->
+            <div class="space-y-4">
+              <span class="text-base font-semibold text-gray-800 block mb-2"
+                >DIMENSÃO DA PEÇA (mm)</span
+              >
+
+              <!-- Campos de Dimensão -->
+              <div class="grid grid-cols-3 gap-4">
+                <label class="block">
+                  <span class="text-xs font-medium text-gray-500">ESP/Ø</span>
+                  <input
+                    type="number"
+                    step="0.01"
+                    id="espessura"
+                    placeholder="Espessura/Diâmetro"
+                    class="dimension-input mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2.5 focus:ring-indigo-500 focus:border-indigo-500"
+                  />
+                </label>
+                <label class="block">
+                  <span class="text-xs font-medium text-gray-500">C</span>
+                  <input
+                    type="number"
+                    step="0.01"
+                    id="comprimento"
+                    placeholder="Comprimento"
+                    class="dimension-input mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2.5 focus:ring-indigo-500 focus:border-indigo-500"
+                  />
+                </label>
+                <label class="block">
+                  <span class="text-xs font-medium text-gray-500">L</span>
+                  <input
+                    type="number"
+                    step="0.01"
+                    id="largura"
+                    placeholder="Largura"
+                    class="dimension-input mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2.5 focus:ring-indigo-500 focus:border-indigo-500"
+                  />
+                </label>
+              </div>
+
+              <!-- NOVO: Display de Peso Teórico -->
+              <p class="text-xs text-gray-500 mt-2">
+                Base de cálculo: Densidade do Aço ($\rho \approx 7.85 \text{
+                g/cm}^3$).
+              </p>
+              <div class="pt-2">
+                <span class="text-sm font-medium text-gray-700"
+                  >PESO (kg) *</span
+                >
+                <!-- Campo de Peso: Recebe o valor calculado, mas permite edição (Peso Real) -->
+                <input
+                  type="number"
+                  step="0.01"
+                  id="peso"
+                  placeholder="0.00 (Teórico)"
+                  required
+                  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2.5 font-semibold text-indigo-700 bg-indigo-50 focus:ring-indigo-500 focus:border-indigo-500"
+                />
+                <p
+                  id="peso-teorico-display"
+                  class="text-xs text-indigo-600 mt-1"
+                >
+                  Peso Teórico Calculado: 0.00 kg
+                </p>
+              </div>
+
+              <!-- Mensagem de status e botão de envio -->
+              <p id="status-message" class="text-sm text-green-600 h-5"></p>
+            </div>
+          </div>
+
+          <div class="pt-4 border-t">
+            <button
+              type="submit"
+              class="w-full md:w-auto px-6 py-3 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition duration-150"
+            >
+              Salvar Registro
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Seção de Visualização dos Logs (Card de Dados) -->
+      <section class="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+        <h2 class="text-xl font-semibold text-gray-800 mb-6 border-b pb-2">
+          2. Logs de Produção Recentes
+        </h2>
+
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th>DATA</th>
+                <th>DIA SEMANAL</th>
+                <th>MÁQUINA</th>
+                <th>INÍCIO</th>
+                <th>FIM</th>
+                <th>HORAS TOTAIS</th>
+                <th>DIMENSÃO (mm)</th>
+                <th>PESO (kg)</th>
+                <th>OPERADOR</th>
+                <th>AÇÕES</th>
+              </tr>
+            </thead>
+            <tbody
+              id="logs-table-body"
+              class="bg-white divide-y divide-gray-200"
+            >
+              <!-- Os logs serão inseridos aqui pelo JavaScript -->
+              <tr>
+                <!-- Colspan alterado para 10 para cobrir a coluna de AÇÕES -->
+                <td colspan="10" class="text-center py-4 text-gray-500">
+                  Carregando dados...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <!-- Modal Padrão (Mensagens) -->
+    <div
+      id="modal"
+      class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden z-50"
+    >
+      <div class="bg-white p-6 rounded-lg shadow-2xl w-80">
+        <h3 id="modal-title" class="text-lg font-bold mb-4"></h3>
+        <p id="modal-message" class="mb-6"></p>
+        <button
+          onclick="document.getElementById('modal').classList.add('hidden')"
+          class="w-full px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+        >
+          OK
+        </button>
+      </div>
+    </div>
+
+    <!-- Modal de Gerenciamento de Operadores -->
+    <div
+      id="operator-management-modal"
+      class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden z-50"
+    >
+      <div class="bg-white p-6 rounded-xl shadow-2xl w-full max-w-lg mx-4">
+        <div class="flex justify-between items-center mb-4 border-b pb-2">
+          <h3 class="text-xl font-bold text-gray-800">Gerenciar Operadores</h3>
+          <button
+            onclick="closeOperatorManagementModal()"
+            class="text-gray-400 hover:text-gray-600"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-6 h-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M6 18 18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Adicionar Novo Operador -->
+        <div class="mb-6">
+          <h4 class="text-lg font-semibold mb-2">Adicionar Novo</h4>
+          <div class="flex space-x-2">
+            <input
+              type="text"
+              id="new-operator-name"
+              placeholder="Nome do Operador"
+              class="flex-1 rounded-md border-gray-300 shadow-sm p-2.5 focus:ring-indigo-500 focus:border-indigo-500"
+            />
+            <button
+              type="button"
+              onclick="addOperator()"
+              class="px-4 py-2 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 transition duration-150"
+            >
+              Adicionar
+            </button>
+          </div>
+          <p
+            id="operator-status-message"
+            class="text-sm text-green-600 mt-2 h-5"
+          ></p>
+        </div>
+
+        <!-- Lista de Operadores Existente -->
+        <div class="max-h-60 overflow-y-auto border rounded-lg p-3 bg-gray-50">
+          <h4 class="text-lg font-semibold mb-2">Lista Atual</h4>
+          <ul id="operators-list" class="space-y-2">
+            <!-- A lista será populada pelo JavaScript -->
+            <li class="text-gray-500">Carregando...</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de Confirmação (para substituição do confirm()) -->
+    <div
+      id="confirm-modal"
+      class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden z-50"
+    >
+      <div class="bg-white p-6 rounded-lg shadow-2xl w-80">
+        <!-- CORRIGIDO: Adicionado o ID 'confirm-title' para ser manipulado pelo JS -->
+        <h3 id="confirm-title" class="text-lg font-bold mb-4 text-red-600">
+          Confirmação de Exclusão
+        </h3>
+        <p id="confirm-message" class="mb-6">
+          Tem certeza que deseja remover este item?
+        </p>
+        <div class="flex justify-end space-x-3">
+          <button
+            id="confirm-cancel-btn"
+            class="px-4 py-2 text-gray-700 rounded-lg hover:bg-gray-100 transition duration-150"
+          >
+            Cancelar
+          </button>
+          <button
+            id="confirm-ok-btn"
+            class="px-4 py-2 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition duration-150"
+          >
+            Excluir
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Blocos de Script para Lógica da Aplicação e Firebase -->
+    <script type="module">
+      // Importações do Firebase
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+      import {
+        getAuth,
+        signInAnonymously,
+        signInWithCustomToken,
+      } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+      import {
+        getFirestore,
+        collection,
+        addDoc,
+        onSnapshot,
+        query,
+        getDocs,
+        deleteDoc,
+        doc,
+        setLogLevel,
+        orderBy, 
+      } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+
+      // Variáveis globais de ambiente (fornecidas pelo sistema)
+      const appId =
+        typeof __app_id !== "undefined" ? __app_id : "default-app-id";
+      const firebaseConfigEnvironment = JSON.parse(
+        typeof __firebase_config !== "undefined" ? __firebase_config : "{}"
+      );
+      const initialAuthTokenEnvironment =
+        typeof __initial_auth_token !== "undefined"
+          ? __initial_auth_token
+          : null;
+
+      let db;
+      let auth;
+      let userId = "loading";
+
+      // Nomes das coleções
+      const LOGS_COLLECTION = "production_logs";
+      const OPERATORS_COLLECTION = "operators"; // Nome da subcoleção
+
+      // Lista de operadores inicial (para o primeiro uso)
+      const initialOperators = [
+        "Tiago Pedro",
+        "Ailton",
+        "Michel",
+        "Silvio",
+        "Paulo",
+        "Marcio",
+      ];
+
+      // Densidade do Aço em kg/mm³ (7850 kg/m³ = 0.00785 g/cm³ = 0.00000785 kg/mm³)
+      const STEEL_DENSITY_KG_PER_MM3 = 0.00000785;
+
+      // Global callback para o modal de confirmação
+      let confirmCallback = null;
+
+      // ----------------------------------------------------------------------
+      // INÍCIO DO BLOCO DE CONFIGURAÇÃO DO FIREBASE (MODIFICAR AQUI PARA VS CODE)
+      // ----------------------------------------------------------------------
+
+      // ⚠️ ATENÇÃO: PARA USAR ESTE CÓDIGO FORA DESTE AMBIENTE (VS CODE), VOCÊ DEVE SUBSTITUIR
+      // OS VALORES ABAIXO COM A SUA CONFIGURAÇÃO REAL.
+
+      // 1. Defina o ID do App para o caminho do Firestore (Pode ser qualquer string única)
+      const LOCAL_appId = "producao-dashboard"; 
+
+      // 2. COLE AQUI SEU OBJETO DE CONFIGURAÇÃO COMPLETO DO FIREBASE WEB SDK.
+      // É FUNDAMENTAL que todos os valores (apiKey, authDomain, etc.) estejam entre aspas duplas ("").
+      const LOCAL_firebaseConfig = {
+          apiKey: "AIzaSyAYO180q2kLEGmcBkHL5DmUmQ2om5xnfoo",
+          authDomain: "producao-dashboard.firebaseapp.com",
+          projectId: "producao-dashboard",
+          storageBucket: "producao-dashboard.firebasestorage.app",
+          messagingSenderId: "707703764325",
+          appId: "1:707703764325:web:5b085c98ce4d92ed2a9d8c",
+          measurementId: "G-3B2CZMC477"
+      };
+      
+      // 3. O token de autenticação customizado não existe localmente. Usaremos `null`.
+      const LOCAL_initialAuthToken = null; 
+
+      // ----------------------------------------------------------------------
+      // FIM DO BLOCO DE CONFIGURAÇÃO DO FIREBASE
+      // ----------------------------------------------------------------------
+      
+      // Lógica para usar a configuração do ambiente (se existir) ou a configuração LOCAL
+      const configToUse = Object.keys(firebaseConfigEnvironment).length > 0
+          ? { appId: appId, config: firebaseConfigEnvironment, token: initialAuthTokenEnvironment }
+          : { appId: LOCAL_appId, config: LOCAL_firebaseConfig, token: LOCAL_initialAuthToken };
+
+      // Variáveis finais que serão usadas no initializeApp e nas referências do Firestore
+      const finalFirebaseConfig = configToUse.config;
+      const finalAppId = configToUse.appId;
+      const finalInitialAuthToken = configToUse.token;
+
+      // ----------------------------------------------------------------------
+      // FUNÇÕES HELPER PARA REFERÊNCIAS DO FIRESTORE
+      // ----------------------------------------------------------------------
+
+      // Logs de Produção: Dados PRIVADOS do usuário
+      function getPrivateLogsCollectionRef() {
+        return collection(
+            db,
+            `/artifacts/${finalAppId}/users/${userId}/${LOGS_COLLECTION}`
+        );
+      }
+
+      // Operadores: Dados PÚBLICOS/COMPARTILHADOS entre todos os usuários do app
+      function getPublicOperatorsCollectionRef() {
+        return collection(
+            db,
+            `/artifacts/${finalAppId}/public/data/${OPERATORS_COLLECTION}`
+        );
+      }
+      
+      // Função utilitária para exibir modais informativos
+      function showModal(title, message) {
+        document.getElementById("modal-title").textContent = title;
+        document.getElementById("modal-message").textContent = message;
+        document.getElementById("modal").classList.remove("hidden");
+      }
+
+      // Função para exibir modal de confirmação (substitui confirm())
+      function showConfirmModal(title, message, callback) {
+        // CORREÇÃO: o elemento #confirm-title agora existe no HTML
+        document.getElementById("confirm-title").textContent = title; 
+        document.getElementById("confirm-message").textContent = message;
+        confirmCallback = callback;
+        document.getElementById("confirm-modal").classList.remove("hidden");
+      }
+
+      // Handlers para o novo modal de confirmação
+      document.getElementById("confirm-ok-btn").onclick = function () {
+        document.getElementById("confirm-modal").classList.add("hidden");
+        if (confirmCallback) {
+          confirmCallback(true);
+          confirmCallback = null;
+        }
+      };
+
+      document.getElementById("confirm-cancel-btn").onclick = function () {
+        document.getElementById("confirm-modal").classList.add("hidden");
+        if (confirmCallback) {
+          confirmCallback(false);
+          confirmCallback = null;
+        }
+      };
+      // Fim dos handlers do modal de confirmação
+
+      // NOVO: Função para calcular o peso teórico
+      function calculateTheoreticalWeight() {
+        const E = parseFloat(document.getElementById("espessura").value) || 0;
+        const C = parseFloat(document.getElementById("comprimento").value) || 0;
+        const L = parseFloat(document.getElementById("largura").value) || 0;
+
+        let volume_mm3 = 0;
+
+        // Só calcula se tiver comprimento (C) e pelo menos a espessura/diâmetro (E)
+        if (E > 0 && C > 0) {
+          if (L > 0) {
+            // CÁLCULO DE PEÇA RETANGULAR/QUADRADA: Volume = E * C * L
+            volume_mm3 = E * C * L;
+          } else {
+            // CÁLCULO DE PEÇA REDONDA: Volume = (PI * (E/2)^2) * C (E = Diâmetro Ø)
+            const raio = E / 2;
+            volume_mm3 = Math.PI * Math.pow(raio, 2) * C;
+          }
+        }
+
+        const theoreticalWeight = volume_mm3 * STEEL_DENSITY_KG_PER_MM3;
+
+        // Atualiza o display do peso teórico
+        document.getElementById(
+          "peso-teorico-display"
+        ).textContent = `Peso Teórico Calculado: ${theoreticalWeight.toFixed(
+          3
+        )} kg`;
+
+        // Atualiza o campo principal de Peso (valor sugerido)
+        document.getElementById("peso").value = theoreticalWeight.toFixed(2);
+
+        return theoreticalWeight;
+      }
+
+      // Adiciona listeners para cálculo do peso ao digitar as dimensões
+      document.querySelectorAll(".dimension-input").forEach((input) => {
+        input.addEventListener("input", calculateTheoreticalWeight);
+      });
+
+      // Função para calcular a diferença entre dois horários (em horas decimais)
+      function calculateTotalHours(startTime, endTime) {
+        const [startH, startM] = startTime.split(":").map(Number);
+        const [endH, endM] = endTime.split(":").map(Number);
+
+        const startMinutes = startH * 60 + startM;
+        let endMinutes = endH * 60 + endM;
+
+        // Se o fim do corte for antes do início (assumindo que passou para o dia seguinte)
+        if (endMinutes < startMinutes) {
+          endMinutes += 24 * 60;
+        }
+
+        const totalMinutes = endMinutes - startMinutes;
+        return (totalMinutes / 60).toFixed(2);
+      }
+
+      // Função para obter o dia da semana em Português
+      function getDayOfWeek(dateString) {
+        const days = [
+          "domingo",
+          "segunda-feira",
+          "terça-feira",
+          "quarta-feira",
+          "quinta-feira",
+          "sexta-feira",
+          "sábado",
+        ];
+        const date = new Date(dateString + "T00:00:00"); // Adiciona T00:00:00 para evitar problemas de fuso horário
+        return days[date.getDay()];
+      }
+
+      // ----------------------------------------------------------------------
+      // OPERATOR MANAGEMENT FUNCTIONS
+      // ----------------------------------------------------------------------
+
+      // Abre o modal de gerenciamento
+      window.openOperatorManagementModal = function () {
+        document
+          .getElementById("operator-management-modal")
+          .classList.remove("hidden");
+      };
+
+      // Fecha o modal de gerenciamento
+      window.closeOperatorManagementModal = function () {
+        document
+          .getElementById("operator-management-modal")
+          .classList.add("hidden");
+        document.getElementById("new-operator-name").value = "";
+        document.getElementById("operator-status-message").textContent = "";
+      };
+
+      // Popula o dropdown e a lista do modal com os operadores
+      function renderOperators(operators) {
+        const select = document.getElementById("operador");
+        const listUl = document.getElementById("operators-list");
+
+        // Limpa ambos os elementos
+        select.innerHTML =
+          '<option value="" disabled selected>Selecione o Operador</option>';
+        listUl.innerHTML = "";
+
+        if (operators.length === 0) {
+          select.innerHTML =
+            '<option value="" disabled selected>Nenhum operador cadastrado</option>';
+          listUl.innerHTML =
+            '<li class="text-gray-500">Nenhum operador cadastrado.</li>';
+          return;
+        }
+
+        operators.forEach((op) => {
+          // Adiciona ao dropdown
+          const option = document.createElement("option");
+          option.value = op.name;
+          option.textContent = op.name;
+          select.appendChild(option);
+
+          // Adiciona à lista de gerenciamento
+          const li = document.createElement("li");
+          li.className =
+            "flex justify-between items-center bg-white p-2 rounded-md shadow-sm border border-gray-200";
+          li.innerHTML = `
+                      <span>${op.name}</span>
+                      <button type="button" onclick="deleteOperator('${op.id}')" 
+                          class="text-red-600 hover:text-red-700 transition duration-150 delete-icon" title="Excluir operador">
+                          <!-- Ícone 'X' Simples e Vermelho -->
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                      </button>
+                  `;
+          listUl.appendChild(li);
+        });
+      }
+
+      // Adiciona um novo operador (AGORA SALVANDO NO CAMINHO PÚBLICO)
+      window.addOperator = async function () {
+        const input = document.getElementById("new-operator-name");
+        const name = input.value.trim();
+        const status = document.getElementById("operator-status-message");
+
+        if (name.length < 2) {
+          status.textContent = "Nome muito curto.";
+          status.classList.remove("text-green-600");
+          status.classList.add("text-red-600");
+          return;
+        }
+
+        if (!db) {
+          showModal("Erro", "O banco de dados não está pronto.");
+          return;
+        }
+
+        try {
+          const operatorsCollection = getPublicOperatorsCollectionRef();
+          await addDoc(operatorsCollection, {
+            name: name,
+            timestamp: Date.now(),
+          });
+
+          status.textContent = `Operador '${name}' adicionado!`;
+          status.classList.remove("text-red-600");
+          status.classList.add("text-green-600");
+          input.value = "";
+        } catch (error) {
+          console.error("Erro ao adicionar operador:", error);
+          status.textContent = `Erro: ${error.message}`;
+          status.classList.remove("text-green-600");
+          status.classList.add("text-red-600");
+        }
+      };
+
+      // Deleta um operador (AGORA DELETANDO NO CAMINHO PÚBLICO)
+      window.deleteOperator = function (id) {
+        showConfirmModal(
+          "Confirmação de Exclusão",
+          `Tem certeza que deseja remover este operador?`,
+          async (confirmed) => {
+            if (!confirmed) return; // Se o usuário cancelar, sai da função.
+
+            if (!db) {
+              showModal("Erro", "O banco de dados não está pronto.");
+              return;
+            }
+
+            try {
+              const operatorDocRef = doc(
+                getPublicOperatorsCollectionRef(),
+                id
+              );
+              await deleteDoc(operatorDocRef);
+            } catch (error) {
+              console.error("Erro ao deletar operador:", error);
+              showModal(
+                "Erro ao Deletar",
+                `Falha ao remover operador: ${error.message}`
+              );
+            }
+          }
+        );
+      };
+
+      // Semeia a lista inicial de operadores (AGORA VERIFICANDO O CAMINHO PÚBLICO)
+      async function seedInitialOperators() {
+        if (!db) return;
+
+        try {
+          const operatorsCollection = getPublicOperatorsCollectionRef();
+          const snapshot = await getDocs(operatorsCollection);
+
+          // Se não houver operadores, adiciona a lista inicial
+          if (snapshot.empty) {
+            console.log("Semeando operadores iniciais...");
+            for (const name of initialOperators) {
+              await addDoc(operatorsCollection, {
+                name: name,
+                timestamp: Date.now(),
+              });
+            }
+          }
+        } catch (error) {
+          console.error("Erro ao semear operadores:", error);
+        }
+      }
+
+      // Carrega a lista de operadores em tempo real (AGORA LENDO O CAMINHO PÚBLICO)
+      function loadOperators() {
+        if (!db) return; // Não depende mais do userId, apenas do db
+
+        const operatorsRef = getPublicOperatorsCollectionRef();
+        const q = query(operatorsRef); 
+
+        onSnapshot(
+          q,
+          (snapshot) => {
+            const operators = [];
+            snapshot.forEach((doc) => {
+              operators.push({ id: doc.id, ...doc.data() });
+            });
+            
+            // Ordena em memória (JavaScript) para garantir que a lista aparece ordenada
+            operators.sort((a, b) => a.name.localeCompare(b.name, "pt-BR"));
+
+            renderOperators(operators);
+          },
+          (error) => {
+            console.error("Erro ao carregar lista de operadores:", error);
+            showModal(
+              "Erro de Conexão",
+              "Não foi possível carregar a lista de operadores."
+            );
+          }
+        );
+      }
+
+      // ----------------------------------------------------------------------
+      // LOGS MANAGEMENT FUNCTIONS
+      // ----------------------------------------------------------------------
+
+      // Função para deletar um log de produção pelo ID
+      window.deleteLog = function (id) {
+        showConfirmModal(
+          "Confirmação de Exclusão",
+          `Tem certeza que deseja remover este registro de produção?`,
+          async (confirmed) => {
+            if (!confirmed) return;
+
+            if (!db || !userId) {
+              showModal("Erro", "O banco de dados não está pronto.");
+              return;
+            }
+
+            try {
+              const logDocRef = doc(
+                getPrivateLogsCollectionRef(),
+                id
+              );
+              await deleteDoc(logDocRef);
+              // A tabela é atualizada automaticamente pelo onSnapshot
+            } catch (error) {
+              console.error("Erro ao deletar log:", error);
+              showModal(
+                "Erro ao Deletar",
+                `Falha ao remover o log: ${error.message}`
+              );
+            }
+          }
+        );
+      };
+
+      // 1. Inicialização do Firebase e Autenticação
+      async function initializeFirebase() {
+        if (!Object.keys(finalFirebaseConfig).length || !finalFirebaseConfig.apiKey) {
+          // Se o objeto estiver vazio ou a chave API estiver faltando, mostra o erro.
+          showModal(
+            "Erro de Configuração",
+            "Configuração do Firebase não encontrada. Verifique se preencheu 'apiKey', 'authDomain' e 'projectId' corretamente no código. O app funcionará no modo de demonstração (sem persistência)."
+          );
+          return;
+        }
+
+        // Se a configuração estiver presente, tenta inicializar
+        const app = initializeApp(finalFirebaseConfig);
+        db = getFirestore(app);
+        auth = getAuth(app);
+
+        setLogLevel("debug");
+
+        try {
+          if (finalInitialAuthToken) {
+            await signInWithCustomToken(auth, finalInitialAuthToken);
+          } else {
+            await signInAnonymously(auth);
+          }
+
+          userId = auth.currentUser?.uid;
+
+          if (userId) {
+            document.getElementById(
+              "user-id-display"
+            ).textContent = `ID: ${userId}`;
+            document
+              .getElementById("user-id-display")
+              .classList.remove("hidden");
+            
+            // NOVO: Logs para ajudar a debugar o caminho no Firebase Console
+            console.log(`%c--- DADOS DO FIREBASE ---`, 'font-weight: bold; color: blue;');
+            console.log(`[FIREBASE INFO] App ID (Path): ${finalAppId}`);
+            console.log(`[FIREBASE INFO] User ID: ${userId}`);
+            console.log(`[FIREBASE INFO] Caminho Logs (PRIVADO): /artifacts/${finalAppId}/users/${userId}/${LOGS_COLLECTION}`);
+            console.log(`[FIREBASE INFO] Caminho Operadores (PÚBLICO): /artifacts/${finalAppId}/public/data/${OPERATORS_COLLECTION}`);
+            console.log(`--------------------------`);
+
+
+            // Semeia e carrega a lista de operadores (agora pública)
+            await seedInitialOperators();
+            loadOperators();
+
+            loadLogs();
+          } else {
+            showModal(
+              "Erro de Autenticação",
+              "Não foi possível obter o ID do usuário. Os dados não serão salvos."
+            );
+          }
+        } catch (error) {
+          console.error("Erro na autenticação Firebase:", error);
+          showModal(
+            "Erro de Autenticação",
+            `Falha ao conectar ao Firebase. Erro: ${error.message}`
+          );
+        }
+      }
+
+      // 2. Função de Salvar Log (Adiciona um novo documento)
+      document
+        .getElementById("production-form")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          if (!db || !userId) {
+            showModal(
+              "Erro",
+              "O banco de dados não está pronto. Tente novamente."
+            );
+            return;
+          }
+
+          const form = e.target;
+          const data = form.data.value;
+          const maquina = form.maquina.value;
+          const inicioCorte = form.inicioCorte.value;
+          const fimCorte = form.fimCorte.value;
+          const espessura = parseFloat(form.espessura.value) || 0;
+          const comprimento = parseFloat(form.comprimento.value) || 0;
+          const largura = parseFloat(form.largura.value) || 0;
+          const peso = parseFloat(form.peso.value);
+          const operador = form.operador.value; // Pega o valor do SELECT
+
+          // Re-calcula o peso teórico final para salvar no log
+          const pesoTeorico = calculateTheoreticalWeight();
+
+          // Validar se um operador foi selecionado (o valor padrão é vazio)
+          if (!operador) {
+            showModal("Atenção", "Por favor, selecione um Operador.");
+            return;
+          }
+
+          // Cálculo das horas totais
+          const horasTotais = calculateTotalHours(inicioCorte, fimCorte);
+          const diaSemanal = getDayOfWeek(data);
+
+          const logData = {
+            timestamp: Date.now(), // Para ordenação
+            data,
+            diaSemanal,
+            maquina,
+            inicioCorte,
+            fimCorte,
+            horasTotais,
+            dimensoes: { espessura, comprimento, largura },
+            peso: peso, // Peso real (pode ser o teórico ou o editado pelo usuário)
+            pesoTeorico: parseFloat(pesoTeorico.toFixed(2)), // Salva o valor teórico
+            operador,
+            userId: userId,
+          };
+
+          try {
+            const logsCollection = getPrivateLogsCollectionRef(); // Usa a referência privada
+            await addDoc(logsCollection, logData);
+
+            // Feedback de sucesso
+            const status = document.getElementById("status-message");
+            status.textContent = "Registro salvo com sucesso!";
+            status.classList.remove("text-red-600");
+            status.classList.add("text-green-600");
+            form.reset();
+            // Também reseta o display de peso teórico
+            document.getElementById("peso-teorico-display").textContent =
+              "Peso Teórico Calculado: 0.00 kg";
+            setTimeout(() => (status.textContent = ""), 3000);
+          } catch (error) {
+            console.error("Erro ao salvar log:", error);
+            const status = document.getElementById("status-message");
+            status.textContent = `Erro ao salvar: ${error.message}`;
+            status.classList.remove("text-green-600");
+            status.classList.add("text-red-600");
+          }
+        });
+
+      // 3. Função de Carregar Logs em Tempo Real (onSnapshot)
+      function loadLogs() {
+        if (!db || !userId) return;
+
+        const logsRef = getPrivateLogsCollectionRef(); // Usa a referência privada
+        const q = query(logsRef); 
+
+        onSnapshot(
+          q,
+          (snapshot) => {
+            const logs = [];
+            snapshot.forEach((doc) => {
+              logs.push({ id: doc.id, ...doc.data() });
+            });
+
+            // Ordena em memória (JavaScript) do mais novo para o mais antigo (DESC)
+            logs.sort((a, b) => b.timestamp - a.timestamp); 
+            
+            renderLogsTable(logs);
+          },
+          (error) => {
+            console.error("Erro ao carregar logs em tempo real:", error);
+            showModal(
+              "Erro de Conexão",
+              "Não foi possível carregar os logs de produção."
+            );
+          }
+        );
+      }
+
+      // 4. Função de Renderizar a Tabela (ATUALIZADA com botão de Ações)
+      function renderLogsTable(logs) {
+        const tbody = document.getElementById("logs-table-body");
+        tbody.innerHTML = "";
+
+        if (logs.length === 0) {
+          // Colspan ajustado para 10
+          tbody.innerHTML =
+            '<tr><td colspan="10" class="text-center py-4 text-gray-500">Nenhum registro encontrado. Comece a registrar acima!</td></tr>';
+          return;
+        }
+
+        logs.forEach((log) => {
+          const row = tbody.insertRow();
+          row.className = "hover:bg-gray-50 transition duration-100";
+
+          // Formatações
+          const dataFormatada = new Date(
+            log.data + "T00:00:00"
+          ).toLocaleDateString("pt-BR");
+          // Dimensões tratam caso 'largura' seja 0 para peças redondas/circulares
+          const dimensoes = log.dimensoes.largura > 0
+            ? `E:${log.dimensoes.espessura} / C:${log.dimensoes.comprimento} / L:${log.dimensoes.largura}`
+            : `Ø:${log.dimensoes.espessura} / C:${log.dimensoes.comprimento}`;
+
+
+          // Exibe o Peso Teórico (se existir) junto ao Peso Real
+          const pesoDisplay = log.pesoTeorico
+            ? `${log.peso.toFixed(2)} kg (Teórico: ${log.pesoTeorico.toFixed(
+                2
+              )})`
+            : `${log.peso.toFixed(2)} kg`;
+
+          row.innerHTML = `
+              <td class="whitespace-nowrap">${dataFormatada}</td>
+              <td class="whitespace-nowrap capitalize">${log.diaSemanal}</td>
+              <td class="whitespace-nowrap font-medium">${log.maquina}</td>
+              <td class="whitespace-nowrap">${log.inicioCorte}</td>
+              <td class="whitespace-nowrap">${log.fimCorte}</td>
+              <td class="whitespace-nowrap font-semibold text-indigo-700">${log.horasTotais} h</td>
+              <td class="whitespace-nowrap text-xs text-gray-500">${dimensoes}</td>
+              <td class="whitespace-nowrap text-xs">${pesoDisplay}</td>
+              <td class="whitespace-nowrap">${log.operador}</td>
+              <!-- NOVO: Célula de Ação com o botão para deletar -->
+              <td>
+                  <button type="button" onclick="deleteLog('${log.id}')"
+                      class="text-red-600 hover:text-red-700 transition duration-150 delete-icon" title="Excluir Registro">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                  </button>
+              </td>
+            `;
+        });
+      }
+
+      // Inicia a aplicação
+      window.onload = initializeFirebase;
+    </script>
+  </body>
+</html>
