@@ -1,20 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 export default function Quiz1() {
-  const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
-
-  useEffect(() => {
-    if (theme === "dark") {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-    localStorage.setItem("theme", theme);
-  }, [theme]);
-
-  const toggleTheme = () => {
-    setTheme(theme === "light" ? "dark" : "light");
-  };
   const [quizItems, setQuizItems] = useState([
     { id: 1, answer: "Are", userAnswer: "" },
     { id: 2, answer: "'m,am", userAnswer: "" },
@@ -58,17 +44,11 @@ export default function Quiz1() {
   }
 
   return (
-    <div className="bg-gray-100 dark:bg-gray-800 p-6 sm:p-8 rounded-xl shadow-lg w-full max-w-2xl text-gray-800 dark:text-gray-100">
+    <div className="bg-gray-400 p-6 sm:p-8 rounded-xl shadow-lg w-full max-w-2xl text-gray-800">
       <div className="text-center mb-6">
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-gray-100">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">
           Quiz: Verbo "To Be"
         </h1>
-        <button
-          onClick={toggleTheme}
-          className="absolute top-4 right-4 p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white text-2xl"
-        >
-          {theme === "light" ? "🌙" : "☀️"}
-        </button>
         <p className="text-gray-700 mt-2">
           🔤 Complete the conversations with{" "}
           <code className="bg-gray-200 p-1 rounded-md">am, is, are, 'm, 's, 're</code>.
