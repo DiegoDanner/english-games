@@ -36,15 +36,38 @@
         <a href="maquinaHtb (3).html" class="block w-full bg-orange-500 text-white font-semibold py-3 px-6 rounded-lg hover:bg-orange-600 mb-4 transition"> 🔩 Máquina HTB Quiz</a>
     </div>
     <script src="js/main.js"></script>
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 <script>
-  var identity = netlifyIdentity;
-  // Adiciona o evento de login/logout
-  identity.on("init", user => {
-    if (!user) {
-      identity.open(); // Abre a janela de login se não houver usuário logado
-    }
-  });
+  // Função para esconder o conteúdo da pagina ate o login
+  function hideContent() {
+    document.body.style.display = 'none';
+  }
+
+  // Função para mostrar o conteudo da pagina
+  function showContent() {
+    document.body.style.display = 'block';
+  }
+
+  // Se o widget estiver carregado
+  if (window.netlifyIdentity) {
+    netlifyIdentity.on('init', (user) => {
+      if (!user) {
+        // Se nao ha usuario logado, esconde o conteudo e abre a modal
+        hideContent();
+        netlifyIdentity.open();
+      } else {
+        // Se ha usuario logado, mostra o conteudo
+        showContent();
+      }
+    });
+
+    // Se o usuario fizer logout, esconde o conteudo
+    netlifyIdentity.on('logout', () => {
+        hideContent();
+        netlifyIdentity.open();
+    });
+  }
 </script>
 </body>
 </html>
