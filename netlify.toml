@@ -1,7 +1,0 @@
-[build]
-  publish = "Games"
-
-[[headers]]
-  for = "/*"
-  [headers.values]
-  Basic-Auth = "YWNlc3NvLWFsdW5vOkFjZXNzbzEyMzE="
