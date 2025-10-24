@@ -1,5 +1,5 @@
 [build]
-  publish = "Games/"
+  publish = "Games"
 
 [[headers]]
   for = "/*"
