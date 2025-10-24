@@ -1,2 +1,5 @@
-# Permite o acesso somente a e-mails de um domínio específico.
-/* https://game-quizzes.netlify.app/ 200! Role=member,Email=@hitachi-hightech.com
+# REGRA 1: Permite o acesso se o usuario estiver logado
+/index.html /index.html 200 Role=*
+
+# REGRA 2: Forca o login para qualquer outra URL que nao esteja liberada
+/* /.netlify/identity/login 302!
