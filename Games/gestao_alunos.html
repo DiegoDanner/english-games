@@ -469,10 +469,15 @@
 
       // CORREÇÃO: Função agora é assíncrona e usa await para garantir que a exclusão termine
       window.executeConfirmedAction = async () => {
-        window.toggleConfirmModal(false);
-        if (window.pendingAction) {
-          // Executa a função com argumentos
-          await window.pendingAction(...window.pendingArgs);
+        // Armazena a ação pendente em variáveis locais ANTES que o modal seja fechado.
+        // Fechar o modal limpa as variáveis globais, o que causava o bug.
+        const action = window.pendingAction;
+        const args = window.pendingArgs;
+
+        window.toggleConfirmModal(false); // Fecha o modal (e limpa as globais)
+
+        if (action) {
+          await action(...args); // Executa a ação que foi salva localmente
         }
       };
 
