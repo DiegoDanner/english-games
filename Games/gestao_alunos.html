@@ -345,8 +345,8 @@
       import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
       import {
         getAuth,
-        GoogleAuthProvider,
-        signInWithPopup,
+        signInAnonymously,
+        signInWithCustomToken,
         onAuthStateChanged,
       } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
       import {
@@ -409,7 +409,7 @@
       window.currentSelectedMonth = null;
       let isSaving = false; // Flag para prevenir "race conditions"
 
-      // NOVO BLOCO
+      /* NOVO BLOCO
       window.loginWithGoogle = async () => {
           const provider = new GoogleAuthProvider();
           try {
@@ -419,8 +419,8 @@
               console.error("Erro no login do Google:", error);
               window.showMessage("Falha ao iniciar sessão com o Google.", "error");
           }
-      };
-
+      }; */
+      
       // --- FUNÇÕES DE UTILIDADE ---
 
       // Variáveis globais para o modal de confirmação
