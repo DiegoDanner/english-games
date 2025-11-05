@@ -607,7 +607,9 @@
       function fetchStudents() {
         if (!db || !userId) return;
 
-        const studentsRef = collection(db, getStudentCollectionPath());
+        const collectionPath = getStudentCollectionPath();
+        console.log("Querying Firestore path:", collectionPath); // <-- LOG DE DEBUG
+        const studentsRef = collection(db, collectionPath);
         const q = query(studentsRef); // Sem orderBy para evitar erros de índice
 
         onSnapshot(
