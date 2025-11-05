@@ -345,8 +345,8 @@
       import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
       import {
         getAuth,
-        signInAnonymously,
-        signInWithCustomToken,
+        GoogleAuthProvider,
+        signInWithPopup,
         onAuthStateChanged,
       } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
       import {
@@ -408,6 +408,18 @@
       window.currentStudent = null;
       window.currentSelectedMonth = null;
       let isSaving = false; // Flag para prevenir "race conditions"
+
+      // NOVO BLOCO
+      window.loginWithGoogle = async () => {
+          const provider = new GoogleAuthProvider();
+          try {
+              await signInWithPopup(auth, provider);
+              // Não precisamos de mais código aqui; o onAuthStateChanged trata do resto!
+          } catch (error) {
+              console.error("Erro no login do Google:", error);
+              window.showMessage("Falha ao iniciar sessão com o Google.", "error");
+          }
+      };
 
       // --- FUNÇÕES DE UTILIDADE ---
 
