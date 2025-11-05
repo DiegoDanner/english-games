@@ -537,8 +537,7 @@
           db = getFirestore(app);
           auth = getAuth(app);
 
-          // Para testes locais no VSCode, usamos a autenticação anônima.
-          await signInAnonymously(auth);
+
 
           onAuthStateChanged(auth, (user) => {
             if (user) {
