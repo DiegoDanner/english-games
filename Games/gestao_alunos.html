@@ -1,0 +1,1423 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gestão de Alunos (Professor de Inglês)</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f4f7f9;
+      }
+      /* Estilo para a barra lateral de alunos */
+      #student-list-container {
+        min-width: 280px;
+        max-width: 300px;
+      }
+      /* Estilos de scrollbar customizados */
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 8px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background-color: #a0aec0; /* gray-400 */
+        border-radius: 4px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background-color: #edf2f7; /* gray-100 */
+      }
+
+      /* Estilo para destacar pagamentos não pagos */
+      .unpaid-row {
+        background-color: #fee2e2 !important; /* red-100 */
+      }
+      .unpaid-row:hover {
+        background-color: #fecaca !important; /* red-200 */
+      }
+    </style>
+  </head>
+  <body class="min-h-screen">
+    <div id="app" class="flex flex-col lg:flex-row min-h-screen">
+      <!-- 1. Coluna de Alunos (Sidebar) -->
+      <div
+        id="student-list-container"
+        class="bg-white border-r border-gray-200 p-4 shadow-lg flex flex-col h-full lg:h-screen sticky top-0 overflow-y-auto custom-scrollbar"
+      >
+        <h1 class="text-2xl font-bold text-indigo-700 mb-6 border-b pb-2">
+          Meus Alunos
+        </h1>
+
+        <!-- Botão Adicionar Aluno -->
+        <button
+          onclick="openStudentModal()"
+          class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 shadow-md mb-6 flex items-center justify-center"
+        >
+          <svg
+            class="w-5 h-5 mr-2"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
+            ></path>
+          </svg>
+          Novo Aluno
+        </button>
+
+        <!-- Lista de Alunos (Preenchida pelo JS) -->
+        <div id="student-list" class="flex-grow space-y-2">
+          <!-- Itens da lista de alunos serão injetados aqui -->
+          <p class="text-gray-500 text-sm">Carregando alunos...</p>
+        </div>
+
+        <div class="mt-auto pt-4 border-t text-sm text-gray-500">
+          <p>Seu ID de Usuário (para suporte):</p>
+          <code
+            id="user-id-display"
+            class="block mt-1 font-mono text-xs text-indigo-600 truncate"
+            >Autenticando...</code
+          >
+        </div>
+      </div>
+
+      <!-- 2. Detalhes do Aluno (Conteúdo Principal) -->
+      <div id="student-details-view" class="flex-grow p-6 lg:p-10">
+        <h2 id="main-title" class="text-3xl font-extrabold text-gray-800 mb-8">
+          Selecione um Aluno
+        </h2>
+
+        <div
+          id="student-details-content"
+          class="bg-white p-6 rounded-xl shadow-2xl transition-all duration-300 transform opacity-0 scale-95 hidden"
+        >
+          <!-- Informações do Aluno (Fixo) -->
+          <div class="flex justify-between items-center mb-6 border-b pb-3">
+            <h3 class="text-xl font-semibold text-gray-700">
+              Informações do Aluno
+            </h3>
+            <button
+              onclick="openStudentModal(currentStudent)"
+              class="text-sm text-indigo-500 hover:text-indigo-700 font-medium flex items-center"
+            >
+              <svg
+                class="w-4 h-4 mr-1"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-7-3l-4 4L19 7l4 4-4-4z"
+                ></path>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15.5 5.5l3 3"
+                ></path>
+              </svg>
+              Editar
+            </button>
+          </div>
+
+          <div
+            id="info-section"
+            class="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700 mb-8"
+          >
+            <!-- Dados do aluno serão injetados aqui -->
+          </div>
+
+          <!-- NOVO LAYOUT: Tabs de Mês + Seções Filtradas -->
+          <div class="lg:flex lg:space-x-8 mt-8">
+            <!-- Abas Laterais de Meses (para filtro) -->
+            <div
+              id="month-tabs-container"
+              class="lg:w-1/4 mb-6 lg:mb-0 border p-3 rounded-xl bg-gray-50 self-start"
+            >
+              <h3 class="text-lg font-bold text-indigo-700 mb-3 border-b pb-2">
+                Filtro Mensal
+              </h3>
+              <div
+                id="month-tabs"
+                class="space-y-1 custom-scrollbar max-h-96 overflow-y-auto"
+              >
+                <p class="text-xs text-gray-500 text-center py-2">
+                  Carregando meses...
+                </p>
+              </div>
+            </div>
+
+            <!-- Conteúdo Filtrado -->
+            <div class="lg:w-3/4">
+              <!-- 1. Controle de Mensalidade (MOVIDO PARA CIMA) -->
+              <div id="payments-section" class="mb-8 border-t pt-6">
+                <div class="flex justify-between items-center mb-4">
+                  <h3 class="text-xl font-semibold text-gray-700">
+                    Controle de Mensalidade (Mês Selecionado)
+                  </h3>
+                  <button
+                    onclick="openPaymentModal()"
+                    class="bg-yellow-500 hover:bg-yellow-600 text-white text-sm font-semibold py-1 px-3 rounded transition duration-200 flex items-center"
+                  >
+                    <svg
+                      class="w-4 h-4 mr-1"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 4v16m8-8H4"
+                      ></path>
+                    </svg>
+                    Novo Pagamento
+                  </button>
+                </div>
+
+                <div class="overflow-x-auto rounded-lg shadow-inner">
+                  <table class="min-w-full bg-gray-50">
+                    <thead class="bg-indigo-500 text-white">
+                      <tr>
+                        <th class="py-2 px-4 text-left">Mês</th>
+                        <th class="py-2 px-4 text-center">Pago?</th>
+                        <th class="py-2 px-4 text-left">Dia Pago</th>
+                        <th class="py-2 px-4">Ações</th>
+                      </tr>
+                    </thead>
+                    <tbody id="payments-table-body">
+                      <!-- Mensalidades serão injetadas aqui -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- 2. Controle de Aulas (MOVIDO PARA BAIXO) -->
+              <div id="classes-section" class="border-t pt-6">
+                <div class="flex justify-between items-center mb-4">
+                  <h3 class="text-xl font-semibold text-gray-700">
+                    Controle de Aulas (Mês Selecionado)
+                  </h3>
+                  <button
+                    onclick="openClassModal()"
+                    class="bg-green-500 hover:bg-green-600 text-white text-sm font-semibold py-1 px-3 rounded transition duration-200 flex items-center"
+                  >
+                    <svg
+                      class="w-4 h-4 mr-1"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 4v16m8-8H4"
+                      ></path>
+                    </svg>
+                    Nova Aula
+                  </button>
+                </div>
+
+                <div class="overflow-x-auto rounded-lg shadow-inner">
+                  <table class="min-w-full bg-gray-50">
+                    <thead class="bg-indigo-500 text-white">
+                      <tr>
+                        <th class="py-2 px-4 text-left">Data da Aula</th>
+                        <th class="py-2 px-4 text-center">Aula</th>
+                        <th class="py-2 px-4 text-center">Presença</th>
+                        <th class="py-2 px-4 text-left">Subject</th>
+                        <th class="py-2 px-4">Ações</th>
+                      </tr>
+                    </thead>
+                    <tbody id="classes-table-body">
+                      <!-- Aulas serão injetadas aqui -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mensagem de boas-vindas/vazio -->
+        <div
+          id="initial-message"
+          class="text-center mt-20 p-8 bg-indigo-50 rounded-xl shadow-lg"
+        >
+          <svg
+            class="w-16 h-16 mx-auto text-indigo-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+            ></path>
+          </svg>
+          <p class="mt-4 text-xl font-semibold text-indigo-600">
+            Seu Gerenciador de Alunos de Inglês
+          </p>
+          <p class="mt-2 text-gray-500">
+            Use o botão "Novo Aluno" para começar a registrar as informações,
+            aulas e pagamentos.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modais -->
+
+    <!-- Modal Base para Formulários (Aluno, Aula, Pagamento) -->
+    <div
+      id="generic-modal"
+      class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center p-4 transition-opacity duration-300 opacity-0 pointer-events-none z-50"
+    >
+      <div
+        class="bg-white rounded-xl shadow-2xl w-full max-w-lg transform transition-transform duration-300 scale-95 p-6"
+      >
+        <h3
+          id="modal-title"
+          class="text-2xl font-bold mb-4 text-indigo-700"
+        ></h3>
+        <div id="modal-content">
+          <!-- O conteúdo específico (formulário) será injetado aqui -->
+        </div>
+      </div>
+    </div>
+
+    <!-- NOVO: Modal de Confirmação Customizado (Substitui confirm()) -->
+    <div
+      id="confirmation-modal"
+      class="fixed inset-0 bg-gray-900 bg-opacity-70 flex items-center justify-center p-4 transition-opacity duration-300 opacity-0 pointer-events-none z-[60]"
+    >
+      <div
+        class="bg-white rounded-xl shadow-2xl w-full max-w-sm transform transition-transform duration-300 scale-95 p-6"
+      >
+        <h3 class="text-xl font-bold mb-4 text-red-700">
+          Confirmação Necessária
+        </h3>
+        <p id="confirm-message" class="text-gray-700 mb-6"></p>
+        <div class="flex justify-end space-x-3">
+          <button
+            type="button"
+            onclick="toggleConfirmModal(false)"
+            class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition duration-150"
+          >
+            Cancelar
+          </button>
+          <button
+            type="button"
+            onclick="executeConfirmedAction()"
+            class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition duration-150"
+          >
+            Confirmar Exclusão
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mensagem de Feedback (para substituir alert()) -->
+    <div
+      id="message-box"
+      class="fixed top-4 right-4 p-4 rounded-lg text-white shadow-lg transition-transform duration-300 transform translate-x-full z-50"
+    ></div>
+
+    <!-- Scripts do Firebase e App Logic -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+      import {
+        getAuth,
+        signInAnonymously,
+        signInWithCustomToken,
+        onAuthStateChanged,
+      } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+      import {
+        getFirestore,
+        doc,
+        setDoc,
+        onSnapshot,
+        collection,
+        query,
+        orderBy,
+        deleteDoc,
+      } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+      import { setLogLevel } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+
+      // Ativar logs de debug (opcional, mas útil para desenvolvimento)
+      setLogLevel("Debug");
+
+      // --- CONFIGURAÇÃO DO FIREBASE (PARA VSCODE) ---
+      // 1. Cole o objeto de configuração que você copiou do console do Firebase aqui:
+      // Your web app's Firebase configuration
+      // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+      const firebaseConfig = {
+        apiKey: "AIzaSyDJe81bxA-PKG7q_ouT7MWIe6Od5QwS0VQ",
+        authDomain: "app-gestao-alunos.firebaseapp.com",
+        projectId: "app-gestao-alunos",
+        storageBucket: "app-gestao-alunos.firebasestorage.app",
+        messagingSenderId: "501391699545",
+        appId: "1:501391699545:web:c8c581f65d5116d7424b48",
+        measurementId: "G-Q8J6YZWNFZ",
+      };
+
+      // 2. Defina o ID do seu aplicativo (pode ser o projectId ou um nome customizado)
+      const appId = firebaseConfig.projectId || "default-app-id";
+
+      let app;
+      let db;
+      let auth;
+      let userId = "loading";
+
+      // Array de meses para o dropdown e ordenação
+      const MONTHS = [
+        "Janeiro",
+        "Fevereiro",
+        "Março",
+        "Abril",
+        "Maio",
+        "Junho",
+        "Julho",
+        "Agosto",
+        "Setembro",
+        "Outubro",
+        "Novembro",
+        "Dezembro",
+      ];
+
+      // Estado Global do App
+      window.students = [];
+      window.currentStudentId = null;
+      window.currentStudent = null;
+      window.currentSelectedMonth = null;
+      let isSaving = false; // Flag para prevenir "race conditions"
+
+      // --- FUNÇÕES DE UTILIDADE ---
+
+      // Variáveis globais para o modal de confirmação
+      window.pendingAction = null;
+      window.pendingArgs = [];
+
+      window.toggleConfirmModal = (show = true) => {
+        const modal = document.getElementById("confirmation-modal");
+        const content = modal.querySelector(".max-w-sm");
+        if (show) {
+          modal.classList.remove("pointer-events-none", "opacity-0");
+          content.classList.remove("scale-95");
+          content.classList.add("scale-100");
+        } else {
+          modal.classList.add("pointer-events-none", "opacity-0");
+          content.classList.remove("scale-100");
+          content.classList.add("scale-95");
+          // Limpa a ação pendente após fechar
+          window.pendingAction = null;
+          window.pendingArgs = [];
+        }
+      };
+
+      window.openConfirmModal = (message, actionFn, args) => {
+        document.getElementById("confirm-message").textContent = message;
+        window.pendingAction = actionFn;
+        window.pendingArgs = args;
+        window.toggleConfirmModal(true);
+      };
+
+      // CORREÇÃO: Função agora é assíncrona e usa await para garantir que a exclusão termine
+      window.executeConfirmedAction = async () => {
+        window.toggleConfirmModal(false);
+        if (window.pendingAction) {
+          // Executa a função com argumentos
+          await window.pendingAction(...window.pendingArgs);
+        }
+      };
+
+      function showMessage(message, type = "success") {
+        const box = document.getElementById("message-box");
+        box.textContent = message;
+        box.className =
+          "fixed top-4 right-4 p-4 rounded-lg shadow-lg transition-transform duration-300 transform translate-x-0";
+
+        if (type === "success") {
+          box.classList.add("bg-green-500");
+        } else if (type === "error") {
+          box.classList.add("bg-red-500");
+        } else {
+          box.classList.add("bg-blue-500");
+        }
+
+        setTimeout(() => {
+          box.classList.remove("translate-x-0");
+          box.classList.add("translate-x-full");
+        }, 3000);
+      }
+
+      /**
+       * Converte data de YYYY-MM-DD para DD/MM/YYYY.
+       * @param {string} dateStr Data no formato YYYY-MM-DD (do input type="date").
+       * @returns {string} Data formatada como DD/MM/YYYY ou o string original.
+       */
+      function formatDate(dateStr) {
+        if (!dateStr || dateStr.length !== 10) return dateStr;
+        // Assumes YYYY-MM-DD
+        const [year, month, day] = dateStr.split("-");
+        if (year && month && day) {
+          return `${day}/${month}/${year}`;
+        }
+        return dateStr;
+      }
+
+      /**
+       * Obtém o nome do mês a partir do índice (0=Janeiro, 11=Dezembro).
+       * @param {number} monthIndex Índice do mês (0-11)
+       * @returns {string} Nome do mês em português.
+       */
+      function getMonthName(monthIndex) {
+        return MONTHS[monthIndex];
+      }
+
+      // Função para mostrar ou esconder o modal genérico
+      window.toggleModal = (show = true) => {
+        const modal = document.getElementById("generic-modal");
+        const content = modal.querySelector(".max-w-lg");
+        if (show) {
+          modal.classList.remove("pointer-events-none", "opacity-0");
+          content.classList.remove("scale-95");
+          content.classList.add("scale-100");
+          document.body.classList.add("overflow-hidden");
+        } else {
+          modal.classList.add("pointer-events-none", "opacity-0");
+          content.classList.remove("scale-100");
+          content.classList.add("scale-95");
+          document.body.classList.remove("overflow-hidden");
+        }
+      };
+
+      // --- FIREBASE E AUTENTICAÇÃO ---
+
+      async function initFirebase() {
+        try {
+          if (
+            !firebaseConfig.apiKey ||
+            firebaseConfig.apiKey === "SEU_API_KEY"
+          ) {
+            throw new Error(
+              "Configuração do Firebase ausente ou não preenchida. Edite o app_gestao_alunos.html e insira seu firebaseConfig (veja INSTRUCOES_FIREBASE.md)."
+            );
+          }
+          app = initializeApp(firebaseConfig);
+          db = getFirestore(app);
+          auth = getAuth(app);
+
+          // Para testes locais no VSCode, usamos a autenticação anônima.
+          await signInAnonymously(auth);
+
+          onAuthStateChanged(auth, (user) => {
+            if (user) {
+              userId = user.uid;
+              document.getElementById("user-id-display").textContent = userId;
+              // Inicia o listener de alunos apenas após a autenticação
+              fetchStudents();
+            } else {
+              userId = crypto.randomUUID(); // Fallback ID se não autenticado (mas o token garante autenticação)
+              document.getElementById("user-id-display").textContent =
+                "Anônimo: " + userId.substring(0, 8) + "...";
+              fetchStudents(); // Tenta buscar com ID anônimo
+            }
+          });
+        } catch (error) {
+          console.error("Erro ao inicializar Firebase:", error);
+          showMessage("Erro de inicialização. Verifique o console.", "error");
+        }
+      }
+
+      // --- FUNÇÕES CRUD BÁSICAS (LEITURA) ---
+
+      // Função para obter o caminho da coleção de alunos (Privado)
+      function getStudentCollectionPath() {
+        return `artifacts/${appId}/users/${userId}/students`;
+      }
+
+      function fetchStudents() {
+        if (!db || !userId) return;
+
+        const studentsRef = collection(db, getStudentCollectionPath());
+        const q = query(studentsRef); // Sem orderBy para evitar erros de índice
+
+        onSnapshot(
+          q,
+          (snapshot) => {
+            if (isSaving) {
+              console.warn("onSnapshot: Renderização pulada (salvando dados).");
+              return; // Pula a renderização se estiver salvando
+            }
+
+            window.students = snapshot.docs.map((doc) => ({
+              id: doc.id,
+              ...doc.data(),
+            }));
+            renderStudentList(window.students);
+
+            // Re-seleciona o aluno atual após a atualização
+            if (window.currentStudentId) {
+              const updatedStudent = window.students.find(
+                (s) => s.id === window.currentStudentId
+              );
+              if (updatedStudent) {
+                selectStudent(updatedStudent);
+              } else {
+                // Se o aluno foi excluído
+                resetDetailsView();
+              }
+            } else if (window.students.length > 0) {
+              // Seleciona o primeiro aluno se nenhum estiver selecionado
+              selectStudent(window.students[0]);
+            } else {
+              resetDetailsView();
+            }
+          },
+          (error) => {
+            console.error("Erro ao buscar alunos:", error);
+            showMessage(
+              "Não foi possível carregar os dados. Verifique a conexão.",
+              "error"
+            );
+          }
+        );
+      }
+
+      // --- FUNÇÕES DE RENDERIZAÇÃO DE UI ---
+
+      function renderStudentList(students) {
+        const listEl = document.getElementById("student-list");
+        listEl.innerHTML = "";
+
+        if (students.length === 0) {
+          listEl.innerHTML =
+            '<p class="text-gray-500 text-sm italic">Nenhum aluno cadastrado. Comece agora!</p>';
+          return;
+        }
+
+        students.forEach((student) => {
+          const isActive =
+            student.id === window.currentStudentId
+              ? "bg-indigo-100 border-indigo-500"
+              : "bg-gray-50 hover:bg-gray-100 border-gray-200";
+
+          const item = document.createElement("div");
+          item.className = `p-3 rounded-lg border cursor-pointer transition duration-150 ${isActive}`;
+          item.innerHTML = `<p class="font-semibold text-gray-800 truncate">${
+            student.nome || "Aluno Sem Nome"
+          }</p>
+                                  <p class="text-xs text-gray-500">${
+                                    student.plano || "Sem Plano"
+                                  }</p>`;
+          item.onclick = () => selectStudent(student);
+          listEl.appendChild(item);
+        });
+      }
+
+      // Função principal para seleção e renderização
+      window.selectStudent = (student) => {
+        window.currentStudentId = student.id;
+        window.currentStudent = student;
+
+        // 1. Atualiza lista e título
+        renderStudentList(window.students);
+        document.getElementById("main-title").textContent =
+          student.nome || "Detalhes do Aluno";
+
+        // 2. Exibe a seção de detalhes
+        const contentEl = document.getElementById("student-details-content");
+        contentEl.classList.remove("hidden", "opacity-0", "scale-95");
+        contentEl.classList.add("opacity-100", "scale-100");
+        document.getElementById("initial-message").classList.add("hidden");
+
+        // 3. Renderiza Informações (Fixas)
+        renderStudentInfo(student);
+
+        // 4. Renderiza Abas de Mês e Filtra o Conteúdo (NOVO FLUXO)
+        renderMonthTabs(student);
+        // Chama selectMonth para garantir que o conteúdo filtrado seja exibido
+        window.selectMonth(
+          window.currentSelectedMonth || getMonthName(new Date().getMonth())
+        );
+      };
+
+      function renderStudentInfo(student) {
+        const infoMap = [
+          { label: "e-mail", key: "email" },
+          { label: "Início", key: "inicio" },
+          { label: "Plano", key: "plano" },
+          { label: "Valor Mensal", key: "valorMensal" },
+          { label: "CPF", key: "cpf" }, // Adicionado o CPF aqui
+          { label: "Horário", key: "horario" },
+        ];
+
+        const html = infoMap
+          .map(
+            (item) => `
+                <div class="border-b pb-2">
+                    <p class="text-xs font-medium text-gray-500">${
+                      item.label
+                    }</p>
+                    <p class="text-base font-medium">${
+                      student[item.key] || "N/A"
+                    }</p>
+                </div>
+            `
+          )
+          .join("");
+
+        document.getElementById("info-section").innerHTML = html;
+      }
+
+      // NOVO: Renderiza Abas e Define o Mês Selecionado
+      function renderMonthTabs(student) {
+        const tabsContainer = document.getElementById("month-tabs");
+        tabsContainer.innerHTML = "";
+
+        const monthsSet = new Set();
+
+        // Coletar meses das Aulas
+        (student.aulas || []).forEach((aula) => {
+          if (aula.data && aula.data.length === 10) {
+            const date = new Date(aula.data + "T00:00:00");
+            monthsSet.add(getMonthName(date.getMonth()));
+          }
+        });
+
+        // Coletar meses das Mensalidades
+        (student.mensalidades || []).forEach((pagamento) => {
+          if (pagamento.mes) {
+            monthsSet.add(pagamento.mes);
+          }
+        });
+
+        const sortedMonths = Array.from(monthsSet).sort((a, b) => {
+          return MONTHS.indexOf(a) - MONTHS.indexOf(b);
+        });
+
+        if (sortedMonths.length === 0) {
+          tabsContainer.innerHTML =
+            '<p class="text-xs text-gray-500 text-center py-2">Nenhum dado registrado.</p>';
+          // Define o mês atual para exibição padrão, mesmo que vazio
+          window.currentSelectedMonth = getMonthName(new Date().getMonth());
+          return;
+        }
+
+        // Define o mês inicial (último mês com dados ou o mês atual se não houver seleção prévia)
+        if (
+          !window.currentSelectedMonth ||
+          !sortedMonths.includes(window.currentSelectedMonth)
+        ) {
+          window.currentSelectedMonth = sortedMonths[sortedMonths.length - 1];
+        }
+
+        // Renderiza as abas
+        sortedMonths.forEach((month) => {
+          const isActive = month === window.currentSelectedMonth;
+          const activeClasses = isActive
+            ? "bg-indigo-600 text-white font-bold shadow-md"
+            : "text-gray-700 hover:bg-indigo-100";
+
+          tabsContainer.innerHTML += `
+                    <button onclick="selectMonth('${month}')" class="w-full text-left px-3 py-2 rounded-lg transition duration-150 ${activeClasses}">
+                        ${month}
+                    </button>
+                `;
+        });
+      }
+
+      // NOVO: Função que filtra e renderiza o conteúdo principal
+      window.selectMonth = (month) => {
+        window.currentSelectedMonth = month;
+
+        // Re-renderiza abas para atualizar o estado ativo
+        renderMonthTabs(window.currentStudent);
+
+        const student = window.currentStudent;
+        if (!student) return;
+
+        // 1. Filtrar Mensalidades
+        const filteredPayments = (student.mensalidades || []).filter(
+          (pagamento) => {
+            return pagamento.mes === month;
+          }
+        );
+
+        // 2. Filtrar Aulas
+        const filteredClasses = (student.aulas || []).filter((aula) => {
+          if (!aula.data || aula.data.length !== 10) return false;
+          const date = new Date(aula.data + "T00:00:00");
+          return getMonthName(date.getMonth()) === month;
+        });
+
+        // 3. Renderizar Seções com dados filtrados
+        renderPayments(filteredPayments); // RENDERIZAÇÃO DE PAGAMENTOS
+        renderClasses(filteredClasses); // RENDERIZAÇÃO DE AULAS
+      };
+
+      // O renderClasses agora aceita a lista de aulas filtrada
+      function renderClasses(filteredAulas) {
+        const tbody = document.getElementById("classes-table-body");
+        tbody.innerHTML = "";
+
+        if (filteredAulas.length === 0) {
+          tbody.innerHTML =
+            '<tr><td colspan="5" class="text-center py-4 text-gray-500 italic">Nenhuma aula registrada neste mês.</td></tr>';
+          return;
+        }
+
+        // Ordena as aulas por data (simplesmente inverte para mostrar as mais recentes primeiro)
+        const sortedAulas = [...filteredAulas].reverse();
+
+        sortedAulas.forEach((aula, index) => {
+          const presenceIcon = aula.presente
+            ? '<svg class="w-5 h-5 text-green-500 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>'
+            : '<svg class="w-5 h-5 text-red-500 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>';
+
+          // Encontra o índice original no array COMPLETO para permitir a edição/exclusão correta
+          const originalIndex = window.currentStudent.aulas.findIndex(
+            (a) =>
+              a.data === aula.data &&
+              a.aula === aula.aula &&
+              a.subject === aula.subject
+          );
+
+          tbody.innerHTML += `
+                    <tr class="border-b hover:bg-gray-100">
+                        <td class="py-3 px-4 text-sm">${
+                          formatDate(aula.data) || "N/A"
+                        }</td>
+                        <td class="py-3 px-4 text-center text-sm font-medium">${
+                          aula.aula || "N/A"
+                        }</td>
+                        <td class="py-3 px-4 text-center">${presenceIcon}</td>
+                        <td class="py-3 px-4 text-sm">${
+                          aula.subject || "N/A"
+                        }</td>
+                        <td class="py-3 px-4 text-center space-x-2">
+                            <button onclick="openClassModal(${originalIndex})" class="text-indigo-500 hover:text-indigo-700 text-xs">Editar</button>
+                            <!-- ATUALIZAÇÃO: Trocado "Excluir" por um ícone X -->
+                            <button onclick="window.deleteClass(${originalIndex})" title="Excluir Aula" class="text-red-500 hover:text-red-700 p-1 rounded-full hover:bg-red-100 transition duration-150">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+        });
+      }
+
+      // O renderPayments agora aceita a lista de pagamentos filtrada
+      function renderPayments(filteredMensalidades) {
+        const tbody = document.getElementById("payments-table-body");
+        tbody.innerHTML = "";
+
+        if (filteredMensalidades.length === 0) {
+          tbody.innerHTML =
+            '<tr><td colspan="4" class="text-center py-4 text-gray-500 italic">Nenhum pagamento registrado neste mês.</td></tr>';
+          return;
+        }
+
+        // Não inverte a ordem pois só deve haver 1 pagamento por mês filtrado
+
+        filteredMensalidades.forEach((pagamento) => {
+          // Adiciona a classe 'unpaid-row' se não estiver pago
+          const rowClass = pagamento.pago ? "hover:bg-gray-100" : "unpaid-row";
+
+          const paidIcon = pagamento.pago
+            ? '<svg class="w-5 h-5 text-green-500 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>'
+            : '<svg class="w-5 h-5 text-red-600 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>'; // Ícone de X para não pago
+
+          // Encontra o índice original no array COMPLETO para permitir a edição/exclusão correta
+          const originalIndex = window.currentStudent.mensalidades.findIndex(
+            (p) => p.mes === pagamento.mes
+          );
+
+          tbody.innerHTML += `
+                    <tr class="border-b ${rowClass}">
+                        <td class="py-3 px-4 text-sm font-medium">${
+                          pagamento.mes || "N/A"
+                        }</td>
+                        <td class="py-3 px-4 text-center">${paidIcon}</td>
+                        <td class="py-3 px-4 text-sm">${
+                          pagamento.pago
+                            ? pagamento.diaPago || "N/A"
+                            : "NÃO PAGO"
+                        }</td>
+                        <td class="py-3 px-4 text-center space-x-2">
+                            <button onclick="openPaymentModal(${originalIndex})" class="text-indigo-500 hover:text-indigo-700 text-xs">Editar</button>
+                            <!-- ATUALIZAÇÃO: Trocado "Excluir" por um ícone X -->
+                            <button onclick="deletePayment(${originalIndex})" title="Excluir Pagamento" class="text-red-500 hover:text-red-700 p-1 rounded-full hover:bg-red-100 transition duration-150">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+        });
+      }
+
+      function resetDetailsView() {
+        document.getElementById("initial-message").classList.remove("hidden");
+        const contentEl = document.getElementById("student-details-content");
+        contentEl.classList.add("hidden", "opacity-0", "scale-95");
+        document.getElementById("main-title").textContent =
+          "Selecione um Aluno";
+        window.currentStudentId = null;
+        window.currentStudent = null;
+        window.currentSelectedMonth = null; // Limpa o mês selecionado
+        renderStudentList(window.students);
+      }
+
+      // --- FUNÇÕES CRUD (ESCRITA) ---
+
+      // 1. Alunos (Alterado para usar o Modal de Confirmação)
+      window.openStudentModal = (student = null) => {
+        const title = student
+          ? `Editar Aluno: ${student.nome}`
+          : "Adicionar Novo Aluno";
+        // Adicionado campo 'cpf' ao objeto de dados
+        const data = student || {
+          nome: "",
+          email: "",
+          inicio: "",
+          plano: "",
+          valorMensal: "",
+          cpf: "",
+          horario: "",
+        };
+
+        document.getElementById("modal-title").textContent = title;
+        document.getElementById("modal-content").innerHTML = `
+                <form id="student-form" onsubmit="event.preventDefault(); saveStudent('${
+                  student ? student.id : ""
+                }')" class="space-y-4">
+                    <div>
+                        <label for="nome" class="block text-sm font-medium text-gray-700">Nome do Aluno</label>
+                        <input type="text" id="nome" value="${
+                          data.nome
+                        }" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700">E-mail</label>
+                        <input type="email" id="email" value="${
+                          data.email
+                        }" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="inicio" class="block text-sm font-medium text-gray-700">Início (Ex: 25/7/2023)</label>
+                            <input type="text" id="inicio" value="${
+                              data.inicio
+                            }" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border focus:ring-indigo-500 focus:border-indigo-500">
+                        </div>
+                        <div>
+                            <label for="plano" class="block text-sm font-medium text-gray-700">Plano (Ex: 2x /week)</label>
+                            <input type="text" id="plano" value="${
+                              data.plano
+                            }" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border focus:ring-indigo-500 focus:border-indigo-500">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="valorMensal" class="block text-sm font-medium text-gray-700">Valor Mensal (Ex: R$ 500)</label>
+                            <input type="text" id="valorMensal" value="${
+                              data.valorMensal
+                            }" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border focus:ring-indigo-500 focus:border-indigo-500">
+                        </div>
+                        <div>
+                            <label for="cpf" class="block text-sm font-medium text-gray-700">CPF</label>
+                            <input type="text" id="cpf" value="${
+                              data.cpf
+                            }" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border focus:ring-indigo-500 focus:border-indigo-500">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1">
+                        <div>
+                            <label for="horario" class="block text-sm font-medium text-gray-700">Horário (Ex: terças e quintas 18hrs)</label>
+                            <input type="text" id="horario" value="${
+                              data.horario
+                            }" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border focus:ring-indigo-500 focus:border-indigo-500">
+                        </div>
+                    </div>
+                    
+                    <!-- ATUALIZAÇÃO: Layout dos botões do formulário alterado -->
+                    <div class="flex justify-between items-center pt-4">
+                        <div> <!-- Botão Excluir (Lixeira) à esquerda -->
+                            ${
+                              student
+                                ? `<button type="button" onclick="deleteStudent('${student.id}', '${student.nome}')" title="Excluir Aluno" class="text-red-600 hover:text-red-800 font-medium p-2 rounded-lg hover:bg-red-50 transition duration-150 flex items-center">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                <span class="ml-1 text-sm">Excluir Aluno</span>
+                            </button>`
+                                : "<div></div>"
+                            }
+                        </div>
+                        <div class="space-x-3"> <!-- Botões Cancelar/Salvar à direita -->
+                            <button type="button" onclick="toggleModal(false)" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition duration-150">Cancelar</button>
+                            <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition duration-150">${
+                              student ? "Salvar Alterações" : "Adicionar"
+                            }</button>
+                        </div>
+                    </div>
+                </form>
+            `;
+        window.toggleModal(true);
+      };
+
+      window.saveStudent = async (studentId) => {
+        const form = document.getElementById("student-form");
+        // Pega o botão de submit
+        const submitButton = form.querySelector('button[type="submit"]');
+
+        if (!form.checkValidity()) {
+          form.reportValidity(); // Mostra o erro de validação nativo do browser
+          return;
+        }
+
+        // CORREÇÃO: Desabilita o botão para evitar cliques duplos (Corrige Bug 2)
+        submitButton.disabled = true;
+        submitButton.textContent = "Salvando...";
+        isSaving = true; // <-- LIGA O FLAG
+
+        const newStudentData = {
+          nome: form.querySelector("#nome").value,
+          email: form.querySelector("#email").value,
+          inicio: form.querySelector("#inicio").value,
+          plano: form.querySelector("#plano").value,
+          valorMensal: form.querySelector("#valorMensal").value,
+          cpf: form.querySelector("#cpf").value, // Salva o CPF
+          horario: form.querySelector("#horario").value,
+          // Mantém as aulas e mensalidades existentes se estiver editando
+          aulas:
+            window.currentStudentId === studentId
+              ? window.currentStudent.aulas || []
+              : [],
+          mensalidades:
+            window.currentStudentId === studentId
+              ? window.currentStudent.mensalidades || []
+              : [],
+        };
+
+        // CORREÇÃO: Define o ID *antes* de salvar, se for um novo aluno
+        const isNewStudent = !studentId;
+        const finalStudentId = isNewStudent ? crypto.randomUUID() : studentId;
+        // CORREÇÃO: Movido 'docRef' para DENTRO do try block
+        // const docRef = doc(db, getStudentCollectionPath(), finalStudentId);
+
+        try {
+          // CORREÇÃO: docRef movido para cá
+          const docRef = doc(db, getStudentCollectionPath(), finalStudentId);
+          await setDoc(docRef, newStudentData, { merge: true });
+
+          // CORREÇÃO (Ordem alterada):
+          // 1. Feche o modal PRIMEIRO.
+          window.toggleModal(false);
+
+          // 2. Mostre a mensagem de sucesso.
+          showMessage(`Aluno ${newStudentData.nome} salvo com sucesso!`);
+
+          // 3. Defina o ID do aluno atual por ÚLTIMO.
+          // Isso dispara o onSnapshot DEPOIS que a UI do modal já foi limpa,
+          // evitando a "condição de corrida".
+          if (isNewStudent) {
+            window.currentStudentId = finalStudentId;
+            // O onSnapshot (em fetchStudents) vai pegar essa mudança
+            // e selecionar o novo aluno automaticamente na lista.
+          }
+
+          // O botão não precisa ser reabilitado aqui, pois o modal foi fechado com sucesso.
+        } catch (e) {
+          console.error("Erro ao salvar aluno: ", e);
+          showMessage("Erro ao salvar. Tente novamente.", "error");
+
+          // CORREÇÃO: Re-abilita o botão apenas se der erro
+          submitButton.disabled = false;
+          submitButton.textContent = isNewStudent
+            ? "Adicionar"
+            : "Salvar Alterações";
+        } finally {
+          isSaving = false; // <-- DESLIGA O FLAG
+          // Força a atualização do onSnapshot, já que ele foi pulado
+          fetchStudents();
+        }
+      };
+
+      // FUNÇÃO ATUALIZADA: Usa o novo modal de confirmação
+      window.deleteStudent = async (studentId, studentName) => {
+        window.openConfirmModal(
+          `Você tem certeza que deseja EXCLUIR o aluno "${studentName}" e TODOS os seus dados? Esta ação é irreversível.`,
+          async (id, name) => {
+            isSaving = true; // <-- CORREÇÃO: LIGA O FLAG
+            try {
+              await deleteDoc(doc(db, getStudentCollectionPath(), id));
+              window.toggleModal(false); // Fecha o modal de aluno/edição
+              showMessage(`Aluno ${name} excluído!`);
+            } catch (e) {
+              console.error("Erro ao excluir aluno: ", e);
+              showMessage("Erro ao excluir. Tente novamente.", "error");
+            } finally {
+              isSaving = false; // <-- CORREÇÃO: DESLIGA O FLAG
+              fetchStudents(); // <-- CORREÇÃO: FORÇA ATUALIZAÇÃO
+            }
+          },
+          [studentId, studentName]
+        );
+      };
+
+      // 2. Aulas (atualizada para chamar selectMonth após salvar)
+      window.openClassModal = (classIndex = -1) => {
+        if (!window.currentStudent) {
+          showMessage("Selecione um aluno primeiro.", "error");
+          return;
+        }
+
+        const isEditing = classIndex !== -1;
+        // A data é armazenada como YYYY-MM-DD para compatibilidade com input type="date"
+        const today = new Date().toISOString().split("T")[0];
+        const existingClass = isEditing
+          ? window.currentStudent.aulas[classIndex]
+          : { data: today, aula: "1ª", presente: true, subject: "" };
+
+        // Opções para o dropdown de sequência de aulas
+        const classOptions = Array.from({ length: 10 }, (_, i) => {
+          const aulaText = `${i + 1}ª`;
+          const selected = existingClass.aula === aulaText ? "selected" : "";
+          return `<option value="${aulaText}" ${selected}>${aulaText} Aula</option>`;
+        }).join("");
+
+        document.getElementById("modal-title").textContent = isEditing
+          ? "Editar Aula"
+          : "Adicionar Nova Aula";
+        document.getElementById("modal-content").innerHTML = `
+                <form id="class-form" onsubmit="event.preventDefault(); saveClass(${classIndex})" class="space-y-4">
+                    <div>
+                        <label for="class-data" class="block text-sm font-medium text-gray-700">Data da Aula</label>
+                        <input type="date" id="class-data" value="${
+                          existingClass.data
+                        }" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
+                    <div>
+                        <label for="class-number" class="block text-sm font-medium text-gray-700">Sequência da Aula</label>
+                        <select id="class-number" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border focus:ring-indigo-500 focus:border-indigo-500">
+                            ${classOptions}
+                        </select>
+                    </div>
+                    <div>
+                        <label for="class-subject" class="block text-sm font-medium text-gray-700">Subject (Ex: Simple Past)</label>
+                        <input type="text" id="class-subject" value="${
+                          existingClass.subject
+                        }" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
+                    <div class="flex items-center">
+                        <input type="checkbox" id="class-presente" ${
+                          existingClass.presente ? "checked" : ""
+                        } class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
+                        <label for="class-presente" class="ml-2 block text-sm font-medium text-gray-700">Presente (Concluída)</label>
+                    </div>
+
+                    <div class="flex justify-end pt-4 space-x-3">
+                        <button type="button" onclick="toggleModal(false)" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition duration-150">Cancelar</button>
+                        <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition duration-150">${
+                          isEditing ? "Salvar Aula" : "Adicionar Aula"
+                        }</button>
+                    </div>
+                </form>
+            `;
+        window.toggleModal(true);
+      };
+
+      window.saveClass = async (classIndex) => {
+        const form = document.getElementById("class-form");
+        const submitButton = form.querySelector('button[type="submit"]'); // <-- Pega o botão
+
+        if (!form.checkValidity()) return;
+        if (!window.currentStudentId) {
+          showMessage("Erro: Nenhum aluno selecionado.", "error");
+          return;
+        }
+
+        submitButton.disabled = true; // <-- Desabilita
+        isSaving = true; // <-- LIGA O FLAG
+
+        const newClass = {
+          data: form.querySelector("#class-data").value,
+          aula: form.querySelector("#class-number").value,
+          subject: form.querySelector("#class-subject").value,
+          presente: form.querySelector("#class-presente").checked,
+        };
+
+        const aulas = [...(window.currentStudent.aulas || [])];
+
+        if (classIndex !== -1) {
+          // Editar aula existente
+          aulas[classIndex] = newClass;
+        } else {
+          // Adicionar nova aula (adiciona no final)
+          aulas.push(newClass);
+        }
+
+        try {
+          // CORREÇÃO: docRef movido para cá
+          const docRef = doc(
+            db,
+            getStudentCollectionPath(),
+            window.currentStudentId
+          );
+          await setDoc(docRef, { aulas }, { merge: true });
+          window.toggleModal(false);
+          showMessage(`Aula salva com sucesso!`);
+
+          // ATUALIZAÇÃO NOVO FLUXO: Seleciona o mês da aula recém-salva
+          const date = new Date(newClass.data + "T00:00:00");
+          const monthName = getMonthName(date.getMonth());
+          // Define o mês, mas a renderização será feita pelo fetchStudents
+          window.currentSelectedMonth = monthName;
+        } catch (e) {
+          console.error("Erro ao salvar aula: ", e);
+          showMessage("Erro ao salvar aula. Tente novamente.", "error");
+          submitButton.disabled = false; // <-- Re-abilita no erro
+        } finally {
+          isSaving = false; // <-- DESLIGA O FLAG
+          fetchStudents(); // <-- Força o onSnapshot
+        }
+      };
+
+      // FUNÇÃO ATUALIZADA: Usa o novo modal de confirmação
+      window.deleteClass = async (classIndex) => {
+        if (!window.currentStudentId) {
+          showMessage("Erro: Nenhum aluno selecionado.", "error");
+          return;
+        }
+
+        window.openConfirmModal(
+          `Você tem certeza que deseja EXCLUIR permanentemente esta aula?`,
+          async (index) => {
+            isSaving = true; // <-- CORREÇÃO: LIGA O FLAG
+            const aulas = [...(window.currentStudent.aulas || [])];
+
+            // Remove a aula pelo índice
+            aulas.splice(index, 1);
+
+            try {
+              const docRef = doc(
+                db,
+                getStudentCollectionPath(),
+                window.currentStudentId
+              );
+              await setDoc(docRef, { aulas }, { merge: true });
+              showMessage(`Aula excluída!`);
+              // O fetchStudents() no 'finally' vai cuidar da renderização
+            } catch (e) {
+              console.error("Erro ao excluir aula: ", e);
+              showMessage("Erro ao excluir aula. Tente novamente.", "error");
+            } finally {
+              isSaving = false; // <-- CORREÇÃO: DESLIGA O FLAG
+              fetchStudents(); // <-- CORREÇÃO: FORÇA ATUALIZAÇÃO
+            }
+          },
+          [classIndex]
+        );
+      };
+
+      // 3. Mensalidades (atualizada para chamar selectMonth após salvar)
+
+      window.openPaymentModal = (paymentIndex = -1) => {
+        if (!window.currentStudent) {
+          showMessage("Selecione um aluno primeiro.", "error");
+          return;
+        }
+
+        const isEditing = paymentIndex !== -1;
+        const existingPayment = isEditing
+          ? window.currentStudent.mensalidades[paymentIndex]
+          : { mes: MONTHS[new Date().getMonth()], pago: true, diaPago: "" };
+
+        // Cria as opções do dropdown de meses
+        const monthOptions = MONTHS.map((month) => {
+          const selected = existingPayment.mes === month ? "selected" : "";
+          return `<option value="${month}" ${selected}>${month}</option>`;
+        }).join("");
+
+        document.getElementById("modal-title").textContent = isEditing
+          ? "Editar Pagamento"
+          : "Registrar Novo Pagamento";
+        document.getElementById("modal-content").innerHTML = `
+                <form id="payment-form" onsubmit="event.preventDefault(); savePayment(${paymentIndex})" class="space-y-4">
+                    <div>
+                        <label for="payment-month" class="block text-sm font-medium text-gray-700">Mês</label>
+                        <select id="payment-month" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border focus:ring-indigo-500 focus:border-indigo-500">
+                            ${monthOptions}
+                        </select>
+                    </div>
+
+                    <div class="flex items-center space-x-4">
+                        <div class="flex items-center">
+                            <input type="checkbox" id="payment-paid" onchange="togglePaymentDay()" ${
+                              existingPayment.pago ? "checked" : ""
+                            } class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
+                            <label for="payment-paid" class="ml-2 block text-sm font-medium text-gray-700">Pagamento Recebido</label>
+                        </div>
+                        
+                        <div id="payment-day-container" class="${
+                          existingPayment.pago ? "" : "hidden"
+                        } flex-grow">
+                            <label for="payment-day" class="block text-sm font-medium text-gray-700">Dia Pago (Ex: 20)</label>
+                            <!-- CORREÇÃO: Removido o 'value' daqui para evitar erros de formatação no HTML -->
+                            <input type="number" id="payment-day" min="1" max="31" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border focus:ring-indigo-500 focus:border-indigo-500">
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end pt-4 space-x-3">
+                        <button type="button" onclick="toggleModal(false)" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition duration-150">Cancelar</button>
+                        <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition duration-150">${
+                          isEditing ? "Salvar Pagamento" : "Registrar Pagamento"
+                        }</button>
+                    </div>
+                </form>
+            `;
+
+        // CORREÇÃO: Define o valor do input de dia 'programaticamente' (mais seguro)
+        document.getElementById("payment-day").value =
+          existingPayment.diaPago || "";
+
+        window.toggleModal(true);
+      };
+
+      window.togglePaymentDay = () => {
+        const paidCheckbox = document.getElementById("payment-paid");
+        const dayContainer = document.getElementById("payment-day-container");
+        const dayInput = document.getElementById("payment-day");
+
+        if (paidCheckbox.checked) {
+          dayContainer.classList.remove("hidden");
+          // Sugere o dia atual para o campo diaPago
+          if (!dayInput.value) {
+            dayInput.value = new Date().getDate();
+          }
+        } else {
+          dayContainer.classList.add("hidden");
+          dayInput.value = ""; // Limpa o dia pago se o status for "Não Pago"
+        }
+      };
+
+      window.savePayment = async (paymentIndex) => {
+        const form = document.getElementById("payment-form");
+        const submitButton = form.querySelector('button[type="submit"]'); // <-- Pega o botão
+
+        if (!form.checkValidity()) return;
+        if (!window.currentStudentId) {
+          showMessage("Erro: Nenhum aluno selecionado.", "error");
+          return;
+        }
+
+        submitButton.disabled = true; // <-- Desabilita
+        isSaving = true; // <-- LIGA O FLAG
+
+        const isPaid = form.querySelector("#payment-paid").checked;
+        const month = form.querySelector("#payment-month").value;
+
+        const newPayment = {
+          mes: month,
+          pago: isPaid,
+          // Salva o dia pago apenas se estiver pago, caso contrário, salva uma string vazia
+          diaPago: isPaid ? form.querySelector("#payment-day").value : "",
+        };
+
+        const mensalidades = [...(window.currentStudent.mensalidades || [])];
+
+        if (paymentIndex !== -1) {
+          // Editar pagamento existente
+          mensalidades[paymentIndex] = newPayment;
+        } else {
+          // Adicionar novo pagamento (adiciona no final)
+          mensalidades.push(newPayment);
+        }
+
+        try {
+          // CORREÇÃO: docRef movido para cá
+          const docRef = doc(
+            db,
+            getStudentCollectionPath(),
+            window.currentStudentId
+          );
+          await setDoc(docRef, { mensalidades }, { merge: true });
+          window.toggleModal(false);
+          showMessage(`Pagamento salvo com sucesso!`);
+
+          // ATUALIZAÇÃO NOVO FLUXO: Seleciona o mês recém-salvo
+          window.currentSelectedMonth = month;
+        } catch (e) {
+          console.error("Erro ao salvar pagamento: ", e);
+          showMessage("Erro ao salvar pagamento. Tente novamente.", "error");
+          submitButton.disabled = false; // <-- Re-abilita no erro
+        } finally {
+          isSaving = false; // <-- DESLIGA O FLAG
+          fetchStudents(); // <-- Força o onSnapshot
+        }
+      };
+
+      // FUNÇÃO ATUALIZADA: Usa o novo modal de confirmação
+      window.deletePayment = async (paymentIndex) => {
+        if (!window.currentStudentId) {
+          showMessage("Erro: Nenhum aluno selecionado.", "error");
+          return;
+        }
+
+        window.openConfirmModal(
+          `Você tem certeza que deseja EXCLUIR permanentemente este registro de pagamento?`,
+          async (index) => {
+            isSaving = true; // <-- CORREÇÃO: LIGA O FLAG
+            const mensalidades = [
+              ...(window.currentStudent.mensalidades || []),
+            ];
+
+            // Remove o pagamento pelo índice
+            mensalidades.splice(index, 1);
+
+            try {
+              const docRef = doc(
+                db,
+                getStudentCollectionPath(),
+                window.currentStudentId
+              );
+              await setDoc(docRef, { mensalidades }, { merge: true });
+              showMessage(`Pagamento excluído!`);
+              // O fetchStudents() no 'finally' vai cuidar da renderização
+            } catch (e) {
+              console.error("Erro ao excluir pagamento: ", e);
+              showMessage(
+                "Erro ao excluir pagamento. Tente novamente.",
+                "error"
+              );
+            } finally {
+              isSaving = false; // <-- CORREÇÃO: DESLIGA O FLAG
+              fetchStudents(); // <-- CORREÇÃO: FORÇA ATUALIZAÇÃO
+            }
+          },
+          [paymentIndex]
+        );
+      };
+
+      // --- INICIALIZAÇÃO ---
+      window.onload = initFirebase;
+    </script>
+  </body>
+</html>
