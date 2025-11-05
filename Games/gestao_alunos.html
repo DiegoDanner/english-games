@@ -646,10 +646,8 @@
           },
           (error) => {
             console.error("Erro ao buscar alunos:", error);
-            showMessage(
-              "Não foi possível carregar os dados. Verifique a conexão.",
-              "error"
-            );
+            // A mensagem visual foi removida para evitar o "falso positivo" na inicialização.
+            // O erro ainda é visível no console para depuração.
           }
         );
       }
