@@ -461,32 +461,69 @@
         }
       };
 
-    // NOVO: Função para exportar dados dos alunos para CSV
+    // APRIMORADO: Função para exportar um relatório detalhado de pagamentos para CSV
     window.exportToCsv = () => {
         if (window.students.length === 0) {
             showMessage("Nenhum aluno para exportar.", "info");
             return;
         }
 
-        // Define as colunas do cabeçalho
-        const headers = ['Nome', 'Email', 'Início', 'Plano', 'Valor Mensal', 'CPF', 'Horário'];
+        // Define as colunas do cabeçalho para um relatório mais detalhado
+        const headers = [
+            'Nome do Aluno',
+            'Valor Mensal',
+            'Mês Referente',
+            'Status Pagamento',
+            'Dia do Pagamento',
+            'Notas'
+        ];
 
-        // Mapeia os dados dos alunos para linhas CSV, tratando valores nulos
-        const rows = window.students.map(student =>
-            [
-                student.nome || '',
-                student.email || '',
-                student.inicio || '',
-                student.plano || '',
-                student.valorMensal || '',
-                student.cpf || '',
-                student.horario || ''
-            ].map(value => `"${String(value).replace(/"/g, '""')}"`) // Aspas para garantir a integridade dos dados
-             .join(',')
+        const allRows = [];
+
+        // Itera sobre cada aluno para criar as linhas do relatório
+        window.students.forEach(student => {
+            const studentName = student.nome || 'Aluno sem nome';
+            const monthlyValue = student.valorMensal || 'N/A';
+
+            if (student.mensalidades && student.mensalidades.length > 0) {
+                // Adiciona uma linha para cada registro de mensalidade
+                student.mensalidades.forEach(payment => {
+                    const row = [
+                        studentName,
+                        monthlyValue,
+                        payment.mes || '',
+                        payment.pago ? 'Pago' : 'Não Pago',
+                        payment.diaPago || '',
+                        payment.notes || ''
+                    ];
+                    allRows.push(row);
+                });
+            } else {
+                // Adiciona uma linha indicando que não há registros para este aluno
+                const row = [
+                    studentName,
+                    monthlyValue,
+                    'Nenhum registro de pagamento',
+                    '',
+                    '',
+                    ''
+                ];
+                allRows.push(row);
+            }
+        });
+
+        if (allRows.length === 0) {
+            showMessage("Nenhum dado de pagamento para exportar.", "info");
+            return;
+        }
+
+        // Mapeia os dados para o formato CSV, garantindo que as aspas sejam tratadas
+        const csvRows = allRows.map(row =>
+            row.map(value => `"${String(value).replace(/"/g, '""')}"`).join(',')
         );
 
-        // Combina cabeçalho e linhas
-        const csvContent = [headers.join(','), ...rows].join('\\n');
+        // Combina cabeçalho e linhas com a quebra de linha correta (\n)
+        const csvContent = [headers.join(','), ...csvRows].join('\n');
 
         // Cria um Blob e simula o clique para download
         const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -494,7 +531,8 @@
         if (link.download !== undefined) {
             const url = URL.createObjectURL(blob);
             link.setAttribute("href", url);
-            link.setAttribute("download", "alunos.csv");
+            // Nome do arquivo mais descritivo
+            link.setAttribute("download", "relatorio_alunos_pagamentos.csv");
             link.style.visibility = 'hidden';
             document.body.appendChild(link);
             link.click();
