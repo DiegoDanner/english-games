@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 260" role="img" aria-labelledby="title desc">
+    <title id="title">Danner Idiomas logo</title>
+    <desc id="desc">Speech bubble with a globe icon at left and the words Danner Idiomas at right.</desc>
+
+    <defs>
+        <style>
+            .bubble { fill: rgb(31, 102, 229); }
+            .bubble-shadow { fill: rgba(15, 61, 145, 0.18); }
+            .globe-ring, .globe-lines { stroke: white; fill: none; }
+            .text-danner {
+                font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+                font-size: 90px;
+                font-weight: 800;
+                fill: #0f3d91; /* Dark blue */
+            }
+            .text-idiomas {
+                font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+                font-size: 90px;
+                font-weight: 800;
+                fill: rgb(31, 102, 229); /* Blue */
+            }
+        </style>
+    </defs>
+
+    <!-- Left icon: speech bubble + globe -->
+    <g transform="translate(15,15)">
+        <!-- Shadow/edge -->
+        <path class="bubble-shadow" d="M40 0h138c22 0 40 18 40 40v92c0 22-18 40-40 40H110l-44 27c-4 2-9-1-9-6v-21H40c-22 0-40-18-40-40V40C0 18 18 0 40 0z"/>
+        <!-- Bubble body -->
+        <path class="bubble" d="M40 10h138c17 0 30 13 30 30v90c0 17-13 30-30 30H112l-46 28c-3 2-7-1-7-5v-23H40c-17 0-30-13-30-30V40C10 23 23 10 40 10z"/>
+        <!-- Globe -->
+        <g transform="translate(44,28)">
+            <circle cx="70" cy="56" r="60" fill="rgb(31, 102, 229)" />
+            <circle cx="70" cy="56" r="60" class="globe-ring" stroke-width="6"/>
+            <!-- Meridians -->
+            <path class="globe-lines" stroke-width="3.5" d="M110,20 C94,29 86,44 86,63s10,34 24,43 M110,20 c14,9 24,24 24,43s-10,34-24,43" transform="scale(1.1) translate(-18,-15)"/>
+            <!-- Parallels -->
+            <path class="globe-lines" stroke-width="3.5" d="M49.2,56 H170.8 M62.4,31 C84.4,40 108.4,40 130.4,31 M65.2,82 C87.2,73 111.2,73 133.2,82" transform="scale(1.1) translate(-18,-15)"/>
+        </g>
+    </g>
+
+    <!-- Right side: brand text -->
+    <text x="260" y="115" class="text-danner">Danner</text>
+    <text x="260" y="200" class="text-idiomas">Idiomas</text>
+</svg>
