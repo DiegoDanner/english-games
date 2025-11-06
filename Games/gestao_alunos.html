@@ -71,6 +71,15 @@
           Novo Aluno
         </button>
 
+        <!-- NOVO: Botão Exportar para Excel -->
+        <button
+          onclick="exportToCsv()"
+          class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 shadow-md mb-6 flex items-center justify-center text-sm"
+        >
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+          Baixar (Excel)
+        </button>
+
         <!-- Lista de Alunos (Preenchida pelo JS) -->
         <div id="student-list" class="flex-grow space-y-2">
           <!-- Itens da lista de alunos serão injetados aqui -->
@@ -150,13 +159,15 @@
               <h3 class="text-lg font-bold text-indigo-700 mb-3 border-b pb-2">
                 Filtro Mensal
               </h3>
-              <div
-                id="month-tabs"
-                class="space-y-1 custom-scrollbar max-h-96 overflow-y-auto"
-              >
-                <p class="text-xs text-gray-500 text-center py-2">
-                  Carregando meses...
-                </p>
+              <div id="month-tabs">
+                <select id="month-dropdown" onchange="selectMonth(this.value)" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                  <!-- As opções serão preenchidas pelo JS -->
+                </select>
+              </div>
+              <!-- NOVO: Seção para exibir o total arrecadado -->
+              <div id="monthly-total-container" class="mt-4 pt-4 border-t">
+                  <h4 class="text-sm font-semibold text-gray-600">Total Arrecadado no Mês:</h4>
+                  <p id="monthly-total" class="text-2xl font-bold text-green-600">R$ 0,00</p>
               </div>
             </div>
 
@@ -197,6 +208,7 @@
                         <th class="py-2 px-4 text-left">Mês</th>
                         <th class="py-2 px-4 text-center">Pago?</th>
                         <th class="py-2 px-4 text-left">Dia Pago</th>
+                        <th class="py-2 px-4 text-left">Notas</th>
                         <th class="py-2 px-4">Ações</th>
                       </tr>
                     </thead>
@@ -459,6 +471,47 @@
           window.pendingArgs = [];
         }
       };
+
+    // NOVO: Função para exportar dados dos alunos para CSV
+    window.exportToCsv = () => {
+        if (window.students.length === 0) {
+            showMessage("Nenhum aluno para exportar.", "info");
+            return;
+        }
+
+        // Define as colunas do cabeçalho
+        const headers = ['Nome', 'Email', 'Início', 'Plano', 'Valor Mensal', 'CPF', 'Horário'];
+
+        // Mapeia os dados dos alunos para linhas CSV, tratando valores nulos
+        const rows = window.students.map(student =>
+            [
+                student.nome || '',
+                student.email || '',
+                student.inicio || '',
+                student.plano || '',
+                student.valorMensal || '',
+                student.cpf || '',
+                student.horario || ''
+            ].map(value => `"${String(value).replace(/"/g, '""')}"`) // Aspas para garantir a integridade dos dados
+             .join(',')
+        );
+
+        // Combina cabeçalho e linhas
+        const csvContent = [headers.join(','), ...rows].join('\\n');
+
+        // Cria um Blob e simula o clique para download
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement("a");
+        if (link.download !== undefined) {
+            const url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            link.setAttribute("download", "alunos.csv");
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    };
 
       window.openConfirmModal = (message, actionFn, args) => {
         document.getElementById("confirm-message").textContent = message;
@@ -743,60 +796,41 @@
         document.getElementById("info-section").innerHTML = html;
       }
 
-      // NOVO: Renderiza Abas e Define o Mês Selecionado
+      // ATUALIZADO: Renderiza o Dropdown de Meses
       function renderMonthTabs(student) {
-        const tabsContainer = document.getElementById("month-tabs");
-        tabsContainer.innerHTML = "";
+        const dropdown = document.getElementById("month-dropdown");
+        dropdown.innerHTML = ""; // Limpa opções antigas
 
         const monthsSet = new Set();
 
-        // Coletar meses das Aulas
-        (student.aulas || []).forEach((aula) => {
-          if (aula.data && aula.data.length === 10) {
-            const date = new Date(aula.data + "T00:00:00");
-            monthsSet.add(getMonthName(date.getMonth()));
-          }
-        });
+        // Coleta meses das Aulas e Mensalidades
+        (student.aulas || []).forEach(a => a.data && monthsSet.add(getMonthName(new Date(a.data + "T00:00:00").getMonth())));
+        (student.mensalidades || []).forEach(p => p.mes && monthsSet.add(p.mes));
 
-        // Coletar meses das Mensalidades
-        (student.mensalidades || []).forEach((pagamento) => {
-          if (pagamento.mes) {
-            monthsSet.add(pagamento.mes);
-          }
-        });
-
-        const sortedMonths = Array.from(monthsSet).sort((a, b) => {
-          return MONTHS.indexOf(a) - MONTHS.indexOf(b);
-        });
+        const sortedMonths = Array.from(monthsSet).sort((a, b) => MONTHS.indexOf(a) - MONTHS.indexOf(b));
 
         if (sortedMonths.length === 0) {
-          tabsContainer.innerHTML =
-            '<p class="text-xs text-gray-500 text-center py-2">Nenhum dado registrado.</p>';
-          // Define o mês atual para exibição padrão, mesmo que vazio
-          window.currentSelectedMonth = getMonthName(new Date().getMonth());
-          return;
+            const defaultMonth = getMonthName(new Date().getMonth());
+            dropdown.innerHTML = `<option value="${defaultMonth}">${defaultMonth}</option>`;
+            window.currentSelectedMonth = defaultMonth;
+            dropdown.value = defaultMonth;
+            return;
         }
 
-        // Define o mês inicial (último mês com dados ou o mês atual se não houver seleção prévia)
-        if (
-          !window.currentSelectedMonth ||
-          !sortedMonths.includes(window.currentSelectedMonth)
-        ) {
-          window.currentSelectedMonth = sortedMonths[sortedMonths.length - 1];
+        // Define o mês inicial
+        if (!window.currentSelectedMonth || !sortedMonths.includes(window.currentSelectedMonth)) {
+            window.currentSelectedMonth = sortedMonths[sortedMonths.length - 1];
         }
 
-        // Renderiza as abas
-        sortedMonths.forEach((month) => {
-          const isActive = month === window.currentSelectedMonth;
-          const activeClasses = isActive
-            ? "bg-indigo-600 text-white font-bold shadow-md"
-            : "text-gray-700 hover:bg-indigo-100";
-
-          tabsContainer.innerHTML += `
-                    <button onclick="selectMonth('${month}')" class="w-full text-left px-3 py-2 rounded-lg transition duration-150 ${activeClasses}">
-                        ${month}
-                    </button>
-                `;
+        // Popula o dropdown
+        sortedMonths.forEach(month => {
+            const option = document.createElement('option');
+            option.value = month;
+            option.textContent = month;
+            if (month === window.currentSelectedMonth) {
+                option.selected = true;
+            }
+            dropdown.appendChild(option);
         });
       }
 
@@ -804,8 +838,8 @@
       window.selectMonth = (month) => {
         window.currentSelectedMonth = month;
 
-        // Re-renderiza abas para atualizar o estado ativo
-        renderMonthTabs(window.currentStudent);
+        // Atualiza o valor do dropdown para refletir a seleção
+        document.getElementById('month-dropdown').value = month;
 
         const student = window.currentStudent;
         if (!student) return;
@@ -827,7 +861,31 @@
         // 3. Renderizar Seções com dados filtrados
         renderPayments(filteredPayments); // RENDERIZAÇÃO DE PAGAMENTOS
         renderClasses(filteredClasses); // RENDERIZAÇÃO DE AULAS
+        updateMonthlyTotal(month); // NOVO: Atualiza o total do mês
       };
+
+      // NOVO: Calcula e exibe o total arrecadado para um determinado mês
+      function updateMonthlyTotal(selectedMonth) {
+          let total = 0;
+
+          window.students.forEach(student => {
+              // Extrai o valor numérico, removendo "R$" e limpando espaços
+              const monthlyValueStr = (student.valorMensal || '0').replace('R$', '').trim();
+              const monthlyValue = parseFloat(monthlyValueStr.replace(',', '.')) || 0;
+
+              if (monthlyValue > 0 && student.mensalidades) {
+                  student.mensalidades.forEach(payment => {
+                      if (payment.mes === selectedMonth && payment.pago) {
+                          total += monthlyValue;
+                      }
+                  });
+              }
+          });
+
+          // Formata como moeda brasileira e exibe
+          const formattedTotal = total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+          document.getElementById('monthly-total').textContent = formattedTotal;
+      }
 
       // O renderClasses agora aceita a lista de aulas filtrada
       function renderClasses(filteredAulas) {
@@ -916,6 +974,9 @@
                           pagamento.pago
                             ? pagamento.diaPago || "N/A"
                             : "NÃO PAGO"
+                        }</td>
+                        <td class="py-3 px-4 text-sm text-gray-600">${
+                          pagamento.notes || ""
                         }</td>
                         <td class="py-3 px-4 text-center space-x-2">
                             <button onclick="openPaymentModal(${originalIndex})" class="text-indigo-500 hover:text-indigo-700 text-xs">Editar</button>
@@ -1303,7 +1364,7 @@
         const isEditing = paymentIndex !== -1;
         const existingPayment = isEditing
           ? window.currentStudent.mensalidades[paymentIndex]
-          : { mes: MONTHS[new Date().getMonth()], pago: true, diaPago: "" };
+          : { mes: MONTHS[new Date().getMonth()], pago: true, diaPago: "", notes: "" };
 
         // Cria as opções do dropdown de meses
         const monthOptions = MONTHS.map((month) => {
@@ -1336,8 +1397,13 @@
                         } flex-grow">
                             <label for="payment-day" class="block text-sm font-medium text-gray-700">Dia Pago (Ex: 20)</label>
                             <!-- CORREÇÃO: Removido o 'value' daqui para evitar erros de formatação no HTML -->
-                            <input type="number" id="payment-day" min="1" max="31" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border focus:ring-indigo-500 focus:border-indigo-500">
+                            <input type="number" id="payment-day" min="1" max="31" class="mt-1 block w-full rounded-md border--gray-300 shadow-sm p-2 border focus:ring-indigo-500 focus:border-indigo-500">
                         </div>
+                    </div>
+
+                    <div>
+                        <label for="payment-notes" class="block text-sm font-medium text-gray-700">Notas (Opcional)</label>
+                        <textarea id="payment-notes" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border focus:ring-indigo-500 focus:border-indigo-500">${ existingPayment.notes || "" }</textarea>
                     </div>
 
                     <div class="flex justify-end pt-4 space-x-3">
@@ -1394,6 +1460,7 @@
           pago: isPaid,
           // Salva o dia pago apenas se estiver pago, caso contrário, salva uma string vazia
           diaPago: isPaid ? form.querySelector("#payment-day").value : "",
+          notes: form.querySelector("#payment-notes").value,
         };
 
         const mensalidades = [...(window.currentStudent.mensalidades || [])];
