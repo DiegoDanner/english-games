@@ -461,63 +461,83 @@
         }
       };
 
-    // APRIMORADO: Função para exportar um relatório detalhado de pagamentos para CSV
+    // APRIMORADO: Função para exportar um relatório completo com dados do aluno, aulas e pagamentos.
     window.exportToCsv = () => {
         if (window.students.length === 0) {
             showMessage("Nenhum aluno para exportar.", "info");
             return;
         }
 
-        // Define as colunas do cabeçalho para um relatório mais detalhado
+        // 1. Define as colunas do cabeçalho para o relatório completo
         const headers = [
-            'Nome do Aluno',
-            'Valor Mensal',
-            'Mês Referente',
-            'Status Pagamento',
-            'Dia do Pagamento',
-            'Notas'
+            'Nome do Aluno', 'Email', 'Início', 'Plano', 'Valor Mensal', 'CPF', 'Horário',
+            'Tipo de Registro', 'Data ou Mês Referente', 'Detalhe 1', 'Detalhe 2', 'Descrição / Notas'
         ];
 
         const allRows = [];
 
-        // Itera sobre cada aluno para criar as linhas do relatório
+        // 2. Itera sobre cada aluno para coletar todos os seus dados
         window.students.forEach(student => {
-            const studentName = student.nome || 'Aluno sem nome';
-            const monthlyValue = student.valorMensal || 'N/A';
+            const studentBaseInfo = [
+                student.nome || '',
+                student.email || '',
+                student.inicio || '',
+                student.plano || '',
+                student.valorMensal || '',
+                student.cpf || '',
+                student.horario || ''
+            ];
 
+            let hasRecords = false;
+
+            // 3. Processa os registros de aulas
+            if (student.aulas && student.aulas.length > 0) {
+                hasRecords = true;
+                student.aulas.forEach(aula => {
+                    const classRow = [
+                        ...studentBaseInfo,
+                        'Aula',
+                        formatDate(aula.data) || '', // Usar a função formatDate
+                        aula.aula || '', // Sequência da aula (ex: 1ª)
+                        aula.presente ? 'Presente' : 'Faltou',
+                        aula.subject || ''
+                    ];
+                    allRows.push(classRow);
+                });
+            }
+
+            // 4. Processa os registros de pagamentos
             if (student.mensalidades && student.mensalidades.length > 0) {
-                // Adiciona uma linha para cada registro de mensalidade
+                hasRecords = true;
                 student.mensalidades.forEach(payment => {
-                    const row = [
-                        studentName,
-                        monthlyValue,
+                    const paymentRow = [
+                        ...studentBaseInfo,
+                        'Pagamento',
                         payment.mes || '',
                         payment.pago ? 'Pago' : 'Não Pago',
                         payment.diaPago || '',
                         payment.notes || ''
                     ];
-                    allRows.push(row);
+                    allRows.push(paymentRow);
                 });
-            } else {
-                // Adiciona uma linha indicando que não há registros para este aluno
-                const row = [
-                    studentName,
-                    monthlyValue,
-                    'Nenhum registro de pagamento',
-                    '',
-                    '',
-                    ''
+            }
+
+            // 5. Se o aluno não tiver nenhum registro, adiciona uma linha base
+            if (!hasRecords) {
+                const noRecordRow = [
+                    ...studentBaseInfo,
+                    'Sem Registros', '', '', '', ''
                 ];
-                allRows.push(row);
+                allRows.push(noRecordRow);
             }
         });
 
         if (allRows.length === 0) {
-            showMessage("Nenhum dado de pagamento para exportar.", "info");
+            showMessage("Nenhum dado para exportar.", "info");
             return;
         }
 
-        // Mapeia os dados para o formato CSV, garantindo que as aspas sejam tratadas
+        // 6. Mapeia os dados para o formato CSV, garantindo que as aspas sejam tratadas
         const csvRows = allRows.map(row =>
             row.map(value => `"${String(value).replace(/"/g, '""')}"`).join(',')
         );
@@ -525,14 +545,14 @@
         // Combina cabeçalho e linhas com a quebra de linha correta (\n)
         const csvContent = [headers.join(','), ...csvRows].join('\n');
 
-        // Cria um Blob e simula o clique para download
+        // 7. Cria um Blob e simula o clique para download
         const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
         const link = document.createElement("a");
         if (link.download !== undefined) {
             const url = URL.createObjectURL(blob);
             link.setAttribute("href", url);
             // Nome do arquivo mais descritivo
-            link.setAttribute("download", "relatorio_alunos_pagamentos.csv");
+            link.setAttribute("download", "relatorio_completo_alunos.csv");
             link.style.visibility = 'hidden';
             document.body.appendChild(link);
             link.click();
