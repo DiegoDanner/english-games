@@ -71,6 +71,15 @@
           Novo Aluno
         </button>
 
+        <!-- NOVO: Botão Exportar para Excel -->
+        <button
+          onclick="exportToCsv()"
+          class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 shadow-md mb-6 flex items-center justify-center text-sm"
+        >
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+          Baixar (Excel)
+        </button>
+
         <!-- Lista de Alunos (Preenchida pelo JS) -->
         <div id="student-list" class="flex-grow space-y-2">
           <!-- Itens da lista de alunos serão injetados aqui -->
@@ -78,7 +87,10 @@
         </div>
 
         <div class="mt-auto pt-4 border-t text-sm text-gray-500">
-          <p>Seu ID de Usuário (para suporte):</p>
+          <div id="auth-container" class="space-y-2">
+            <!-- Os botões de Login/Logout serão inseridos aqui -->
+          </div>
+          <p class="mt-2">Seu ID de Usuário (para suporte):</p>
           <code
             id="user-id-display"
             class="block mt-1 font-mono text-xs text-indigo-600 truncate"
@@ -137,30 +149,23 @@
             <!-- Dados do aluno serão injetados aqui -->
           </div>
 
-          <!-- NOVO LAYOUT: Tabs de Mês + Seções Filtradas -->
-          <div class="lg:flex lg:space-x-8 mt-8">
-            <!-- Abas Laterais de Meses (para filtro) -->
-            <div
-              id="month-tabs-container"
-              class="lg:w-1/4 mb-6 lg:mb-0 border p-3 rounded-xl bg-gray-50 self-start"
-            >
-              <h3 class="text-lg font-bold text-indigo-700 mb-3 border-b pb-2">
-                Filtro Mensal
-              </h3>
-              <div
-                id="month-tabs"
-                class="space-y-1 custom-scrollbar max-h-96 overflow-y-auto"
-              >
-                <p class="text-xs text-gray-500 text-center py-2">
-                  Carregando meses...
-                </p>
-              </div>
+          <!-- NOVO LAYOUT: Bloco de Filtro no Topo -->
+          <div class="bg-indigo-50 p-4 rounded-xl mb-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="w-full md:w-1/2">
+              <label for="month-dropdown" class="block text-sm font-bold text-indigo-800 mb-1">Filtro Mensal</label>
+              <select id="month-dropdown" onchange="selectMonth(this.value)" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                <!-- As opções serão preenchidas pelo JS -->
+              </select>
             </div>
+            <div class="w-full md:w-auto text-center md:text-right">
+              <h4 class="text-sm font-bold text-green-800">Total Arrecadado no Mês:</h4>
+              <p id="monthly-total" class="text-3xl font-extrabold text-green-600">R$ 0,00</p>
+            </div>
+          </div>
 
-            <!-- Conteúdo Filtrado -->
-            <div class="lg:w-3/4">
-              <!-- 1. Controle de Mensalidade (MOVIDO PARA CIMA) -->
-              <div id="payments-section" class="mb-8 border-t pt-6">
+
+              <!-- 1. Controle de Mensalidade -->
+              <div id="payments-section" class="mb-8">
                 <div class="flex justify-between items-center mb-4">
                   <h3 class="text-xl font-semibold text-gray-700">
                     Controle de Mensalidade (Mês Selecionado)
@@ -194,6 +199,7 @@
                         <th class="py-2 px-4 text-left">Mês</th>
                         <th class="py-2 px-4 text-center">Pago?</th>
                         <th class="py-2 px-4 text-left">Dia Pago</th>
+                        <th class="py-2 px-4 text-left">Notas</th>
                         <th class="py-2 px-4">Ações</th>
                       </tr>
                     </thead>
@@ -249,8 +255,6 @@
                   </table>
                 </div>
               </div>
-            </div>
-          </div>
         </div>
 
         <!-- Mensagem de boas-vindas/vazio -->
@@ -346,8 +350,10 @@
       import {
         getAuth,
         signInAnonymously,
-        signInWithCustomToken,
         onAuthStateChanged,
+        GoogleAuthProvider,
+        signInWithPopup,
+        signOut,
       } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
       import {
         getFirestore,
@@ -409,17 +415,28 @@
       window.currentSelectedMonth = null;
       let isSaving = false; // Flag para prevenir "race conditions"
 
-      /* NOVO BLOCO
       window.loginWithGoogle = async () => {
-          const provider = new GoogleAuthProvider();
-          try {
-              await signInWithPopup(auth, provider);
-              // Não precisamos de mais código aqui; o onAuthStateChanged trata do resto!
-          } catch (error) {
-              console.error("Erro no login do Google:", error);
-              window.showMessage("Falha ao iniciar sessão com o Google.", "error");
-          }
-      }; */
+        const provider = new GoogleAuthProvider();
+        try {
+          await signInWithPopup(auth, provider);
+          // O onAuthStateChanged vai lidar com a atualização da UI.
+        } catch (error) {
+          console.error("Erro detalhado no login com Google:", error);
+          // Mostra uma mensagem mais específica para o usuário
+          showMessage(`Falha no login: ${error.code}`, "error");
+        }
+      };
+
+      window.logout = async () => {
+        try {
+          await signOut(auth);
+          // O onAuthStateChanged vai lidar com a atualização da UI,
+          // fazendo login anônimo automaticamente.
+        } catch (error) {
+          console.error("Erro ao fazer logout:", error);
+          showMessage("Falha ao fazer logout.", "error");
+        }
+      };
       
       // --- FUNÇÕES DE UTILIDADE ---
 
@@ -444,6 +461,85 @@
         }
       };
 
+    // APRIMORADO: Função para exportar um relatório detalhado de pagamentos para CSV
+    window.exportToCsv = () => {
+        if (window.students.length === 0) {
+            showMessage("Nenhum aluno para exportar.", "info");
+            return;
+        }
+
+        // Define as colunas do cabeçalho para um relatório mais detalhado
+        const headers = [
+            'Nome do Aluno',
+            'Valor Mensal',
+            'Mês Referente',
+            'Status Pagamento',
+            'Dia do Pagamento',
+            'Notas'
+        ];
+
+        const allRows = [];
+
+        // Itera sobre cada aluno para criar as linhas do relatório
+        window.students.forEach(student => {
+            const studentName = student.nome || 'Aluno sem nome';
+            const monthlyValue = student.valorMensal || 'N/A';
+
+            if (student.mensalidades && student.mensalidades.length > 0) {
+                // Adiciona uma linha para cada registro de mensalidade
+                student.mensalidades.forEach(payment => {
+                    const row = [
+                        studentName,
+                        monthlyValue,
+                        payment.mes || '',
+                        payment.pago ? 'Pago' : 'Não Pago',
+                        payment.diaPago || '',
+                        payment.notes || ''
+                    ];
+                    allRows.push(row);
+                });
+            } else {
+                // Adiciona uma linha indicando que não há registros para este aluno
+                const row = [
+                    studentName,
+                    monthlyValue,
+                    'Nenhum registro de pagamento',
+                    '',
+                    '',
+                    ''
+                ];
+                allRows.push(row);
+            }
+        });
+
+        if (allRows.length === 0) {
+            showMessage("Nenhum dado de pagamento para exportar.", "info");
+            return;
+        }
+
+        // Mapeia os dados para o formato CSV, garantindo que as aspas sejam tratadas
+        const csvRows = allRows.map(row =>
+            row.map(value => `"${String(value).replace(/"/g, '""')}"`).join(',')
+        );
+
+        // Combina cabeçalho e linhas com a quebra de linha correta (\n)
+        const csvContent = [headers.join(','), ...csvRows].join('\n');
+
+        // Cria um Blob e simula o clique para download
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement("a");
+        if (link.download !== undefined) {
+            const url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            // Nome do arquivo mais descritivo
+            link.setAttribute("download", "relatorio_alunos_pagamentos.csv");
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    };
+
       window.openConfirmModal = (message, actionFn, args) => {
         document.getElementById("confirm-message").textContent = message;
         window.pendingAction = actionFn;
@@ -453,10 +549,15 @@
 
       // CORREÇÃO: Função agora é assíncrona e usa await para garantir que a exclusão termine
       window.executeConfirmedAction = async () => {
-        window.toggleConfirmModal(false);
-        if (window.pendingAction) {
-          // Executa a função com argumentos
-          await window.pendingAction(...window.pendingArgs);
+        // Armazena a ação pendente em variáveis locais ANTES que o modal seja fechado.
+        // Fechar o modal limpa as variáveis globais, o que causava o bug.
+        const action = window.pendingAction;
+        const args = window.pendingArgs;
+
+        window.toggleConfirmModal(false); // Fecha o modal (e limpa as globais)
+
+        if (action) {
+          await action(...args); // Executa a ação que foi salva localmente
         }
       };
 
@@ -540,16 +641,39 @@
 
 
           onAuthStateChanged(auth, (user) => {
-            if (user) {
+            const authContainer = document.getElementById("auth-container");
+            if (user && !user.isAnonymous) {
+              // --- USUÁRIO LOGADO COM GOOGLE ---
               userId = user.uid;
-              document.getElementById("user-id-display").textContent = userId;
-              // Inicia o listener de alunos apenas após a autenticação
+              document.getElementById("user-id-display").textContent =
+                user.email; // Mostra o email
+              authContainer.innerHTML = `
+                <button onclick="logout()" class="w-full text-sm bg-red-500 hover:bg-red-600 text-white font-semibold py-1.5 px-3 rounded-lg transition duration-200 shadow-sm">
+                  Logout
+                </button>
+              `;
               fetchStudents();
             } else {
-              userId = crypto.randomUUID(); // Fallback ID se não autenticado (mas o token garante autenticação)
-              document.getElementById("user-id-display").textContent =
-                "Anônimo: " + userId.substring(0, 8) + "...";
-              fetchStudents(); // Tenta buscar com ID anônimo
+              // --- USUÁRIO ANÔNIMO OU DESLOGADO ---
+              authContainer.innerHTML = `
+                <button onclick="loginWithGoogle()" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-1.5 px-3 rounded-lg transition duration-200 shadow-sm flex items-center justify-center">
+                  <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                  Login com Google
+                </button>
+              `;
+              // Se não há usuário, tenta login anônimo
+              if (!user) {
+                signInAnonymously(auth).catch((error) => {
+                  console.error("Erro no login anônimo:", error);
+                  showMessage("Falha na conexão com o servidor.", "error");
+                });
+              } else {
+                // Se o usuário é anônimo
+                userId = user.uid;
+                document.getElementById("user-id-display").textContent =
+                  "Anônimo (local)";
+                fetchStudents();
+              }
             }
           });
         } catch (error) {
@@ -568,7 +692,9 @@
       function fetchStudents() {
         if (!db || !userId) return;
 
-        const studentsRef = collection(db, getStudentCollectionPath());
+        const collectionPath = getStudentCollectionPath();
+        console.log("Querying Firestore path:", collectionPath); // <-- LOG DE DEBUG
+        const studentsRef = collection(db, collectionPath);
         const q = query(studentsRef); // Sem orderBy para evitar erros de índice
 
         onSnapshot(
@@ -605,10 +731,8 @@
           },
           (error) => {
             console.error("Erro ao buscar alunos:", error);
-            showMessage(
-              "Não foi possível carregar os dados. Verifique a conexão.",
-              "error"
-            );
+            // A mensagem visual foi removida para evitar o "falso positivo" na inicialização.
+            // O erro ainda é visível no console para depuração.
           }
         );
       }
@@ -699,60 +823,41 @@
         document.getElementById("info-section").innerHTML = html;
       }
 
-      // NOVO: Renderiza Abas e Define o Mês Selecionado
+      // ATUALIZADO: Renderiza o Dropdown de Meses
       function renderMonthTabs(student) {
-        const tabsContainer = document.getElementById("month-tabs");
-        tabsContainer.innerHTML = "";
+        const dropdown = document.getElementById("month-dropdown");
+        dropdown.innerHTML = ""; // Limpa opções antigas
 
         const monthsSet = new Set();
 
-        // Coletar meses das Aulas
-        (student.aulas || []).forEach((aula) => {
-          if (aula.data && aula.data.length === 10) {
-            const date = new Date(aula.data + "T00:00:00");
-            monthsSet.add(getMonthName(date.getMonth()));
-          }
-        });
+        // Coleta meses das Aulas e Mensalidades
+        (student.aulas || []).forEach(a => a.data && monthsSet.add(getMonthName(new Date(a.data + "T00:00:00").getMonth())));
+        (student.mensalidades || []).forEach(p => p.mes && monthsSet.add(p.mes));
 
-        // Coletar meses das Mensalidades
-        (student.mensalidades || []).forEach((pagamento) => {
-          if (pagamento.mes) {
-            monthsSet.add(pagamento.mes);
-          }
-        });
-
-        const sortedMonths = Array.from(monthsSet).sort((a, b) => {
-          return MONTHS.indexOf(a) - MONTHS.indexOf(b);
-        });
+        const sortedMonths = Array.from(monthsSet).sort((a, b) => MONTHS.indexOf(a) - MONTHS.indexOf(b));
 
         if (sortedMonths.length === 0) {
-          tabsContainer.innerHTML =
-            '<p class="text-xs text-gray-500 text-center py-2">Nenhum dado registrado.</p>';
-          // Define o mês atual para exibição padrão, mesmo que vazio
-          window.currentSelectedMonth = getMonthName(new Date().getMonth());
-          return;
+            const defaultMonth = getMonthName(new Date().getMonth());
+            dropdown.innerHTML = `<option value="${defaultMonth}">${defaultMonth}</option>`;
+            window.currentSelectedMonth = defaultMonth;
+            dropdown.value = defaultMonth;
+            return;
         }
 
-        // Define o mês inicial (último mês com dados ou o mês atual se não houver seleção prévia)
-        if (
-          !window.currentSelectedMonth ||
-          !sortedMonths.includes(window.currentSelectedMonth)
-        ) {
-          window.currentSelectedMonth = sortedMonths[sortedMonths.length - 1];
+        // Define o mês inicial
+        if (!window.currentSelectedMonth || !sortedMonths.includes(window.currentSelectedMonth)) {
+            window.currentSelectedMonth = sortedMonths[sortedMonths.length - 1];
         }
 
-        // Renderiza as abas
-        sortedMonths.forEach((month) => {
-          const isActive = month === window.currentSelectedMonth;
-          const activeClasses = isActive
-            ? "bg-indigo-600 text-white font-bold shadow-md"
-            : "text-gray-700 hover:bg-indigo-100";
-
-          tabsContainer.innerHTML += `
-                    <button onclick="selectMonth('${month}')" class="w-full text-left px-3 py-2 rounded-lg transition duration-150 ${activeClasses}">
-                        ${month}
-                    </button>
-                `;
+        // Popula o dropdown
+        sortedMonths.forEach(month => {
+            const option = document.createElement('option');
+            option.value = month;
+            option.textContent = month;
+            if (month === window.currentSelectedMonth) {
+                option.selected = true;
+            }
+            dropdown.appendChild(option);
         });
       }
 
@@ -760,8 +865,8 @@
       window.selectMonth = (month) => {
         window.currentSelectedMonth = month;
 
-        // Re-renderiza abas para atualizar o estado ativo
-        renderMonthTabs(window.currentStudent);
+        // Atualiza o valor do dropdown para refletir a seleção
+        document.getElementById('month-dropdown').value = month;
 
         const student = window.currentStudent;
         if (!student) return;
@@ -783,7 +888,31 @@
         // 3. Renderizar Seções com dados filtrados
         renderPayments(filteredPayments); // RENDERIZAÇÃO DE PAGAMENTOS
         renderClasses(filteredClasses); // RENDERIZAÇÃO DE AULAS
+        updateMonthlyTotal(month); // NOVO: Atualiza o total do mês
       };
+
+      // NOVO: Calcula e exibe o total arrecadado para um determinado mês
+      function updateMonthlyTotal(selectedMonth) {
+          let total = 0;
+
+          window.students.forEach(student => {
+              // Extrai o valor numérico, removendo "R$" e limpando espaços
+              const monthlyValueStr = (student.valorMensal || '0').replace('R$', '').trim();
+              const monthlyValue = parseFloat(monthlyValueStr.replace(',', '.')) || 0;
+
+              if (monthlyValue > 0 && student.mensalidades) {
+                  student.mensalidades.forEach(payment => {
+                      if (payment.mes === selectedMonth && payment.pago) {
+                          total += monthlyValue;
+                      }
+                  });
+              }
+          });
+
+          // Formata como moeda brasileira e exibe
+          const formattedTotal = total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+          document.getElementById('monthly-total').textContent = formattedTotal;
+      }
 
       // O renderClasses agora aceita a lista de aulas filtrada
       function renderClasses(filteredAulas) {
@@ -872,6 +1001,9 @@
                           pagamento.pago
                             ? pagamento.diaPago || "N/A"
                             : "NÃO PAGO"
+                        }</td>
+                        <td class="py-3 px-4 text-sm text-gray-600">${
+                          pagamento.notes || ""
                         }</td>
                         <td class="py-3 px-4 text-center space-x-2">
                             <button onclick="openPaymentModal(${originalIndex})" class="text-indigo-500 hover:text-indigo-700 text-xs">Editar</button>
@@ -1259,7 +1391,7 @@
         const isEditing = paymentIndex !== -1;
         const existingPayment = isEditing
           ? window.currentStudent.mensalidades[paymentIndex]
-          : { mes: MONTHS[new Date().getMonth()], pago: true, diaPago: "" };
+          : { mes: MONTHS[new Date().getMonth()], pago: true, diaPago: "", notes: "" };
 
         // Cria as opções do dropdown de meses
         const monthOptions = MONTHS.map((month) => {
@@ -1292,8 +1424,13 @@
                         } flex-grow">
                             <label for="payment-day" class="block text-sm font-medium text-gray-700">Dia Pago (Ex: 20)</label>
                             <!-- CORREÇÃO: Removido o 'value' daqui para evitar erros de formatação no HTML -->
-                            <input type="number" id="payment-day" min="1" max="31" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border focus:ring-indigo-500 focus:border-indigo-500">
+                            <input type="number" id="payment-day" min="1" max="31" class="mt-1 block w-full rounded-md border--gray-300 shadow-sm p-2 border focus:ring-indigo-500 focus:border-indigo-500">
                         </div>
+                    </div>
+
+                    <div>
+                        <label for="payment-notes" class="block text-sm font-medium text-gray-700">Notas (Opcional)</label>
+                        <textarea id="payment-notes" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border focus:ring-indigo-500 focus:border-indigo-500">${ existingPayment.notes || "" }</textarea>
                     </div>
 
                     <div class="flex justify-end pt-4 space-x-3">
@@ -1350,6 +1487,7 @@
           pago: isPaid,
           // Salva o dia pago apenas se estiver pago, caso contrário, salva uma string vazia
           diaPago: isPaid ? form.querySelector("#payment-day").value : "",
+          notes: form.querySelector("#payment-notes").value,
         };
 
         const mensalidades = [...(window.currentStudent.mensalidades || [])];
