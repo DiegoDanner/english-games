@@ -6,12 +6,7 @@
     <title>Acesso aos Quizzes</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6; /* gray-100 */
-        }
-    </style>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="bg-gray-100">
 
@@ -31,21 +26,17 @@
 
     <!-- Seção de Conteúdo (Oculta por padrão) -->
     <div id="content-section" class="hidden">
-        <!-- CABEÇALHO FIXO -->
-        <header class="fixed top-0 left-0 right-0 bg-white shadow-sm z-10">
-            <div class="container mx-auto px-6 py-3 flex justify-between items-center">
-                <div class="flex items-center">
-                    <img src="img/logo.svg" alt="Logo Danner Idiomas" class="h-10 w-auto mr-2">
-                    <span class="text-xl font-semibold text-gray-700">Danner Idiomas</span>
-                </div>
-                <nav class="flex items-center space-x-4">
-                    <a href="#" class="text-gray-700 hover:text-blue-600 font-medium">Menu</a>
-                     <p id="user-display" class="text-gray-600 text-sm">Logado como: <span class="font-semibold"></span></p>
-                    <button id="logout-button" class="bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-3 rounded-lg text-sm transition duration-200">
-                        Sair
-                    </button>
-                </nav>
+        <!-- CABEÇALHO PADRONIZADO -->
+        <header class="page-header">
+            <div class="logo-placeholder">
+                <img src="img/LOGO_DANNER.png" alt="Logo Danner Idiomas" />
             </div>
+            <a href="https://game-quizzes.netlify.app/" class="menu-link" title="Back to Home">Menu</a>
+            <p id="user-display" class="menu-link" style="color: inherit;">Logado como: <span class="font-semibold"></span></p>
+            <button id="logout-button" class="bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-3 rounded-lg text-sm transition duration-200" style="margin-left: 1rem;">
+                Sair
+            </button>
+            <button id="theme-toggle-btn">🌞</button>
         </header>
 
         <!-- O contêiner principal dos quizzes será inserido aqui -->
@@ -59,6 +50,7 @@
         </main>
     </div>
 
+    <script src="js/main.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
         import {

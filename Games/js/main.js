@@ -1,25 +1,18 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const themeToggleBtn = document.getElementById("theme-toggle-btn");
-    const body = document.body;
+document.addEventListener('DOMContentLoaded', () => {
+    const themeToggleButton = document.getElementById('theme-toggle');
+    const currentTheme = localStorage.getItem('theme');
 
-    if (themeToggleBtn) {
-        themeToggleBtn.addEventListener("click", () => {
-            body.classList.toggle("light-mode");
-            const isLight = body.classList.contains("light-mode");
-            localStorage.setItem("theme", isLight ? "light" : "dark");
-            themeToggleBtn.textContent = isLight ? "🌙" : "🌞";
-        });
+    if (currentTheme === 'light') {
+        document.body.classList.add('light-mode');
     }
 
-    const savedTheme = localStorage.getItem("theme") || "dark";
-    if (savedTheme === "light") {
-        body.classList.add("light-mode");
-        if (themeToggleBtn) {
-            themeToggleBtn.textContent = "🌙";
+    themeToggleButton.addEventListener('click', () => {
+        document.body.classList.toggle('light-mode');
+
+        let theme = 'dark';
+        if (document.body.classList.contains('light-mode')) {
+            theme = 'light';
         }
-    } else {
-        if (themeToggleBtn) {
-            themeToggleBtn.textContent = "🌞";
-        }
-    }
+        localStorage.setItem('theme', theme);
+    });
 });
