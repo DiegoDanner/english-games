@@ -56,4 +56,40 @@ body.light-mode #theme-toggle-btn {
 
 body {
     padding-top: 70px;
+    font-family: 'Inter', sans-serif;
+    transition: background-color 0.5s, color 0.5s;
+}
+
+/* Light Mode Defaults */
+body.light-mode {
+    background-color: #f3f4f6; /* gray-100 */
+    color: #1a202c;
+}
+body.light-mode #login-section,
+body.light-mode .w-full.max-w-2xl {
+    background-color: #ffffff;
+    color: #1a202c;
+}
+body.light-mode #login-section h1, body.light-mode #login-section p,
+body.light-mode .w-full.max-w-2xl h2 {
+    color: #1a202c;
+}
+
+/* Dark Mode Styles */
+body:not(.light-mode) {
+    background-color: #1a202c;
+    color: #cbd5e0;
+}
+body:not(.light-mode) #login-section,
+body:not(.light-mode) .w-full.max-w-2xl {
+    background-color: #2d3748;
+    color: #cbd5e0;
+}
+body:not(.light-mode) #login-section h1, body:not(.light-mode) #login-section p,
+body:not(.light-mode) .w-full.max-w-2xl h2 {
+    color: #ffffff;
+}
+body:not(.light-mode) .menu-link,
+body:not(.light-mode) #user-display {
+    color: #cbd5e0;
 }
