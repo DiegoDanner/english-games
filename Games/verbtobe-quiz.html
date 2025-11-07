@@ -11,45 +11,74 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="css/theme.css">
-    <script>
-        // Script para evitar FOUC (Flash of Unstyled Content)
-        (function() {
-            const theme = localStorage.getItem('theme');
-            if (theme === 'dark') {
-                document.documentElement.classList.add('dark');
-            }
-        })();
-    </script>
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/style.css" />
     <style>
-        /* Layout específico para o cabeçalho desta página */
-        .page-header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            display: flex;
-            align-items: center;
-            padding: 0.75rem 1.5rem;
-            background-color: var(--header-bg);
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
-            transition: background-color 0.3s;
-            border-bottom: 1px solid var(--border-color);
-            justify-content: space-between;
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      #quiz-container {
+        background-color: var(--container-bg);
+        box-shadow: 0 10px 20px var(--container-shadow);
+        color: var(--text-color);
+      }
+      #quiz-container h1, #quiz-container p {
+        color: var(--text-color);
+      }
+       .quiz-select {
+        background-color: var(--button-bg);
+        color: var(--button-text);
+        border: 1px solid var(--button-hover-bg);
+      }
+      .quiz-step .border-gray-200 {
+        border-color: var(--button-hover-bg);
+      }
+      .check-step-btn, .next-step-btn {
+        background-color: #4f46e5;
+      }
+      .check-step-btn:hover, .next-step-btn:hover {
+        background-color: #4338ca;
+      }
+      #retry-btn {
+        background-color: #6b7280;
+      }
+       #retry-btn:hover {
+        background-color: #4b5563;
+      }
+      /* Estilos para o feedback */
+      .feedback-correct {
+        color: #16a34a; /* green-600 */
+        font-weight: 600;
+      }
+      .feedback-incorrect {
+        color: #dc2626; /* red-600 */
+        text-decoration: line-through;
+        font-weight: 500;
+      }
+      .correct-answer-text {
+        color: #16a34a; /* green-600 */
+        font-weight: 600;
+        margin-left: 0.25rem;
+      }
+      /* Animação de fade-in */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
         }
-        .page-header .logo-placeholder img { height: 40px; }
-        .page-header .menu-link {
-            font-weight: 600;
-            color: var(--text-secondary);
-            text-decoration: none;
-            transition: color 0.2s;
-            margin: 0 1rem;
+        to {
+          opacity: 1;
+          transform: translateY(0);
         }
-        .page-header .menu-link:hover { color: var(--text-primary); }
+      }
+      .fade-in {
+        animation: fadeIn 0.5s ease-in-out forwards;
+      }
     </style>
   </head>
-  <body class="flex items-center justify-center min-h-screen pt-20 p-4">
+  <body
+    class="flex items-center justify-center min-h-screen pt-20 p-4 transition-colors duration-300"
+  >
     <header class="page-header">
       <div class="logo-placeholder">
         <img src="img/LOGO_DANNER.png" alt="Danner Idiomas Logo" />
@@ -60,16 +89,16 @@
 
     <div
       id="quiz-container"
-      class="bg-white p-6 sm:p-8 rounded-xl shadow-lg w-full max-w-2xl relative"
+      class="p-6 sm:p-8 rounded-xl shadow-lg w-full max-w-2xl relative"
     >
       <!-- Cabeçalho do Quiz -->
       <div class="text-center mb-6">
         <h1
-          class="text-2xl sm:text-3xl font-bold text-gray-800"
+          class="text-2xl sm:text-3xl font-bold"
         >
           Quiz: O Verbo "To Be"
         </h1>
-        <p class="text-gray-600 mt-2">
+        <p class="mt-2">
           🔤 Complete one conversation at a time.
         </p>
       </div>
@@ -79,18 +108,18 @@
         <!-- Passo 1: Pergunta 1 -->
         <div class="quiz-step fade-in" data-step="0">
           <div
-            class="p-4 border border-gray-200 rounded-lg"
+            class="p-4 border rounded-lg"
           >
-            <p class="font-semibold text-gray-700 mb-3">
+            <p class="font-semibold mb-3">
               1. Conversation at the Cafe
             </p>
-            <div class="space-y-2 text-gray-800">
+            <div class="space-y-2">
               <p>
                 A:
                 <span class="quiz-item"
                   ><select
                     data-answer="Are"
-                    class="quiz-select bg-white border-gray-300 rounded-md shadow-sm p-2"
+                    class="quiz-select border-gray-300 rounded-md shadow-sm p-2"
                   >
                     <option value="">...</option>
                     <option value="am">am</option>
@@ -108,7 +137,7 @@
                 <span class="quiz-item"
                   ><select
                     data-answer="'m,am"
-                    class="quiz-select bg-white border-gray-300 rounded-md shadow-sm p-2"
+                    class="quiz-select border-gray-300 rounded-md shadow-sm p-2"
                   >
                     <option value="">...</option>
                     <option value="am">am</option>
@@ -123,7 +152,7 @@
                 <span class="quiz-item"
                   ><select
                     data-answer="am,'m"
-                    class="quiz-select bg-white border-gray-300 rounded-md shadow-sm p-2"
+                    class="quiz-select border-gray-300 rounded-md shadow-sm p-2"
                   >
                     <option value="">...</option>
                     <option value="am">am</option>
@@ -141,7 +170,7 @@
                 <span class="quiz-item"
                   ><select
                     data-answer="'s,is"
-                    class="quiz-select bg-white border-gray-300 rounded-md shadow-sm p-2"
+                    class="quiz-select border-gray-300 rounded-md shadow-sm p-2"
                   >
                     <option value="">...</option>
                     <option value="am">am</option>
@@ -158,12 +187,12 @@
           </div>
           <div class="mt-6 text-center">
             <button
-              class="check-step-btn bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700"
+              class="check-step-btn text-white font-bold py-2 px-6 rounded-lg"
             >
               Check Answer
             </button>
             <button
-              class="next-step-btn hidden bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700"
+              class="next-step-btn hidden text-white font-bold py-2 px-6 rounded-lg"
             >
               Next
             </button>
@@ -173,18 +202,18 @@
         <!-- Passo 2: Pergunta 2 (escondido) -->
         <div class="quiz-step hidden" data-step="1">
           <div
-            class="p-4 border border-gray-200 rounded-lg"
+            class="p-4 border rounded-lg"
           >
-            <p class="font-semibold text-gray-700 mb-3">
+            <p class="font-semibold mb-3">
               2. Weekend Plans
             </p>
-            <div class="space-y-2 text-gray-800">
+            <div class="space-y-2">
               <p>
                 A: Where
                 <span class="quiz-item"
                   ><select
                     data-answer="are"
-                    class="quiz-select bg-white border-gray-300 rounded-md shadow-sm p-2"
+                    class="quiz-select border-gray-300 rounded-md shadow-sm p-2"
                   >
                     <option value="">...</option>
                     <option value="am">am</option>
@@ -202,7 +231,7 @@
                 <span class="quiz-item"
                   ><select
                     data-answer="'re,are"
-                    class="quiz-select bg-white border-gray-300 rounded-md shadow-sm p-2"
+                    class="quiz-select border-gray-300 rounded-md shadow-sm p-2"
                   >
                     <option value="">...</option>
                     <option value="am">am</option>
@@ -221,7 +250,7 @@
                 <span class="quiz-item"
                   ><select
                     data-answer="'s,is"
-                    class="quiz-select bg-white border-gray-300 rounded-md shadow-sm p-2"
+                    class="quiz-select border-gray-300 rounded-md shadow-sm p-2"
                   >
                     <option value="">...</option>
                     <option value="am">am</option>
@@ -236,7 +265,7 @@
                 <span class="quiz-item"
                   ><select
                     data-answer="is,'s"
-                    class="quiz-select bg-white border-gray-300 rounded-md shadow-sm p-2"
+                    class="quiz-select border-gray-300 rounded-md shadow-sm p-2"
                   >
                     <option value="">...</option>
                     <option value="am">am</option>
@@ -253,12 +282,12 @@
           </div>
           <div class="mt-6 text-center">
             <button
-              class="check-step-btn bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700"
+              class="check-step-btn text-white font-bold py-2 px-6 rounded-lg"
             >
               Check Answer
             </button>
             <button
-              class="next-step-btn hidden bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700"
+              class="next-step-btn hidden text-white font-bold py-2 px-6 rounded-lg"
             >
               Next
             </button>
@@ -268,18 +297,18 @@
         <!-- Passo 3: Pergunta 3 (escondido) -->
         <div class="quiz-step hidden" data-step="2">
           <div
-            class="p-4 border border-gray-200 rounded-lg"
+            class="p-4 border rounded-lg"
           >
-            <p class="font-semibold text-gray-700 mb-3">
+            <p class="font-semibold mb-3">
               3. First Day of School
             </p>
-            <div class="space-y-2 text-gray-800">
+            <div class="space-y-2">
               <p>
                 A: Hi! I
                 <span class="quiz-item"
                   ><select
                     data-answer="'m,am"
-                    class="quiz-select bg-white border-gray-300 rounded-md shadow-sm p-2"
+                    class="quiz-select border-gray-300 rounded-md shadow-sm p-2"
                   >
                     <option value="">...</option>
                     <option value="am">am</option>
@@ -297,7 +326,7 @@
                 <span class="quiz-item"
                   ><select
                     data-answer="'m,am"
-                    class="quiz-select bg-white border-gray-300 rounded-md shadow-sm p-2"
+                    class="quiz-select border-gray-300 rounded-md shadow-sm p-2"
                   >
                     <option value="">...</option>
                     <option value="am">am</option>
@@ -315,7 +344,7 @@
                 <span class="quiz-item"
                   ><select
                     data-answer="Are"
-                    class="quiz-select bg-white border-gray-300 rounded-md shadow-sm p-2"
+                    class="quiz-select border-gray-300 rounded-md shadow-sm p-2"
                   >
                     <option value="">...</option>
                     <option value="am">am</option>
@@ -333,7 +362,7 @@
                 <span class="quiz-item"
                   ><select
                     data-answer="am"
-                    class="quiz-select bg-white border-gray-300 rounded-md shadow-sm p-2"
+                    class="quiz-select border-gray-300 rounded-md shadow-sm p-2"
                   >
                     <option value="">...</option>
                     <option value="am">am</option>
@@ -349,12 +378,12 @@
           </div>
           <div class="mt-6 text-center">
             <button
-              class="check-step-btn bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700"
+              class="check-step-btn text-white font-bold py-2 px-6 rounded-lg"
             >
               Check Answer
             </button>
             <button
-              class="next-step-btn hidden bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700"
+              class="next-step-btn hidden text-white font-bold py-2 px-6 rounded-lg"
             >
               Next
             </button>
@@ -364,18 +393,18 @@
         <!-- Passo 4: Pergunta 4 (escondido) -->
         <div class="quiz-step hidden" data-step="3">
           <div
-            class="p-4 border border-gray-200 rounded-lg"
+            class="p-4 border rounded-lg"
           >
-            <p class="font-semibold text-gray-700 mb-3">
+            <p class="font-semibold mb-3">
               4. Late For Class
             </p>
-            <div class="space-y-2 text-gray-800">
+            <div class="space-y-2">
               <p>
                 A: What time
                 <span class="quiz-item"
                   ><select
                     data-answer="is,'s"
-                    class="quiz-select bg-white border-gray-300 rounded-md shadow-sm p-2"
+                    class="quiz-select border-gray-300 rounded-md shadow-sm p-2"
                   >
                     <option value="">...</option>
                     <option value="am">am</option>
@@ -393,7 +422,7 @@
                 <span class="quiz-item"
                   ><select
                     data-answer="'s,is"
-                    class="quiz-select bg-white border-gray-300 rounded-md shadow-sm p-2"
+                    class="quiz-select border-gray-300 rounded-md shadow-sm p-2"
                   >
                     <option value="">...</option>
                     <option value="am">am</option>
@@ -411,7 +440,7 @@
                 <span class="quiz-item"
                   ><select
                     data-answer="'re,are"
-                    class="quiz-select bg-white border-gray-300 rounded-md shadow-sm p-2"
+                    class="quiz-select border-gray-300 rounded-md shadow-sm p-2"
                   >
                     <option value="">...</option>
                     <option value="am">am</option>
@@ -429,7 +458,7 @@
                 <span class="quiz-item"
                   ><select
                     data-answer="is,'s"
-                    class="quiz-select bg-white border-gray-300 rounded-md shadow-sm p-2"
+                    class="quiz-select border-gray-300 rounded-md shadow-sm p-2"
                   >
                     <option value="">...</option>
                     <option value="am">am</option>
@@ -446,12 +475,12 @@
           </div>
           <div class="mt-6 text-center">
             <button
-              class="check-step-btn bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700"
+              class="check-step-btn text-white font-bold py-2 px-6 rounded-lg"
             >
               Check Answer
             </button>
             <button
-              class="next-step-btn hidden bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700"
+              class="next-step-btn hidden text-white font-bold py-2 px-6 rounded-lg"
             >
               Next
             </button>
@@ -461,17 +490,17 @@
         <!-- Passo 5: Pergunta 5 (escondido) -->
         <div class="quiz-step hidden" data-step="4">
           <div
-            class="p-4 border border-gray-200 rounded-lg"
+            class="p-4 border rounded-lg"
           >
-            <p class="font-semibold text-gray-700 mb-3">
+            <p class="font-semibold mb-3">
               5. Talking About Time
             </p>
-            <div class="space-y-2 text-gray-800">
+            <div class="space-y-2">
               <p>
                 A: How<span class="quiz-item"
                   ><select
                     data-answer="'s,is"
-                    class="quiz-select bg-white border-gray-300 rounded-md shadow-sm p-2"
+                    class="quiz-select border-gray-300 rounded-md shadow-sm p-2"
                   >
                     <option value="">...</option>
                     <option value="am">am</option>
@@ -489,7 +518,7 @@
                 <span class="quiz-item"
                   ><select
                     data-answer="'s,is"
-                    class="quiz-select bg-white border-gray-300 rounded-md shadow-sm p-2"
+                    class="quiz-select border-gray-300 rounded-md shadow-sm p-2"
                   >
                     <option value="">...</option>
                     <option value="am">am</option>
@@ -504,7 +533,7 @@
                 <span class="quiz-item"
                   ><select
                     data-answer="'m,am"
-                    class="quiz-select bg-white border-gray-300 rounded-md shadow-sm p-2"
+                    class="quiz-select border-gray-300 rounded-md shadow-sm p-2"
                   >
                     <option value="">...</option>
                     <option value="am">am</option>
@@ -522,7 +551,7 @@
                 <span class="quiz-item"
                   ><select
                     data-answer="is,'s"
-                    class="quiz-select bg-white border-gray-300 rounded-md shadow-sm p-2"
+                    class="quiz-select border-gray-300 rounded-md shadow-sm p-2"
                   >
                     <option value="">...</option>
                     <option value="am">am</option>
@@ -539,12 +568,12 @@
           </div>
           <div class="mt-6 text-center">
             <button
-              class="check-step-btn bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700"
+              class="check-step-btn text-white font-bold py-2 px-6 rounded-lg"
             >
               Check Answer
             </button>
             <button
-              class="next-step-btn hidden bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700"
+              class="next-step-btn hidden text-white font-bold py-2 px-6 rounded-lg"
             >
               Next
             </button>
@@ -554,18 +583,18 @@
         <!-- Passo 6: Pergunta 6 (escondido) -->
         <div class="quiz-step hidden" data-step="5">
           <div
-            class="p-4 border border-gray-200 rounded-lg"
+            class="p-4 border rounded-lg"
           >
-            <p class="font-semibold text-gray-700 mb-3">
+            <p class="font-semibold mb-3">
               6. At the Restaurant
             </p>
-            <div class="space-y-2 text-gray-800">
+            <div class="space-y-2">
               <p>
                 A: This food
                 <span class="quiz-item"
                   ><select
                     data-answer="is,'s"
-                    class="quiz-select bg-white border-gray-300 rounded-md shadow-sm p-2"
+                    class="quiz-select border-gray-300 rounded-md shadow-sm p-2"
                   >
                     <option value="">...</option>
                     <option value="am">am</option>
@@ -583,7 +612,7 @@
                 <span class="quiz-item"
                   ><select
                     data-answer="Are"
-                    class="quiz-select bg-white border-gray-300 rounded-md shadow-sm p-2"
+                    class="quiz-select border-gray-300 rounded-md shadow-sm p-2"
                   >
                     <option value="">...</option>
                     <option value="am">am</option>
@@ -601,7 +630,7 @@
                 <span class="quiz-item"
                   ><select
                     data-answer="'re,are"
-                    class="quiz-select bg-white border-gray-300 rounded-md shadow-sm p-2"
+                    class="quiz-select border-gray-300 rounded-md shadow-sm p-2"
                   >
                     <option value="">...</option>
                     <option value="am">am</option>
@@ -618,12 +647,12 @@
           </div>
           <div class="mt-6 text-center">
             <button
-              class="check-step-btn bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700"
+              class="check-step-btn text-white font-bold py-2 px-6 rounded-lg"
             >
               Check Answer
             </button>
             <button
-              class="next-step-btn hidden bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700"
+              class="next-step-btn hidden text-white font-bold py-2 px-6 rounded-lg"
             >
               Next
             </button>
@@ -633,19 +662,19 @@
         <!-- Passo 7: Pergunta 7 (escondido) -->
         <div class="quiz-step hidden" data-step="6">
           <div
-            class="p-4 border border-gray-200 rounded-lg"
+            class="p-4 border rounded-lg"
           >
-            <p class="font-semibold text-gray-700 mb-3">
+            <p class="font-semibold mb-3">
               7. About a Movie
             </p>
-            <div class="space-y-2 text-gray-800">
+            <div class="space-y-2">
               <p>A: What do you think about the movie?</p>
               <p>
                 B: It
                 <span class="quiz-item"
                   ><select
                     data-answer="is,'s"
-                    class="quiz-select bg-white border-gray-300 rounded-md shadow-sm p-2"
+                    class="quiz-select border-gray-300 rounded-md shadow-sm p-2"
                   >
                     <option value="">...</option>
                     <option value="am">am</option>
@@ -660,7 +689,7 @@
                 <span class="quiz-item"
                   ><select
                     data-answer="Is"
-                    class="quiz-select bg-white border-gray-300 rounded-md shadow-sm p-2"
+                    class="quiz-select border-gray-300 rounded-md shadow-sm p-2"
                   >
                     <option value="">...</option>
                     <option value="am">am</option>
@@ -678,7 +707,7 @@
                 <span class="quiz-item"
                   ><select
                     data-answer="is,'s"
-                    class="quiz-select bg-white border-gray-300 rounded-md shadow-sm p-2"
+                    class="quiz-select border-gray-300 rounded-md shadow-sm p-2"
                   >
                     <option value="">...</option>
                     <option value="am">am</option>
@@ -695,12 +724,12 @@
           </div>
           <div class="mt-6 text-center">
             <button
-              class="check-step-btn bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700"
+              class="check-step-btn text-white font-bold py-2 px-6 rounded-lg"
             >
               Check Answer
             </button>
             <button
-              class="next-step-btn hidden bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700"
+              class="next-step-btn hidden text-white font-bold py-2 px-6 rounded-lg"
             >
               Next
             </button>
@@ -710,18 +739,18 @@
         <!-- Passo 8: Pergunta 8 (escondido) -->
         <div class="quiz-step hidden" data-step="7">
           <div
-            class="p-4 border border-gray-200 rounded-lg"
+            class="p-4 border rounded-lg"
           >
-            <p class="font-semibold text-gray-700 mb-3">
+            <p class="font-semibold mb-3">
               8. Planning a Trip
             </p>
-            <div class="space-y-2 text-gray-800">
+            <div class="space-y-2">
               <p>
                 A: We
                 <span class="quiz-item"
                   ><select
                     data-answer="'re,are"
-                    class="quiz-select bg-white border-gray-300 rounded-md shadow-sm p-2"
+                    class="quiz-select border-gray-300 rounded-md shadow-sm p-2"
                   >
                     <option value="">...</option>
                     <option value="am">am</option>
@@ -739,7 +768,7 @@
                 <span class="quiz-item"
                   ><select
                     data-answer="Is"
-                    class="quiz-select bg-white border-gray-300 rounded-md shadow-sm p-2"
+                    class="quiz-select border-gray-300 rounded-md shadow-sm p-2"
                   >
                     <option value="">...</option>
                     <option value="am">am</option>
@@ -750,14 +779,14 @@
                     <option value="'re">'re</option>
                   </select></span
                 >
-                is the hotel far from the beach?
+                the hotel far from the beach?
               </p>
               <p>
                 A: No, it
                 <span class="quiz-item"
                   ><select
                     data-answer="'s,is"
-                    class="quiz-select bg-white border-gray-300 rounded-md shadow-sm p-2"
+                    class="quiz-select border-gray-300 rounded-md shadow-sm p-2"
                   >
                     <option value="">...</option>
                     <option value="am">am</option>
@@ -774,12 +803,12 @@
           </div>
           <div class="mt-6 text-center">
             <button
-              class="check-step-btn bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700"
+              class="check-step-btn text-white font-bold py-2 px-6 rounded-lg"
             >
               Check Answer
             </button>
             <button
-              class="next-step-btn hidden bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700"
+              class="next-step-btn hidden text-white font-bold py-2 px-6 rounded-lg"
             >
               Next
             </button>
@@ -789,18 +818,18 @@
         <!-- Passo 9: Pergunta 9 (escondido) -->
         <div class="quiz-step hidden" data-step="8">
           <div
-            class="p-4 border border-gray-200 rounded-lg"
+            class="p-4 border rounded-lg"
           >
-            <p class="font-semibold text-gray-700 mb-3">
+            <p class="font-semibold mb-3">
               9. In the Library
             </p>
-            <div class="space-y-2 text-gray-800">
+            <div class="space-y-2">
               <p>
                 A: Excuse me, I
                 <span class="quiz-item"
                   ><select
                     data-answer="'m,am"
-                    class="quiz-select bg-white border-gray-300 rounded-md shadow-sm p-2"
+                    class="quiz-select border-gray-300 rounded-md shadow-sm p-2"
                   >
                     <option value="">...</option>
                     <option value="am">am</option>
@@ -818,7 +847,7 @@
                 <span class="quiz-item"
                   ><select
                     data-answer="is,'s"
-                    class="quiz-select bg-white border-gray-300 rounded-md shadow-sm p-2"
+                    class="quiz-select border-gray-300 rounded-md shadow-sm p-2"
                   >
                     <option value="">...</option>
                     <option value="am">am</option>
@@ -836,7 +865,7 @@
                 <span class="quiz-item"
                   ><select
                     data-answer="Are"
-                    class="quiz-select bg-white border-gray-300 rounded-md shadow-sm p-2"
+                    class="quiz-select border-gray-300 rounded-md shadow-sm p-2"
                   >
                     <option value="">...</option>
                     <option value="am">am</option>
@@ -854,7 +883,7 @@
                 <span class="quiz-item"
                   ><select
                     data-answer="am"
-                    class="quiz-select bg-white border-gray-300 rounded-md shadow-sm p-2"
+                    class="quiz-select border-gray-300 rounded-md shadow-sm p-2"
                   >
                     <option value="">...</option>
                     <option value="am">am</option>
@@ -870,12 +899,12 @@
           </div>
           <div class="mt-6 text-center">
             <button
-              class="check-step-btn bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700"
+              class="check-step-btn text-white font-bold py-2 px-6 rounded-lg"
             >
               Check Answer
             </button>
             <button
-              class="next-step-btn hidden bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700"
+              class="next-step-btn hidden text-white font-bold py-2 px-6 rounded-lg"
             >
               Next
             </button>
@@ -885,18 +914,18 @@
         <!-- Passo 10: Pergunta 10 (escondido) -->
         <div class="quiz-step hidden" data-step="9">
           <div
-            class="p-4 border border-gray-200 rounded-lg"
+            class="p-4 border rounded-lg"
           >
-            <p class="font-semibold text-gray-700 mb-3">
+            <p class="font-semibold mb-3">
               10. At the Gym
             </p>
-            <div class="space-y-2 text-gray-800">
+            <div class="space-y-2">
               <p>
                 A: Look at that guy. He
                 <span class="quiz-item"
                   ><select
                     data-answer="'s,is"
-                    class="quiz-select bg-white border-gray-300 rounded-md shadow-sm p-2"
+                    class="quiz-select border-gray-300 rounded-md shadow-sm p-2"
                   >
                     <option value="">...</option>
                     <option value="am">am</option>
@@ -914,7 +943,7 @@
                 <span class="quiz-item"
                   ><select
                     data-answer="is"
-                    class="quiz-select bg-white border-gray-300 rounded-md shadow-sm p-2"
+                    class="quiz-select border-gray-300 rounded-md shadow-sm p-2"
                   >
                     <option value="">...</option>
                     <option value="am">am</option>
@@ -928,7 +957,7 @@
                 <span class="quiz-item"
                   ><select
                     data-answer="Are"
-                    class="quiz-select bg-white border-gray-300 rounded-md shadow-sm p-2"
+                    class="quiz-select border-gray-300 rounded-md shadow-sm p-2"
                   >
                     <option value="">...</option>
                     <option value="am">am</option>
@@ -946,7 +975,7 @@
                 <span class="quiz-item"
                   ><select
                     data-answer="are"
-                    class="quiz-select bg-white border-gray-300 rounded-md shadow-sm p-2"
+                    class="quiz-select border-gray-300 rounded-md shadow-sm p-2"
                   >
                     <option value="">...</option>
                     <option value="am">am</option>
@@ -962,12 +991,12 @@
           </div>
           <div class="mt-6 text-center">
             <button
-              class="check-step-btn bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700"
+              class="check-step-btn text-white font-bold py-2 px-6 rounded-lg"
             >
               Check Answer
             </button>
             <button
-              class="next-step-btn hidden bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700"
+              class="next-step-btn hidden text-white font-bold py-2 px-6 rounded-lg"
             >
               Next
             </button>
@@ -980,17 +1009,17 @@
           class="quiz-step hidden text-center"
           data-step="10"
         >
-          <h2 class="text-2xl font-bold text-gray-800">
+          <h2 class="text-2xl font-bold">
             Quiz Complete!
           </h2>
           <p id="final-score" class="text-xl mt-4"></p>
           <p
             id="final-message"
-            class="text-gray-600 mt-2"
+            class="mt-2"
           ></p>
           <button
             id="retry-btn"
-            class="mt-8 bg-gray-500 text-white font-bold py-3 px-8 rounded-lg hover:bg-gray-600"
+            class="mt-8 text-white font-bold py-3 px-8 rounded-lg"
           >
             Tentar Novamente
           </button>
@@ -1093,6 +1122,6 @@
         }
       });
     </script>
-    <script src="js/theme-toggle.js"></script>
+    <script src="js/main.js"></script>
   </body>
 </html>

@@ -6,39 +6,79 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Grammar Quiz</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/theme.css">
     <script>
-        // Script para evitar FOUC (Flash of Unstyled Content)
-        (function() {
-            const theme = localStorage.getItem('theme');
-            if (theme === 'dark') {
-                document.documentElement.classList.add('dark');
-            }
-        })();
+        // On page load or when changing themes, best to add inline in `head` to avoid FOUC
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark')
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
     </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css" />
     <style>
-        /* Layout específico para esta página */
         body {
+            font-family: 'Inter', sans-serif;
+        }
+        .quiz-container {
+            max-width: none;
+            width: 95%;
+            position: relative;
+            overflow: hidden;
+            padding-top: 12rem !important;
+        }
+        .answer-btn {
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .answer-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .correct {
+            background-color: #22c55e !important; /* Tailwind green-500 */
+            color: white;
+        }
+        .incorrect {
+            background-color: #ef4444 !important; /* Tailwind red-500 */
+            color: white;
+        }
+        #timer-progress {
+            transition: stroke-dasharray 1s linear;
+        }
+        .quiz-container {
+            max-width: 900px;
+            width: 90%;
+            min-height: 600px;
             display: flex;
+            flex-direction: column;
             justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding-top: 80px; /* Espaço para o cabeçalho */
+            padding: 2rem;  /* You can adjust this too */
         }
-        .page-header {
-            position: fixed; top: 0; left: 0; right: 0; display: flex; align-items: center;
-            padding: 0.75rem 1.5rem; background-color: var(--header-bg);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1); z-index: 1000;
-            border-bottom: 1px solid var(--border-color); justify-content: space-between;
+            .quiz-container {
+            position: relative;
+            overflow: hidden;
+            padding-top: 12rem;
         }
-        .page-header .logo-placeholder img { height: 40px; }
-        .page-header .menu-link { font-weight: 600; color: var(--text-secondary); text-decoration: none; margin: 0 1rem; }
-        .page-header .menu-link:hover { color: var(--text-primary); }
-        .quiz-container { max-width: 640px; }
+
+            .quiz-container::before {
+                content: "";
+                background-image: url('img/LOGO_DANNER.png');
+                background-size: 50%;
+                background-repeat: no-repeat;
+                background-position: top center ;
+                opacity: 0.38;
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 0;
+                pointer-events: none;
+            }
+
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen">
+<body class="bg-gray-100 dark:bg-gray-900 flex items-center justify-center min-h-screen">
     <header class="page-header">
         <div class="logo-placeholder">
             <img src="img/LOGO_DANNER.png" alt="Logo">
@@ -46,13 +86,13 @@
         <a href="https://game-quizzes.netlify.app/" class="menu-link" title="Back to Home">Menu</a>
         <button id="theme-toggle-btn">🌞</button>
     </header>
-    <div id="quiz-container" class="quiz-container bg-white p-6 sm:p-8 rounded-2xl shadow-lg text-center relative w-full">
+    <div id="quiz-container" class="quiz-container bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-2xl shadow-lg text-center relative">
         
         <!-- Start Screen -->
         <div id="start-screen">
             
-            <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 mb-4 mt-8 text-center">Comparative and Superlative: Adjectives</h1>
-            <p class="text-gray-600 mb-16">You'll have 20 seconds for each question. Good luck!</p>
+            <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-white mb-4 mt-8 text-center">Comparative and Superlative: Adjectives</h1>
+            <p class="text-gray-600 dark:text-gray-300 mb-16">You'll have 20 seconds for each question. Good luck!</p>
             <button id="start-btn" class="w-48 bg-blue-500 text-white font-bold py-3 rounded-lg hover:bg-blue-600 transition-colors duration-300 text-lg mx-auto block">Start Quiz</button>
             
         </div>
@@ -60,10 +100,10 @@
         <!-- Quiz Screen -->
         <div id="quiz-screen" class="hidden">
             
-            <p id="feedback-message" class="text-xl font-semibold mb-4 text-gray-700 hidden"></p>
+            <p id="feedback-message" class="text-xl font-semibold mb-4 text-gray-700 dark:text-gray-200 hidden"></p>
             <div id="timer-container" class="relative w-20 h-20 mx-auto mb-4">
                 <svg class="w-full h-full" viewBox="0 0 36 36" transform="rotate(-90)">
-                    <path class="text-gray-200"
+                    <path class="text-gray-200 dark:text-gray-600"
                         d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                         fill="none" stroke="currentColor" stroke-width="3" />
                     <path id="timer-progress" class="text-blue-500"
@@ -71,15 +111,15 @@
                         d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                         fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
                 </svg>
-                <div id="timer-text" class="absolute inset-0 flex items-center justify-center text-2xl font-bold text-gray-800"></div>
+                <div id="timer-text" class="absolute inset-0 flex items-center justify-center text-2xl font-bold text-gray-800 dark:text-white"></div>
             </div>
             <div id="progress-container" class="flex justify-between items-center mb-4">
-                <p id="question-counter" class="text-gray-600"></p>
-                <p id="score-display" class="font-semibold text-blue-600"></p>
+                <p id="question-counter" class="text-gray-600 dark:text-gray-400"></p>
+                <p id="score-display" class="font-semibold text-blue-600 dark:text-blue-400"></p>
             </div>
             <button id="next-btn" class="hidden mt-4 bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600 transition-colors duration-300">
                 Next Question</button>
-            <h2 id="question-text" class="text-2xl font-semibold text-gray-800 mb-6 min-h-[50px]"></h2>
+            <h2 id="question-text" class="text-2xl font-semibold text-gray-800 dark:text-white mb-6 min-h-[50px]"></h2>
             <div id="answer-buttons" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <!-- Answer buttons will be inserted here by JavaScript -->
             
@@ -88,9 +128,9 @@
 
         <!-- Result Screen -->
         <div id="result-screen" class="hidden">
-            <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 mb-4">Quiz Complete!</h1>
-            <p id="final-score" class="text-2xl text-gray-700 mb-2"></p>
-            <p id="score-message" class="text-gray-600 mb-8"></p>
+            <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-white mb-4">Quiz Complete!</h1>
+            <p id="final-score" class="text-2xl text-gray-700 dark:text-gray-200 mb-2"></p>
+            <p id="score-message" class="text-gray-600 dark:text-gray-400 mb-8"></p>
             <button id="restart-btn" class="w-full bg-blue-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-600 transition-colors duration-300 text-lg">Play Again</button>
         </div>
 
@@ -98,7 +138,31 @@
 
 
     <script>
-        // --- JS do Quiz ---
+
+
+        // --- DOM Elements ---
+        const nextBtn = document.getElementById('next-btn');
+        const startScreen = document.getElementById('start-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const resultScreen = document.getElementById('result-screen');
+
+        const startBtn = document.getElementById('start-btn');
+        const restartBtn = document.getElementById('restart-btn');
+
+        const questionCounter = document.getElementById('question-counter');
+        const scoreDisplay = document.getElementById('score-display');
+        const questionText = document.getElementById('question-text');
+        const answerButtonsContainer = document.getElementById('answer-buttons');
+
+        const finalScoreDisplay = document.getElementById('final-score');
+        const scoreMessage = document.getElementById('score-message');
+
+        const timerText = document.getElementById('timer-text');
+        const timerProgress = document.getElementById('timer-progress');
+        const countdownAudio = new Audio('audio/countdown_beep.wav');
+
+
+        // --- Quiz Data (20 Questions) ---
         const quizQuestions = [
             { question: "What is the comparative form of the adjective 'big'?", answers: [ { text: "Bigger", correct: true }, { text: "More big", correct: false }, { text: "Biger", correct: false }, { text: "Biggest", correct: false } ] },
             { question: "Which adjective is the superlative form of 'good'?", answers: [ { text: "Goodest", correct: false }, { text: "Better", correct: false }, { text: "Best", correct: true }, { text: "More good", correct: false } ] },
@@ -122,9 +186,234 @@
             { question: "This is the ___ of my worries.", answers: [ { text: "Littlest", correct: false }, { text: "Less", correct: false }, { text: "Least", correct: true }, { text: "Little", correct: false } ] }
         ];
 
-        // --- State and DOM elements ---
-        // ... (resto do seu script do quiz)
+        // --- State Variables ---
+        let currentQuestionIndex;
+        let score;
+        let shuffledQuestions;
+        let timer;
+        let timeLeft;
+        const TIME_LIMIT = 20;
+
+        // --- Event Listeners ---
+        startBtn.addEventListener('click', startQuiz);
+        restartBtn.addEventListener('click', () => {
+            resultScreen.classList.add('hidden');
+            startScreen.classList.remove('hidden');
+        });
+            nextBtn.addEventListener('click', () => {
+                countdownAudio.pause();
+                countdownAudio.currentTime = 0;
+                countdownAudio.play();
+                currentQuestionIndex++;
+                nextBtn.classList.add('hidden');
+                showNextQuestion();
+        });
+
+        /**
+         * Starts the quiz by resetting state, shuffling questions, and showing the first question.
+         */
+        function startQuiz() {
+            startScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+            shuffledQuestions = quizQuestions.sort(() => Math.random() - 0.5);
+            currentQuestionIndex = 0;
+            score = 0;
+            updateScoreDisplay();
+            showNextQuestion();
+
+                        countdownAudio.currentTime = 0;
+            countdownAudio.play();
+        }
+
+        /**
+         * Displays the current question and its answer options, and starts the timer.
+         */
+        function showNextQuestion() {
+            nextBtn.classList.add('hidden');
+            resetState();
+            if (currentQuestionIndex < shuffledQuestions.length) {
+                const question = shuffledQuestions[currentQuestionIndex];
+                questionText.innerText = question.question;
+                questionCounter.innerText = `Question ${currentQuestionIndex + 1} of ${shuffledQuestions.length}`;
+
+                shuffleArray(question.answers);// ✅ Shuffle answers here
+
+                question.answers.forEach(answer => {
+                    const button = document.createElement('button');
+                    button.innerText = answer.text;
+                    button.classList.add('answer-btn', 'w-full', 'bg-gray-400', 'text-black', 'font-semibold', 'py-3', 'px-4', 'rounded-lg');
+                    button.dataset.correct = answer.correct;
+                    button.addEventListener('click', selectAnswer);
+                    answerButtonsContainer.appendChild(button);
+                });
+                startTimer();
+            } else {
+                showResults();
+            }
+        }
+
+        /**
+         * Starts the countdown timer for the current question.
+         */
+        function startTimer() {
+
+            timeLeft = TIME_LIMIT;
+            timerText.textContent = timeLeft;
+            timerProgress.style.strokeDasharray = '100, 100'; // Reset progress bar
+
+            clearInterval(timer); // Clear any existing timer
+            timer = setInterval(() => {
+                timeLeft--;
+                timerText.textContent = timeLeft;
+                const progress = (timeLeft / TIME_LIMIT) * 100;
+                timerProgress.style.strokeDasharray = `${progress}, 100`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    timeUp();
+                }
+            }, 1000);
+
+        }
+
+
+
+        /**
+         * Handles the situation when the timer runs out.
+         */
+        function timeUp() {
+
+            clearInterval(timer);
+                countdownAudio.pause();
+                countdownAudio.currentTime = 0;
+            showFeedback(); // Show the correct answer
+            nextBtn.classList.remove('hidden');
+           // Wait before moving to the next question
+
+
+        }
+
+        /**
+         * Handles the user's answer selection.
+         * @param {Event} e The click event from the answer button.
+         */
+        function selectAnswer(e) {
+
+            clearInterval(timer); // Stop the timer as soon as an answer is selected
+            countdownAudio.pause();
+            countdownAudio.currentTime = 0;
+            const selectedBtn = e.target;
+            const isCorrect = selectedBtn.dataset.correct === 'true';
+
+            if (isCorrect) {
+                score++;
+                updateScoreDisplay();
+            }
+
+
+            showFeedback();
+
+              nextBtn.classList.remove('hidden');
+
+
+
+            const feedbackMessage = document.getElementById('feedback-message');
+            if (isCorrect) {
+                feedbackMessage.innerText = "Correct!";
+                feedbackMessage.classList.remove('hidden');
+                feedbackMessage.classList.add('text-green-500');
+            } else {
+                feedbackMessage.innerText = "Wrong!";
+                feedbackMessage.classList.remove('hidden');
+                feedbackMessage.classList.add('text-red-500');
+            }
+
+
+        }
+
+        /**
+         * Provides visual feedback (correct/incorrect) on all answer buttons.
+         */
+        function showFeedback() {
+            Array.from(answerButtonsContainer.children).forEach(button => {
+                if (button.dataset.correct === 'true') {
+                    button.classList.add('correct');
+                } else {
+                    button.classList.add('incorrect');
+                }
+                button.disabled = true; // Disable all buttons after an answer is chosen or time is up
+            });
+        }
+
+        /**
+         * Clears previous question's state (buttons).
+         */
+        function resetState() {
+            while (answerButtonsContainer.firstChild) {
+                answerButtonsContainer.removeChild(answerButtonsContainer.firstChild);
+            }
+            const feedbackMessage = document.getElementById('feedback-message');
+                feedbackMessage.innerText = '';
+                feedbackMessage.classList.add('hidden');
+                feedbackMessage.classList.remove('text-green-500', 'text-red-500');
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        /**
+         * Updates the score display on the quiz screen.
+         */
+        function updateScoreDisplay() {
+            scoreDisplay.innerText = `Score: ${score}`;
+        }
+
+        /**
+         * Displays the final results screen.
+         */
+        function showResults() {
+            quizScreen.classList.add('hidden');
+            resultScreen.classList.remove('hidden');
+            finalScoreDisplay.innerText = `You scored ${score} out of ${shuffledQuestions.length}!`;
+
+            const scorePercent = (score / shuffledQuestions.length) * 100;
+            if (scorePercent === 100) {
+                scoreMessage.innerText = "Perfect score! You're a grammar master!";
+            } else if (scorePercent >= 75) {
+                scoreMessage.innerText = "Great job! You really know your adjectives.";
+            } else if (scorePercent >= 50) {
+                scoreMessage.innerText = "Not bad! A solid effort.";
+            } else {
+                scoreMessage.innerText = "Better luck next time! Keep practicing.";
+            }
+        }
+
+        const themeToggleBtn = document.getElementById('theme-toggle-btn');
+
+        const applyTheme = () => {
+            if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+                themeToggleBtn.textContent = '🌙';
+            } else {
+                document.documentElement.classList.remove('dark');
+                themeToggleBtn.textContent = '☀️';
+            }
+        };
+
+        themeToggleBtn.addEventListener('click', () => {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.theme = isDark ? 'dark' : 'light';
+            applyTheme();
+        });
+
+        document.addEventListener('DOMContentLoaded', applyTheme);
+
     </script>
-    <script src="js/theme-toggle.js"></script>
+
+    <script src="js/main.js"></script>
 </body>
 </html>
