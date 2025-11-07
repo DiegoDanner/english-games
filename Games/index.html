@@ -6,9 +6,18 @@
     <title>Acesso aos Quizzes</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/theme.css">
+    <script>
+        // Script para evitar FOUC (Flash of Unstyled Content)
+        (function() {
+            const theme = localStorage.getItem('theme');
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark');
+            }
+        })();
+    </script>
 </head>
-<body class="bg-gray-100">
+<body>
 
     <!-- Seção de Login (Visível por padrão) -->
     <div id="login-wrapper" class="flex items-center justify-center min-h-screen">
@@ -50,7 +59,6 @@
         </main>
     </div>
 
-    <script src="js/main.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
         import {
@@ -167,6 +175,6 @@
             `).join('');
         }
     </script>
-
+    <script src="js/theme-toggle.js"></script>
 </body>
 </html>

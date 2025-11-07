@@ -1,0 +1,146 @@
+/* :root define as variáveis para o modo claro (padrão) */
+:root {
+    --bg-color: #f1f5f9; /* Cor de fundo principal (cinza claro) */
+    --card-bg-color: #ffffff; /* Cor de fundo para contêineres e cartões (branco) */
+    --text-primary: #1e293b; /* Cor do texto principal (cinza escuro) */
+    --text-secondary: #475569; /* Cor do texto secundário (cinza médio) */
+    --border-color: #e2e8f0; /* Cor da borda */
+    --header-bg: #ffffff; /* Fundo do cabeçalho */
+}
+
+/* Quando o html tem a classe .dark, estas variáveis são aplicadas */
+html.dark {
+    --bg-color: #0f172a; /* Fundo principal (azul-escuro) */
+    --card-bg-color: #1e293b; /* Fundo dos cartões (azul-escuro médio) */
+    --text-primary: #f1f5f9; /* Texto principal (cinza claro) */
+    --text-secondary: #94a3b8; /* Texto secundário (cinza claro médio) */
+    --border-color: #334155; /* Cor da borda */
+    --header-bg: #1e293b; /* Fundo do cabeçalho */
+}
+
+/* --- Estilos Gerais --- */
+body {
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
+    transition: background-color 0.3s, color 0.3s;
+    padding-top: 80px; /* Espaço para o cabeçalho fixo */
+}
+
+/* --- Cabeçalho Fixo --- */
+.page-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+    background-color: var(--header-bg);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    transition: background-color 0.3s;
+    border-bottom: 1px solid var(--border-color);
+    justify-content: space-between;
+}
+
+.page-header .logo-placeholder img {
+    height: 40px;
+}
+
+.page-header .menu-link {
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.2s;
+    margin: 0 1rem;
+}
+
+.page-header .menu-link:hover {
+    color: var(--text-primary);
+}
+
+#theme-toggle-btn {
+    background: none;
+    border: none;
+    font-size: 1.75rem;
+    cursor: pointer;
+    color: var(--text-primary);
+    line-height: 1;
+}
+
+
+/* --- Estilos para Forçar Cores do Tema sobre o Tailwind --- */
+/*
+  Essas regras usam !important para garantir que nossas variáveis de tema
+  prevaleçam sobre as classes de utilitários do Tailwind nos arquivos HTML.
+*/
+
+.bg-white, .bg-gray-100, .bg-gray-50 {
+   background-color: var(--card-bg-color) !important;
+}
+
+.text-gray-800, .text-gray-900, .text-gray-700 {
+    color: var(--text-primary) !important;
+}
+.text-gray-600, .text-gray-500, .text-gray-400 {
+    color: var(--text-secondary) !important;
+}
+
+.border-gray-200, .border-gray-300, .border-gray-400 {
+    border-color: var(--border-color) !important;
+}
+
+/* --- Componentes Específicos dos Quizzes --- */
+/* Para garantir que os componentes interativos também mudem de cor */
+
+.quiz-select {
+    background-color: var(--bg-color);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+
+.drop-zone {
+    background-color: var(--bg-color);
+    border: 2px dashed var(--border-color);
+}
+
+.option-card {
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-color);
+}
+.option-card:hover {
+    filter: brightness(95%);
+}
+html.dark .option-card:hover {
+    filter: brightness(115%);
+}
+
+.answer-btn {
+    background-color: var(--bg-color) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-color);
+}
+.answer-btn:hover {
+     filter: brightness(95%);
+}
+html.dark .answer-btn:hover {
+    filter: brightness(115%);
+}
+.answer-btn.correct {
+    background-color: #22c55e !important; /* Verde */
+    color: white !important;
+    border-color: #16a34a !important;
+}
+.answer-btn.incorrect {
+    background-color: #ef4444 !important; /* Vermelho */
+    color: white !important;
+    border-color: #dc2626 !important;
+}
+
+.quiz-container{
+    padding: 40px;
+}
+.page-header{
+    padding: 20px;
+}

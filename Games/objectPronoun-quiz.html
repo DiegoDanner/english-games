@@ -12,185 +12,18 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="css/style.css" />
-    <style>
-      body {
-        font-family: "Inter", sans-serif;
-        padding-top: 70px;
-      }
-      .main-content {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          min-height: calc(100vh - 70px);
-          padding: 2rem;
-      }
-      .quiz-container {
-        max-width: 700px;
-        width: 95%;
-        position: relative; /* Necessário para posicionar o botão do tema */
-      }
-      .drop-zone {
-        display: inline-block;
-        min-width: 90px;
-        height: 40px;
-        padding: 0 12px;
-        margin: 0 8px;
-        border: 2px dashed #9ca3af; /* gray-400 */
-        border-radius: 8px;
-        text-align: center;
-        line-height: 36px;
-        vertical-align: middle;
-        font-weight: 600;
-        transition: all 0.2s ease;
-      }
-      .drop-zone.filled {
-        cursor: pointer;
-      }
-      .option-card {
-        padding: 8px 16px;
-        border-radius: 8px;
-        cursor: pointer;
-        user-select: none;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        transition: all 0.2s ease;
-      }
-      .option-card:hover {
-        transform: translateY(-2px);
-      }
-      .option-card.used {
-        visibility: hidden;
-      }
-
-      .modal {
-        display: none;
-        position: fixed;
-        z-index: 1;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        overflow: auto;
-        background-color: rgba(0, 0, 0, 0.4);
-      }
-      .modal-content {
-        background-color: #fefefe;
-        margin: 15% auto;
-        padding: 20px;
-        border-radius: 8px;
-        width: 80%;
-        max-width: 500px;
-        position: relative;
-      }
-      .close-modal {
-        color: #aaa;
-        position: absolute;
-        top: 10px;
-        right: 20px;
-        font-size: 28px;
-        font-weight: bold;
-        cursor: pointer;
-      }
-      .explanation-text {
-        white-space: pre-wrap; /* Para preservar quebras de linha da resposta da API */
-      }
-      .loading-spinner {
-        border: 4px solid #f3f3f3;
-        border-radius: 50%;
-        border-top: 4px solid #3498db;
-        width: 20px;
-        height: 20px;
-        -webkit-animation: spin 1s linear infinite;
-        animation: spin 1s linear infinite;
-      }
-      @-webkit-keyframes spin {
-        0% {
-          -webkit-transform: rotate(0deg);
-        }
-        100% {
-          -webkit-transform: rotate(360deg);
-        }
-      }
-      @keyframes spin {
-        0% {
-          transform: rotate(0deg);
-        }
-        100% {
-          transform: rotate(360deg);
-        }
-      }
-      /* Estilos do Dark Mode */
-      body:not(.light-mode) {
-        background-color: #1a202c; /* gray-900 */
-      }
-      body:not(.light-mode) .quiz-container {
-        background-color: #2d3748; /* gray-800 */
-      }
-      body:not(.light-mode) h1,
-      body:not(.light-mode) h2,
-      body:not(.light-mode) p,
-      body:not(.light-mode) table {
-        color: #e2e8f0; /* gray-200 */
-      }
-      body:not(.light-mode) .bg-gray-100 {
-        background-color: #2d3748;
-      }
-      body:not(.light-mode) .bg-white {
-        background-color: #2d3748;
-      }
-      body:not(.light-mode) .bg-gray-50 {
-        background-color: #1a202c;
-      }
-      body:not(.light-mode) .text-gray-900 {
-        color: #e2e8f0;
-      }
-      body:not(.light-mode) .border-gray-200 {
-        border-color: #4a5568;
-      }
-      body:not(.light-mode) .border-gray-300 {
-        border-color: #4a5568;
-      }
-      body:not(.light-mode) .text-gray-700 {
-        color: #cbd5e0;
-      }
-      body:not(.light-mode) .text-gray-800 {
-        color: #e2e8f0;
-      }
-      body:not(.light-mode) .text-gray-600 {
-        color: #a0aec0;
-      }
-      body:not(.light-mode) .text-gray-400 {
-        color: #a0aec0;
-      }
-      body:not(.light-mode) .option-card {
-        background-color: #4a5568;
-        border-color: #4a5568;
-        color: #e2e8f0;
-      }
-      body:not(.light-mode) .drop-zone {
-        background-color: #1a202c;
-        border-color: #4a5568;
-        color: #63b3ed;
-      }
-      body:not(.light-mode) .bg-indigo-100 {
-        background-color: #4c51bf;
-      }
-      body:not(.light-mode) .text-indigo-800 {
-        color: #e0e7ff;
-      }
-      body:not(.light-mode) .bg-gray-200 {
-        background-color: #4a5568;
-      }
-      body:not(.light-mode) .modal-content {
-        background-color: #1a202c;
-        color: #e2e8f0;
-      }
-    </style>
+    <link rel="stylesheet" href="css/theme.css">
+    <script>
+        // Script para evitar FOUC (Flash of Unstyled Content)
+        (function() {
+            const theme = localStorage.getItem('theme');
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark');
+            }
+        })();
+    </script>
   </head>
-  <body
-    class="bg-gray-100 transition-colors duration-300"
-    translate="no"
-  >
+  <body translate="no">
     <header class="page-header">
         <div class="logo-placeholder">
             <img src="img/LOGO_DANNER.png" alt="Logo">
@@ -201,7 +34,7 @@
     <main class="main-content">
         <div
           id="quiz"
-          class="quiz-container bg-white p-6 sm:p-8 rounded-xl shadow-lg transition-colors duration-300"
+          class="quiz-container bg-white p-6 sm:p-8 rounded-xl shadow-lg"
         >
           <!-- Nova Tela de Introdução -->
           <div id="intro-screen" class="relative">
@@ -456,7 +289,6 @@
       </div>
     </div>
 
-    <script src="js/main.js"></script>
     <script>
       // Dicionário de traduções para palavras-chave e pronomes
       const translations = {
@@ -637,7 +469,7 @@
         },
         {
           story:
-            "My mom sounded upset on the phone. She said: 'Please, call&nbsp{dropzone} soon; {dropzone} am very worried about you.'",
+            "My mom sounded upset on the phone. She said: 'Please, call&nbsp;{dropzone} soon; {dropzone} am very worried about you.'",
           inputs: 2,
           answers: ["me", "I"],
           options: ["I", "me", "my", "mine"],
@@ -646,7 +478,7 @@
         },
         {
           story:
-            "We are at the concert. Look, Sara and Kevin are over there by the stage. Can {dropzone} see&nbsp{dropzone} from here, or are {dropzone} too far?",
+            "We are at the concert. Look, Sara and Kevin are over there by the stage. Can {dropzone} see&nbsp;{dropzone} from here, or are {dropzone} too far?",
           inputs: 3,
           answers: ["you", "them", "they"],
           options: ["you", "them", "they", "us"],
@@ -946,5 +778,6 @@
       });
 
     </script>
+    <script src="js/theme-toggle.js"></script>
   </body>
 </html>

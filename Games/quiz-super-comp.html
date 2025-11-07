@@ -7,9 +7,18 @@
     <title>Grammar Quiz</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/theme.css">
+    <script>
+        // Script para evitar FOUC (Flash of Unstyled Content)
+        (function() {
+            const theme = localStorage.getItem('theme');
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark');
+            }
+        })();
+    </script>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+<body>
     <header class="page-header">
         <div class="logo-placeholder">
             <img src="img/LOGO_DANNER.png" alt="Logo">
@@ -323,7 +332,6 @@
             }
         }
     </script>
-
-    <script src="js/main.js"></script>
+    <script src="js/theme-toggle.js"></script>
 </body>
 </html>
