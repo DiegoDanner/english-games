@@ -12,6 +12,8 @@
   --link-color-light: #4299e1;
   --menu-link-color-light: #333;
   --menu-link-hover-light: #007bff;
+  --gemini-btn-bg-light: #8b5cf6;
+  --gemini-btn-hover-light: #7c3aed;
 }
 
 body.light-mode {
@@ -27,6 +29,8 @@ body.light-mode {
   --link-color: var(--link-color-light);
   --menu-link-color: var(--menu-link-color-light);
   --menu-link-hover: var(--menu-link-hover-light);
+  --gemini-btn-bg: var(--gemini-btn-bg-light);
+  --gemini-btn-hover: var(--gemini-btn-hover-light);
 }
 
 body:not(.light-mode) {
@@ -42,6 +46,8 @@ body:not(.light-mode) {
   --link-color: #63b3ed;
   --menu-link-color: white;
   --menu-link-hover: #bbb;
+  --gemini-btn-bg: #6d28d9;
+  --gemini-btn-hover: #5b21b6;
 }
 
 body {

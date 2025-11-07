@@ -154,3 +154,94 @@ body {
 .hidden {
     display: none;
 }
+
+
+/* Quiz de Pronomes com IA styles */
+#quiz.quiz-container {
+    background-color: var(--container-bg);
+    box-shadow: 0 10px 20px var(--container-shadow);
+}
+
+.pronoun-table {
+    color: var(--text-color);
+}
+.pronoun-table thead {
+    background-color: var(--button-hover-bg);
+    color: var(--button-text);
+}
+.pronoun-table tbody tr {
+    border-bottom: 1px solid var(--header-shadow);
+}
+.pronoun-table tbody tr:nth-child(even) {
+    background-color: var(--container-bg);
+}
+.pronoun-table tbody tr:nth-child(odd) {
+    background-color: var(--background-color);
+}
+
+.input-blank {
+    border-bottom: 2px solid var(--text-color);
+    background-color: transparent;
+    text-align: center;
+    width: 80px;
+    margin: 0 8px;
+    padding: 2px 4px;
+    font-weight: 600;
+    color: var(--link-color);
+    transition: all 0.3s ease;
+}
+.input-blank:focus {
+    outline: none;
+    border-bottom-color: var(--link-hover);
+}
+
+.loader {
+    border: 4px solid var(--container-bg);
+    border-top: 4px solid var(--link-color);
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spin 1s linear infinite;
+}
+
+#start-quiz-btn, #standard-quiz-btn, #restart-btn, #check-btn {
+    background-color: var(--button-bg);
+    color: var(--button-text);
+}
+#start-quiz-btn:hover, #standard-quiz-btn:hover, #restart-btn:hover, #check-btn:hover {
+    background-color: var(--button-hover-bg);
+}
+
+.gemini-btn {
+    background-color: var(--gemini-btn-bg);
+    color: var(--button-text);
+}
+.gemini-btn:hover {
+    background-color: var(--gemini-btn-hover);
+}
+
+.next-btn {
+    background-color: #22c55e; /* Green */
+    color: white;
+}
+.next-btn:hover {
+    background-color: #16a34a;
+}
+
+.back-menu-btn {
+    color: var(--link-color);
+}
+.back-menu-btn:hover {
+    text-decoration: underline;
+    color: var(--link-hover);
+}
+
+.progress-bar-bg {
+    background-color: var(--header-shadow);
+}
+.progress-bar {
+    background-color: var(--link-color);
+}
+.score-text {
+    color: var(--link-color);
+}
