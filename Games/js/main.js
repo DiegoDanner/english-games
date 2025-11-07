@@ -1,18 +1,32 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const themeToggleButton = document.getElementById('theme-toggle');
-    const currentTheme = localStorage.getItem('theme');
+    const themeToggleButton = document.getElementById('theme-toggle-btn');
+    const body = document.body;
 
-    if (currentTheme === 'light') {
-        document.body.classList.add('light-mode');
+    const updateButtonIcon = () => {
+        if (body.classList.contains('light-mode')) {
+            themeToggleButton.textContent = '🌙'; // Em modo claro, mostra a lua (para mudar para escuro)
+        } else {
+            themeToggleButton.textContent = '🌞'; // Em modo escuro, mostra o sol (para mudar para claro)
+        }
+    };
+
+    // Define o tema inicial do localStorage
+    if (localStorage.getItem('theme') === 'light') {
+        body.classList.add('light-mode');
     }
 
-    themeToggleButton.addEventListener('click', () => {
-        document.body.classList.toggle('light-mode');
+    updateButtonIcon(); // Define o ícone inicial
 
+    themeToggleButton.addEventListener('click', () => {
+        body.classList.toggle('light-mode');
+
+        // Atualiza o tema no localStorage
         let theme = 'dark';
-        if (document.body.classList.contains('light-mode')) {
+        if (body.classList.contains('light-mode')) {
             theme = 'light';
         }
         localStorage.setItem('theme', theme);
+
+        updateButtonIcon(); // Atualiza o ícone ao alternar
     });
 });
