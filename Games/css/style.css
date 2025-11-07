@@ -50,3 +50,107 @@
 body {
     padding-top: 70px;
 }
+
+/* Comparative & Superlative Quiz styles */
+.quiz-container {
+    background-color: var(--container-bg);
+    border-radius: 15px;
+    box-shadow: 0 10px 20px var(--container-shadow);
+    width: 100%;
+    max-width: 800px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 500px;
+    position: relative;
+    padding: 2rem;
+    text-align: center;
+    margin: 2rem auto; /* Center the container */
+}
+
+.quiz-container::before {
+    content: ;
+    background-image: url(img/LOGO_DANNER.png);
+    background-size: 130px;
+    background-repeat: no-repeat;
+    background-position: bottom left;
+    opacity: 0.75;
+    position: absolute;
+    bottom: 20px;
+    left: 1px;
+    width: 130px;
+    height: auto;
+    z-index: 0;
+    pointer-events: none;
+}
+
+#quiz-screen {
+    position: relative;
+    overflow: hidden;
+}
+
+.watermark-logo {
+    position: absolute;
+    top: -20px;
+    left: 1px;
+    width: 150px;
+    opacity: 0.75;
+    pointer-events: none;
+    z-index: 0;
+}
+
+#start-screen h1 {
+    margin-top: 100px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.answer-btn {
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    padding: 15px;
+    border-radius: 10px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease,
+      box-shadow 0.2s ease;
+    border: none;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.answer-btn:hover {
+    background-color: var(--button-hover-bg);
+    transform: translateY(-2px);
+}
+
+.answer-btn.correct {
+    background-color: #48bb78; /* Green for correct */
+    color: white;
+}
+
+.answer-btn.incorrect {
+    background-color: #e53e3e; /* Red for incorrect */
+    color: white;
+}
+
+#timer-text {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+#feedback-message {
+    font-size: 1.2rem;
+    margin-top: 10px;
+}
+
+#result-screen h1 {
+    margin-top: 100px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.hidden {
+    display: none;
+}
