@@ -6,14 +6,13 @@
     <title>Vocabulary Memory Match with Audio </title>
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/theme.css" />
     <link rel="stylesheet" href="css/style.css" />
     <style>
         /* Define a custom font */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f0f4f8; /* Light blue-gray background */
-            /* OTIMIZAÇÃO: Usar flexbox para gerenciar o espaço vertical e horizontal */
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -29,7 +28,7 @@
             transition: transform 0.6s;
             transform-style: preserve-3d;
             cursor: pointer;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+            box-shadow: 0 4px 6px -1px var(--container-shadow), 0 2px 4px -2px var(--container-shadow);
             border-radius: 12px;
         }
         .card.is-flipped {
@@ -58,14 +57,14 @@
         }
         /* Card Front (Revealed content) */
         .card-front {
-            background-color: #ffffff;
-            color: #1f2937; /* Dark gray text */
+            background-color: var(--container-bg);
+            color: var(--text-color);
             transform: rotateY(180deg);
             flex-direction: column; 
             /* OTIMIZAÇÃO: Fonte menor para caber 6 linhas */
             font-size: 0.75rem; 
             font-weight: 600;
-            border: 2px solid #e5e7eb;
+            border: 2px solid var(--button-hover-bg);
             gap: 2px; /* Smaller space between icon and text */
         }
         .card-icon {
@@ -113,12 +112,17 @@
              max-width: 800px; /* Limite máximo para telas muito largas */
         }
 
-        body.light-mode {
-            background-color: #f0f4f8;
+        #main-game-container h1, #main-game-container p {
+            color: var(--text-color);
         }
 
-        body.light-mode h1, body.light-mode p {
-            color: #1f2937;
+        .stats-container {
+             background-color: var(--container-bg);
+             box-shadow: 0 10px 20px var(--container-shadow);
+        }
+
+        .stats-container p {
+            color: var(--text-color);
         }
 
     </style>
@@ -138,13 +142,13 @@
       </header>
     <!-- Adicionando um ID para melhor controle do layout -->
     <div id="main-game-container" class="w-full">
-        <h1 class="text-3xl font-extrabold text-center text-gray-800 mb-2"> Food Vocabulary Match </h1>
-        <p class="text-center text-gray-500 mb-6">15 words are randomly chosen from a total of 30 each round. Click to listen!</p>
+        <h1 class="text-3xl font-extrabold text-center mb-2"> Food Vocabulary Match </h1>
+        <p class="text-center mb-6">15 words are randomly chosen from a total of 30 each round. Click to listen!</p>
 
         <!-- Stats and Controls -->
-        <div class="flex justify-between items-center bg-white p-4 rounded-xl shadow-lg mb-4">
-            <p class="text-lg font-medium text-gray-700">Tries: <span id="tries" class="text-blue-600 font-bold">0</span></p>
-            <p class="text-lg font-medium text-gray-700">Matches: <span id="matches" class="text-green-600 font-bold">0 / 15</span></p>
+        <div class="stats-container flex justify-between items-center p-4 rounded-xl shadow-lg mb-4">
+            <p class="text-lg font-medium">Tries: <span id="tries" class="font-bold">0</span></p>
+            <p class="text-lg font-medium">Matches: <span id="matches" class="font-bold">0 / 15</span></p>
             <button id="reset-button" class="px-4 py-2 bg-pink-500 text-white font-bold rounded-lg shadow-md hover:bg-pink-600 transition duration-150 transform hover:scale-105">
                 Restart
             </button>
