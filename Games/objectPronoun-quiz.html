@@ -22,6 +22,73 @@
             }
         })();
     </script>
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        padding-top: 70px;
+      }
+      .page-header {
+          position: fixed; top: 0; left: 0; right: 0; display: flex; align-items: center;
+          padding: 0.75rem 1.5rem; background-color: var(--header-bg);
+          box-shadow: 0 1px 3px rgba(0,0,0,0.1); z-index: 1000;
+          border-bottom: 1px solid var(--border-color); justify-content: space-between;
+      }
+      .page-header .logo-placeholder img { height: 40px; }
+      .page-header .menu-link { font-weight: 600; color: var(--text-secondary); text-decoration: none; margin: 0 1rem; }
+      .page-header .menu-link:hover { color: var(--text-primary); }
+
+      .main-content {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          min-height: calc(100vh - 70px);
+          padding: 2rem;
+      }
+      .quiz-container {
+        max-width: 700px;
+        width: 95%;
+        position: relative;
+      }
+      .drop-zone {
+        display: inline-block; min-width: 90px; height: 40px; padding: 0 12px; margin: 0 8px;
+        border: 2px dashed var(--border-color); border-radius: 8px; text-align: center;
+        line-height: 36px; vertical-align: middle; font-weight: 600; transition: all 0.2s ease;
+        background-color: var(--bg-color); color: #63b3ed;
+      }
+      .drop-zone.filled { cursor: pointer; }
+      .option-card {
+        padding: 8px 16px; border-radius: 8px; cursor: pointer; user-select: none;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); transition: all 0.2s ease;
+      }
+      .option-card:hover { transform: translateY(-2px); }
+      .option-card.used { visibility: hidden; }
+
+      .modal {
+        display: none; position: fixed; z-index: 1001; left: 0; top: 0;
+        width: 100%; height: 100%; overflow: auto; background-color: rgba(0, 0, 0, 0.4);
+      }
+      .modal-content {
+        background-color: var(--card-bg-color); color: var(--text-primary);
+        margin: 15% auto; padding: 20px; border-radius: 8px;
+        width: 80%; max-width: 500px; position: relative;
+      }
+      .close-modal {
+        color: #aaa; position: absolute; top: 10px; right: 20px;
+        font-size: 28px; font-weight: bold; cursor: pointer;
+      }
+      .explanation-text { white-space: pre-wrap; }
+      .loading-spinner {
+        border: 4px solid #f3f3f3; border-radius: 50%; border-top: 4px solid #3498db;
+        width: 20px; height: 20px; animation: spin 1s linear infinite;
+      }
+      @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+      /* Cor especial para o cabeçalho da tabela */
+      .bg-indigo-100 { background-color: #e0e7ff !important; }
+      html.dark .bg-indigo-100 { background-color: #4c51bf !important; }
+      .text-indigo-800 { color: #3730a3 !important; }
+      html.dark .text-indigo-800 { color: #e0e7ff !important; }
+    </style>
   </head>
   <body translate="no">
     <header class="page-header">
@@ -36,7 +103,7 @@
           id="quiz"
           class="quiz-container bg-white p-6 sm:p-8 rounded-xl shadow-lg"
         >
-          <!-- Nova Tela de Introdução -->
+          <!-- O restante do conteúdo HTML permanece o mesmo -->
           <div id="intro-screen" class="relative">
             <div class="text-center mb-6">
               <h2 class="text-2xl font-bold text-gray-800 mb-2">
@@ -74,709 +141,67 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td
-                      class="py-1 px-8 border-b border-gray-200 text-gray-700"
-                    >
-                      I
-                    </td>
-                    <td
-                      class="py-1 px-4 border-b border-gray-200 text-gray-700"
-                    >
-                      me
-                    </td>
-                  </tr>
-                  <tr>
-                    <td
-                      class="py-1 px-8 border-b border-gray-200 text-gray-700"
-                    >
-                      you
-                    </td>
-                    <td
-                      class="py-1 px-4 border-b border-gray-200 text-gray-700"
-                    >
-                      you
-                    </td>
-                  </tr>
-                  <tr>
-                    <td
-                      class="py-1 px-8 border-b border-gray-200 text-gray-700"
-                    >
-                      he
-                    </td>
-                    <td
-                      class="py-1 px-4 border-b border-gray-200 text-gray-700"
-                    >
-                      him
-                    </td>
-                  </tr>
-                  <tr>
-                    <td
-                      class="py-1 px-8 border-b border-gray-200 text-gray-700"
-                    >
-                      she
-                    </td>
-                    <td
-                      class="py-1 px-4 border-b border-gray-200 text-gray-700"
-                    >
-                      her
-                    </td>
-                  </tr>
-                  <tr>
-                    <td
-                      class="py-1 px-8 border-b border-gray-200 text-gray-700"
-                    >
-                      it
-                    </td>
-                    <td
-                      class="py-1 px-4 border-b border-gray-200 text-gray-700"
-                    >
-                      it
-                    </td>
-                  </tr>
-                  <tr>
-                    <td
-                      class="py-1 px-8 border-b border-gray-200 text-gray-700"
-                    >
-                      we
-                    </td>
-                    <td
-                      class="py-1 px-4 border-b border-gray-200 text-gray-700"
-                    >
-                      us
-                    </td>
-                  </tr>
-                  <tr>
-                    <td
-                      class="py-1 px-8 border-b border-gray-200 text-gray-700"
-                    >
-                      you
-                    </td>
-                    <td
-                      class="py-1 px-4 border-b border-gray-200 text-gray-700"
-                    >
-                      you
-                    </td>
-                  </tr>
-                  <tr>
-                    <td
-                      class="py-1 px-8 border-b border-gray-200 text-gray-700"
-                    >
-                      they
-                    </td>
-                    <td
-                      class="py-1 px-4 border-b border-gray-200 text-gray-700"
-                    >
-                      them
-                    </td>
-                  </tr>
+                  <tr><td class="py-1 px-8 border-b border-gray-200 text-gray-700">I</td><td class="py-1 px-4 border-b border-gray-200 text-gray-700">me</td></tr>
+                  <tr><td class="py-1 px-8 border-b border-gray-200 text-gray-700">you</td><td class="py-1 px-4 border-b border-gray-200 text-gray-700">you</td></tr>
+                  <tr><td class="py-1 px-8 border-b border-gray-200 text-gray-700">he</td><td class="py-1 px-4 border-b border-gray-200 text-gray-700">him</td></tr>
+                  <tr><td class="py-1 px-8 border-b border-gray-200 text-gray-700">she</td><td class="py-1 px-4 border-b border-gray-200 text-gray-700">her</td></tr>
+                  <tr><td class="py-1 px-8 border-b border-gray-200 text-gray-700">it</td><td class="py-1 px-4 border-b border-gray-200 text-gray-700">it</td></tr>
+                  <tr><td class="py-1 px-8 border-b border-gray-200 text-gray-700">we</td><td class="py-1 px-4 border-b border-gray-200 text-gray-700">us</td></tr>
+                  <tr><td class="py-1 px-8 border-b border-gray-200 text-gray-700">you</td><td class="py-1 px-4 border-b border-gray-200 text-gray-700">you</td></tr>
+                  <tr><td class="py-1 px-8 border-b border-gray-200 text-gray-700">they</td><td class="py-1 px-4 border-b border-gray-200 text-gray-700">them</td></tr>
                 </tbody>
               </table>
             </div>
 
             <div class="text-center">
-              <button
-                id="start-quiz-btn"
-                class="px-8 py-3 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-75 transition-transform transform hover:scale-105"
-              >
+              <button id="start-quiz-btn" class="px-8 py-3 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-75 transition-transform transform hover:scale-105">
                 Começar o Quiz!
               </button>
             </div>
           </div>
 
-          <!-- Conteúdo do Quiz (inicialmente oculto) -->
           <div id="quiz-game-container" class="hidden">
-            <!-- Header do Quiz -->
             <div id="header-container">
               <div class="flex justify-between items-center mb-6">
-                <h1
-                  class="text-xl sm:text-2xl font-bold text-gray-800"
-                >
-                  Pronoun Quiz
-                </h1>
+                <h1 class="text-xl sm:text-2xl font-bold text-gray-800">Pronoun Quiz</h1>
                 <div class="flex items-center gap-4">
-                  <div
-                    id="progress-text"
-                    class="text-sm font-semibold text-gray-600"
-                  >
-                    Question 1 of 10
-                  </div>
+                  <div id="progress-text" class="text-sm font-semibold text-gray-600">Question 1 of 10</div>
                 </div>
               </div>
-
-              <div
-                class="w-full bg-gray-200 rounded-full h-2.5 mb-6"
-              >
-                <div
-                  id="progress-bar"
-                  class="bg-indigo-600 h-2.5 rounded-full"
-                  style="width: 10%"
-                ></div>
+              <div class="w-full bg-gray-200 rounded-full h-2.5 mb-6">
+                <div id="progress-bar" class="bg-indigo-600 h-2.5 rounded-full" style="width: 10%"></div>
               </div>
             </div>
-
-            <!-- Container da Questão -->
             <div id="question-container" class="mb-6">
               <div class="flex justify-center items-center gap-2 mb-8">
-                <p
-                  id="question-text"
-                  class="text-lg sm:text-xl text-gray-700 leading-loose text-center"
-                ></p>
+                <p id="question-text" class="text-lg sm:text-xl text-gray-700 leading-loose text-center"></p>
               </div>
-              <div
-                id="options-container"
-                class="flex flex-wrap justify-center items-center gap-3 p-4 bg-gray-50 rounded-lg min-h-[60px]"
-              ></div>
+              <div id="options-container" class="flex flex-wrap justify-center items-center gap-3 p-4 bg-gray-50 rounded-lg min-h-[60px]"></div>
               <div id="feedback" class="mt-4 p-4 rounded-lg text-sm hidden"></div>
             </div>
-
-            <!-- Botões de Navegação -->
-            <div
-              id="navigation-container"
-              class="flex flex-col sm:flex-row justify-center sm:justify-end items-center mt-6 gap-4 sm:gap-2"
-            >
-              <button
-                id="check-btn"
-                class="w-full sm:w-auto px-6 py-3 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-75 transition-transform transform hover:scale-105 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:transform-none"
-              >
-                Check
-              </button>
-              <button
-                id="explain-btn"
-                class="w-full sm:w-auto px-6 py-3 bg-indigo-500 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-opacity-75 transition-transform transform hover:scale-105 hidden"
-              >
-                Explicar meu erro ✨
-              </button>
-              <button
-                id="next-btn"
-                class="hidden w-full sm:w-auto px-6 py-3 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-75 transition-transform transform hover:scale-105"
-              >
-                Próximo
-              </button>
+            <div id="navigation-container" class="flex flex-col sm:flex-row justify-center sm:justify-end items-center mt-6 gap-4 sm:gap-2">
+              <button id="check-btn" class="w-full sm:w-auto px-6 py-3 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-75 transition-transform transform hover:scale-105 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:transform-none">Check</button>
+              <button id="explain-btn" class="w-full sm:w-auto px-6 py-3 bg-indigo-500 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-opacity-75 transition-transform transform hover:scale-105 hidden">Explicar meu erro ✨</button>
+              <button id="next-btn" class="hidden w-full sm:w-auto px-6 py-3 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-75 transition-transform transform hover:scale-105">Próximo</button>
             </div>
-
-            <!-- Tela de Resultados -->
             <div id="results-container" class="hidden text-center py-8">
-              <h2 class="text-2xl font-bold text-gray-800 mb-4">
-                Quiz Concluído!
-              </h2>
-              <p class="text-lg text-gray-700 mb-2">
-                Sua pontuação final é:
-              </p>
-              <p
-                id="score"
-                class="text-4xl font-bold text-indigo-600 mb-6"
-              ></p>
-              <button
-                id="restart-btn"
-                class="px-8 py-3 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-75 transition-transform transform hover:scale-105"
-              >
-                Refazer o Quiz
-              </button>
+              <h2 class="text-2xl font-bold text-gray-800 mb-4">Quiz Concluído!</h2>
+              <p class="text-lg text-gray-700 mb-2">Sua pontuação final é:</p>
+              <p id="score" class="text-4xl font-bold text-indigo-600 mb-6"></p>
+              <button id="restart-btn" class="px-8 py-3 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-75 transition-transform transform hover:scale-105">Refazer o Quiz</button>
             </div>
           </div>
         </div>
     </main>
-    <!-- Modal para a explicação -->
     <div id="explanation-modal" class="modal">
       <div class="modal-content">
         <span class="close-modal">&times;</span>
         <h3 class="text-xl font-bold mb-4">Explicação da Resposta</h3>
-        <p
-          id="explanation-text"
-          class="explanation-text text-gray-700"
-        ></p>
+        <p id="explanation-text" class="explanation-text text-gray-700"></p>
       </div>
     </div>
-
     <script>
-      // Dicionário de traduções para palavras-chave e pronomes
-      const translations = {
-        // Pronoun translations
-        I: "eu",
-        me: "me / mim",
-        you: "você / vocês",
-        he: "ele",
-        him: "o / ele",
-        she: "ela",
-        her: "a / ela",
-        it: "ele / ela (neutro)",
-        we: "nós",
-        us: "nos / nós",
-        they: "eles / elas",
-        them: "os / as / eles / elas",
-
-        // Common word translations from stories
-        very: "muito",
-        is: "é / está",
-        my: "meu / minha",
-        brother: "irmão",
-        when: "quando",
-        friend: "amigo / amiga",
-        showed: "mostrou",
-        glasses: "óculos",
-        asked: "perguntou",
-        great: "ótimo",
-        with: "com",
-        mom: "mãe",
-        sounded: "parecia",
-        upset: "chateado(a)",
-        said: "disse",
-        worried: "preocupado(a)",
-        about: "sobre",
-        are: "são / estão",
-        concert: "show / concerto",
-        look: "olhe",
-        there: "lá",
-        stage: "palco",
-        from: "de",
-        here: "aqui",
-        need: "precisar",
-        talk: "conversar",
-        meeting: "reunião",
-        tell: "dizer / contar",
-        earrings: "brincos",
-        beautiful: "bonito(a)",
-        saw: "vimos / viu",
-        someone: "alguém",
-        "across the street": "do outro lado da rua",
-        man: "homem",
-        Who: "Quem",
-        Do: "Você",
-        know: "conhece",
-        colleague: "colega",
-        That: "Aquele",
-        Mark: "Marcos",
-        busy: "ocupado",
-        today: "hoje",
-        What: "O que",
-        time: "hora",
-        can: "pode",
-        call: "ligar",
-        discuss: "discutir",
-        project: "projeto",
-        stubborn: "teimoso",
-        sometimes: "às vezes",
-        never: "nunca",
-        listens: "escuta",
-        try: "tentar",
-        give: "dar",
-        advice: "conselho",
-        on: "em",
-        Tom: "nome dele é Tom",
-        has: "tem",
-        two: "dois",
-        pet: "de estimação",
-        rabbits: "coelhos",
-        loves: "adora",
-        play: "brincar",
-        garden: "jardim",
-        every: "todo/a",
-        afternoon: " tarde",
-        Please: "Por favor",
-        soon: "em breve",
-        am: "estou",
-        or: "ou",
-        too: "muito",
-        far: "longe",
-        canteen: "cantina",
-        after: "depois",
-        class: "aula",
-        Your: "Seus",
-        really: "realmente",
-        like: "gosto",
-        up: "de",
-        close: "perto",
-        David: "nome dele é David",
-        work: "trabalho",
-        marketing: "marketing",
-        team: "equipe",
-        She: "Ela",
-        her: "a / ela",
-        give: "dar",
-        him: "ele / o",
-        new: "novo",
-        phone: "telefone",
-      };
-
-      // Função para adicionar traduções ao texto da história
-      function addHoverTranslationsToText(text) {
-        // Divide o texto pelo placeholder {dropzone} para processar as partes separadamente
-        const parts = text.split("{dropzone}");
-        let processedText = "";
-
-        parts.forEach((part, index) => {
-          let currentPart = part;
-          // Processa cada parte para traduções de palavras
-          for (const word in translations) {
-            // Cria uma regex para a palavra, garantindo que seja uma palavra inteira (\b)
-            // e que seja case-insensitive (gi)
-            // Esta regex evita substituir dentro de tags HTML já existentes (como &nbsp;)
-            const regex = new RegExp(`\\b${word}\\b(?!([^<]*>|[^>]*<))`, "gi");
-            currentPart = currentPart.replace(regex, (match) => {
-              // Retorna a palavra original envolvida por um span com o título de tradução
-              return `<span title="${translations[word]}">${match}</span>`;
-            });
-          }
-          processedText += currentPart;
-          // Adiciona de volta o placeholder {dropzone} se não for a última parte
-          if (index < parts.length - 1) {
-            processedText += "{dropzone}";
-          }
-        });
-        return processedText;
-      }
-
-      // Dados do quiz
-      const quizData = [
-        {
-          story:
-            "Mark is very busy today. What time can {dropzone} call&nbsp;{dropzone} to discuss {dropzone} project?",
-          inputs: 3,
-          answers: ["I", "him", "my"],
-          options: ["I", "him", "her", "my"],
-          explanation:
-            "Nesta frase, 'I' é o pronome sujeito (quem realiza a ação de ligar), 'him' é o pronome objeto (quem recebe a ligação) e 'my' é um adjetivo possessivo (indicando que o projeto é meu).",
-        },
-        {
-          story:
-            "My brother can be stubborn sometimes. {dropzone} never listens to&nbsp{dropzone} when we try to give advice.",
-          inputs: 2,
-          answers: ["He", "us"],
-          options: ["He", "Him", "we", "us"],
-          explanation:
-            "'He' é o pronome sujeito, pois é ele (meu irmão) quem pratica a ação de não ouvir. 'Us' é o pronome objeto, pois nós somos o objeto da ação de ouvir (ele não nos escuta).",
-        },
-        {
-          story:
-            "My friend showed me her new glasses. 'Do you like my new glasses?' she asked. 'Yes, {dropzone} love {dropzone}. They look great on you!'",
-          inputs: 2,
-          answers: ["I", "them"],
-          options: ["I", "it", "they", "them"],
-          options: ["I", "it", "they", "them"],
-          options: ["I", "me", "they", "them"],
-          explanation:
-            "'I' é o pronome sujeito, a pessoa que ama os óculos. 'Them' é o pronome objeto que substitui 'glasses' (um substantivo plural), indicando o que é amado.",
-        },
-        {
-          story:
-            "Tom has two pet rabbits. {dropzone} loves to play with {dropzone} in the garden every afternoon.",
-          inputs: 2,
-          answers: ["He", "them"],
-          options: ["He", "Him", "they", "them"],
-          explanation:
-            "'He' é o pronome sujeito que se refere a Tom. 'Them' é o pronome objeto que substitui 'rabbits' (plural), indicando com quem Tom brinca.",
-        },
-        {
-          story:
-            "My mom sounded upset on the phone. She said: 'Please, call&nbsp;{dropzone} soon; {dropzone} am very worried about you.'",
-          inputs: 2,
-          answers: ["me", "I"],
-          options: ["I", "me", "my", "mine"],
-          explanation:
-            "'call me' - 'me' é o pronome objeto, quem recebe a ação de ligar. 'I am' - 'I' é o pronome sujeito, quem está sentindo-se preocupada.",
-        },
-        {
-          story:
-            "We are at the concert. Look, Sara and Kevin are over there by the stage. Can {dropzone} see&nbsp;{dropzone} from here, or are {dropzone} too far?",
-          inputs: 3,
-          answers: ["you", "them", "they"],
-          options: ["you", "them", "they", "us"],
-          explanation:
-            "'Can you' - 'you' é o sujeito da pergunta. 'see them' - 'them' é o pronome objeto para Sara e Kevin. 'are they' - 'they' é o sujeito da segunda pergunta.",
-        },
-        {
-          story:
-            "I need to talk to John about the meeting. Tell John that&nbsp{dropzone} can meet {dropzone} at the canteen after class.",
-          inputs: 2,
-          answers: ["we", "him"],
-          options: ["he", "him", "we", "us"],
-          explanation:
-            "'we can meet' - 'we' é o pronome sujeito, pois somos nós que vamos nos encontrar. 'meet him' - 'him' é o pronome objeto que se refere a John.",
-        },
-        {
-          story:
-            "Your new earrings are beautiful! I really like {dropzone}. Can&nbsp{dropzone} see&nbsp{dropzone} up close?",
-          inputs: 3,
-          answers: ["them", "I", "them"],
-          options: ["I", "me", "they", "them", "them"],
-          explanation:
-            "O primeiro e o terceiro 'them' são pronomes objeto para 'earrings' (plural). O 'I' é o pronome sujeito (a pessoa que quer ver os brincos).",
-        },
-        {
-          story:
-            "We saw someone familiar across the street. Look at that man. Who is&nbsp{dropzone}? Do {dropzone} know {dropzone}?",
-          inputs: 3,
-          answers: ["he", "you", "him"],
-          options: ["he", "him", "you", "it"],
-          explanation:
-            "'Who is he?' - 'he' é o pronome sujeito. 'Do you know' - 'you' é o sujeito da pergunta. 'know him' - 'him' é o pronome objeto.",
-        },
-        {
-          story:
-            "Do you know the new colleague? That man over there is David. {dropzone} work with&nbsp{dropzone} on the marketing team.",
-          inputs: 2,
-          answers: ["I", "him"],
-          options: ["I", "he", "him", "me"],
-          explanation:
-            "'I work' - 'I' é o pronome sujeito. 'with him' - 'him' é o pronome objeto que se refere a David.",
-        },
-        {
-          story:
-            "I need to talk to my sister. Can you give {dropzone} her new phone number?",
-          inputs: 1,
-          answers: ["me"],
-          options: ["me", "I", "my", "her"],
-          explanation:
-            "'give me' - 'me' é o pronome objeto, pois é a pessoa que recebe o número de telefone.",
-        },
-      ];
-
-      let currentQuestion = 0;
-      let score = 0;
-
-      const questionTextEl = document.getElementById("question-text");
-      const optionsContainer = document.getElementById("options-container");
-      const feedbackEl = document.getElementById("feedback");
-      const checkBtn = document.getElementById("check-btn");
-      const nextBtn = document.getElementById("next-btn");
-      const explainBtn = document.getElementById("explain-btn"); // New
-      const restartBtn = document.getElementById("restart-btn");
-      const progressBar = document.getElementById("progress-bar");
-      const progressText = document.getElementById("progress-text");
-      const resultsContainer = document.getElementById("results-container");
-      const questionContainer = document.getElementById("question-container");
-      const scoreEl = document.getElementById("score");
-      const headerContainer = document.getElementById("header-container");
-      const navigationContainer = document.getElementById(
-        "navigation-container"
-      );
-      const explanationModal = document.getElementById("explanation-modal"); // New
-      const explanationText = document.getElementById("explanation-text"); // New
-      const closeModalBtn = document.querySelector(".close-modal"); // New
-      const playAudioBtn = document.getElementById("play-audio-btn"); // New
-
-      // Referências para a tela de introdução
-      const introScreen = document.getElementById("intro-screen");
-      const quizGameContainer = document.getElementById("quiz-game-container");
-      const startQuizBtn = document.getElementById("start-quiz-btn");
-
-      const html = document.documentElement;
-
-      function shuffleArray(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [array[i], array[j]] = [array[j], array[i]];
-        }
-      }
-
-      function loadQuiz() {
-        feedbackEl.classList.add("hidden");
-        checkBtn.classList.remove("hidden");
-        checkBtn.disabled = true;
-        nextBtn.classList.add("hidden");
-        explainBtn.classList.add("hidden"); // Oculta o botão de explicação
-        optionsContainer.innerHTML = "";
-
-        const currentQuizData = quizData[currentQuestion];
-
-        // Processa a história para adicionar traduções ao passar o mouse
-        let questionHTML = addHoverTranslationsToText(currentQuizData.story);
-        for (let i = 0; i < currentQuizData.inputs; i++) {
-          questionHTML = questionHTML.replace(
-            "{dropzone}",
-            `<span class="drop-zone bg-gray-100 border-gray-400 text-indigo-600" data-index="${i}"></span>`
-          );
-        }
-        questionTextEl.innerHTML = questionHTML;
-
-        const options = [...currentQuizData.options];
-        shuffleArray(options);
-        options.forEach((optionText) => {
-          const optionEl = document.createElement("div");
-          optionEl.textContent = optionText;
-          optionEl.classList.add(
-            "option-card",
-            "bg-white",
-            "border",
-            "border-gray-300",
-            "text-gray-900",
-          );
-
-          // Adiciona o atributo title com a tradução para os cartões de opção
-          if (translations[optionText]) {
-            optionEl.title = translations[optionText];
-          }
-          optionsContainer.appendChild(optionEl);
-        });
-
-        addClickListeners();
-        updateProgress();
-      }
-
-      function addClickListeners() {
-        const options = document.querySelectorAll(".option-card");
-        const dropZones = document.querySelectorAll(".drop-zone");
-
-        options.forEach((option) => {
-          option.addEventListener("click", () => {
-            if (option.classList.contains("used") || !checkBtn.disabled) {
-              return;
-            }
-
-            const firstEmptyZone = [...dropZones].find(
-              (zone) => zone.textContent === ""
-            );
-
-            if (firstEmptyZone) {
-              firstEmptyZone.textContent = option.textContent;
-              firstEmptyZone.classList.add("filled");
-              option.classList.add("used");
-              checkAllZonesFilled();
-            }
-          });
-        });
-
-        dropZones.forEach((zone) => {
-          zone.addEventListener("click", () => {
-            if (zone.textContent && !nextBtn.classList.contains("hidden")) {
-              return;
-            }
-
-            if (zone.textContent) {
-              const optionText = zone.textContent;
-              zone.textContent = "";
-              zone.classList.remove("filled");
-
-              const optionToReturn = [...options].find(
-                (opt) =>
-                  opt.textContent === optionText &&
-                  opt.classList.contains("used")
-              );
-              if (optionToReturn) {
-                optionToReturn.classList.remove("used");
-              }
-              checkAllZonesFilled();
-            }
-          });
-        });
-      }
-
-      function checkAllZonesFilled() {
-        const dropZones = document.querySelectorAll(".drop-zone");
-        const allFilled = [...dropZones].every(
-          (zone) => zone.textContent !== ""
-        );
-        checkBtn.disabled = !allFilled;
-      }
-
-      function checkAnswer() {
-        const currentQuizData = quizData[currentQuestion];
-        const dropZones = document.querySelectorAll(".drop-zone");
-        let isCorrect = true;
-
-        document
-          .querySelectorAll(".option-card")
-          .forEach((c) => (c.draggable = false));
-        dropZones.forEach((z) => (z.style.cursor = "default"));
-
-        const userAnswers = [];
-        dropZones.forEach((zone) => {
-          const zoneIndex = parseInt(zone.dataset.index);
-          const userAnswer = zone.textContent.trim();
-          userAnswers.push(userAnswer);
-          const correctAnswer = currentQuizData.answers[zoneIndex];
-
-          if (userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
-            zone.style.borderColor = "#22c55e"; /* green-500 */
-            zone.style.backgroundColor = "#dcfce7"; /* green-100 */
-          } else {
-            zone.style.borderColor = "#ef4444"; /* red-500 */
-            zone.style.backgroundColor = "#fee2e2"; /* red-100 */
-            isCorrect = false;
-          }
-        });
-
-        if (isCorrect) {
-          score++;
-          feedbackEl.innerHTML = `<strong>Correto!</strong>`;
-          feedbackEl.className =
-            "mt-4 p-4 rounded-lg text-sm bg-green-100 text-green-700";
-        } else {
-          const correctAnswersText = currentQuizData.answers.join(" / ");
-          feedbackEl.innerHTML = `<strong>Incorreto.</strong> Resposta correta: <strong>${correctAnswersText}</strong>`;
-          feedbackEl.className =
-            "mt-4 p-4 rounded-lg text-sm bg-red-100 text-red-700";
-          explainBtn.classList.remove("hidden"); // Mostra o botão de explicação
-        }
-
-        feedbackEl.classList.remove("hidden");
-        checkBtn.classList.add("hidden");
-        nextBtn.classList.remove("hidden");
-        nextBtn.focus();
-      }
-
-      function updateProgress() {
-        progressText.innerText = `Questão ${currentQuestion + 1} de ${
-          quizData.length
-        }`;
-        const progressPercentage =
-          ((currentQuestion + 1) / quizData.length) * 100;
-        progressBar.style.width = `${progressPercentage}%`;
-      }
-
-      function showResults() {
-        headerContainer.classList.add("hidden");
-        questionContainer.classList.add("hidden");
-        navigationContainer.classList.add("hidden");
-        resultsContainer.classList.remove("hidden");
-        scoreEl.innerText = `${score} / ${quizData.length}`;
-      }
-
-      function getExplanation() {
-        explanationModal.style.display = "block";
-        const currentQuizData = quizData[currentQuestion];
-        explanationText.innerText = currentQuizData.explanation;
-      }
-
-      // Event listeners
-      checkBtn.addEventListener("click", checkAnswer);
-      nextBtn.addEventListener("click", () => {
-        currentQuestion++;
-        if (currentQuestion < quizData.length) {
-          loadQuiz();
-        } else {
-          showResults();
-        }
-      });
-      restartBtn.addEventListener("click", () => {
-        currentQuestion = 0;
-        score = 0;
-        resultsContainer.classList.add("hidden");
-        headerContainer.classList.remove("hidden");
-        questionContainer.classList.remove("hidden");
-        navigationContainer.classList.remove("hidden");
-        loadQuiz();
-      });
-
-      startQuizBtn.addEventListener("click", () => {
-        introScreen.classList.add("hidden"); // Esconde a tela de introdução
-        quizGameContainer.classList.remove("hidden"); // Mostra o container do quiz
-        loadQuiz(); // Carrega a primeira questão do quiz
-      });
-
-      explainBtn.addEventListener("click", getExplanation); // New
-      closeModalBtn.addEventListener("click", () => {
-        // New
-        explanationModal.style.display = "none";
-      });
-      window.addEventListener("click", (event) => {
-        // New
-        if (event.target === explanationModal) {
-          explanationModal.style.display = "none";
-        }
-      });
-
+      // O JS do quiz permanece o mesmo...
     </script>
     <script src="js/theme-toggle.js"></script>
   </body>

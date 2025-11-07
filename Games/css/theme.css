@@ -18,46 +18,12 @@ html.dark {
     --header-bg: #1e293b; /* Fundo do cabeçalho */
 }
 
-/* --- Estilos Gerais --- */
+/* --- Estilos Gerais de Cores --- */
 body {
     background-color: var(--bg-color);
     color: var(--text-primary);
     font-family: 'Inter', sans-serif;
     transition: background-color 0.3s, color 0.3s;
-    padding-top: 80px; /* Espaço para o cabeçalho fixo */
-}
-
-/* --- Cabeçalho Fixo --- */
-.page-header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    display: flex;
-    align-items: center;
-    padding: 0.75rem 1.5rem;
-    background-color: var(--header-bg);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-    transition: background-color 0.3s;
-    border-bottom: 1px solid var(--border-color);
-    justify-content: space-between;
-}
-
-.page-header .logo-placeholder img {
-    height: 40px;
-}
-
-.page-header .menu-link {
-    font-weight: 600;
-    color: var(--text-secondary);
-    text-decoration: none;
-    transition: color 0.2s;
-    margin: 0 1rem;
-}
-
-.page-header .menu-link:hover {
-    color: var(--text-primary);
 }
 
 #theme-toggle-btn {
@@ -68,7 +34,6 @@ body {
     color: var(--text-primary);
     line-height: 1;
 }
-
 
 /* --- Estilos para Forçar Cores do Tema sobre o Tailwind --- */
 /*
@@ -136,11 +101,4 @@ html.dark .answer-btn:hover {
     background-color: #ef4444 !important; /* Vermelho */
     color: white !important;
     border-color: #dc2626 !important;
-}
-
-.quiz-container{
-    padding: 40px;
-}
-.page-header{
-    padding: 20px;
 }
