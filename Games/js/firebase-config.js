@@ -1,12 +1,13 @@
-// ARQUIVO DE EXEMPLO DE CONFIGURAÇÃO DO FIREBASE
-// Renomeie este arquivo para "firebase-config.js" e preencha com suas próprias credenciais do Firebase.
-// Este arquivo não deve ser versionado.
+// ARQUIVO DE CONFIGURAÇÃO DO FIREBASE
+// Para proteger suas chaves, este arquivo NÃO DEVE SER versionado.
+// Crie este arquivo no seu ambiente local com as suas credenciais.
 
 export const firebaseConfig = {
-    apiKey: "AIzaSyAtK5IZ90-5eAtXKJJW0bx0x0qUjgfoutc",
-    authDomain: "login-danneridiomas.firebaseapp.com",
-    projectId: "login-danneridiomas",
-    storageBucket: "login-danneridiomas.firebasestorage.app",
-    messagingSenderId: "40775533575",
-    appId: "1:40775533575:web:3fff43067b1f4dcba216a2"
+    apiKey: "AIzaSyDJe81bxA-PKG7q_ouT7MWIe6Od5QwS0VQ",
+    authDomain: "app-gestao-alunos.firebaseapp.com",
+    projectId: "app-gestao-alunos",
+    storageBucket: "app-gestao-alunos.firebasestorage.app",
+    messagingSenderId: "501391699545",
+    appId: "1:501391699545:web:c8c581f65d5116d7424b48",
+    measurementId: "G-Q8J6YZWNFZ",
 };

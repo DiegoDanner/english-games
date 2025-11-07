@@ -22,18 +22,19 @@ Navegue até a pasta `Games/js/`. Lá, você encontrará um arquivo chamado `fir
 - Abra o novo arquivo `firebase-config.js`.
 - Substitua os valores de exemplo (como `"SUA_API_KEY"`) pelas suas credenciais reais do Firebase. Você pode encontrá-las no console do seu projeto Firebase.
 
-O arquivo final deverá ter esta aparência:
+### 4. Force o Envio do Arquivo (Passo Crucial)
 
-```javascript
-export const firebaseConfig = {
-    apiKey: "AIza...",
-    authDomain: "seu-projeto.firebaseapp.com",
-    projectId: "seu-projeto",
-    storageBucket: "seu-projeto.appspot.com",
-    messagingSenderId: "1234567890",
-    appId: "1:1234567890:web:abcdef123456",
-    measurementId: "G-ABCDEFGHIJ"
-};
+Como este arquivo é normalmente ignorado pelo Git, você precisa **forçar** o seu envio na primeira vez. Abra o terminal na pasta do seu projeto e execute os seguintes comandos:
+
+```bash
+# 1. Force o Git a "ver" o seu arquivo de configuração
+git add --force Games/js/firebase-config.js
+
+# 2. Faça o commit da alteração
+git commit -m "Adiciona o arquivo de configuração do Firebase"
+
+# 3. Envie para o repositório
+git push
 ```
 
-**Importante:** O arquivo `firebase-config.js` já está incluído no `.gitignore`, então as suas credenciais nunca serão enviadas para o repositório, mantendo-as seguras.
+Após executar esses passos, o seu site na Netlify terá o arquivo de configuração necessário, e o erro `auth/configuration-not-found` será resolvido.
