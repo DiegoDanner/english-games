@@ -14,301 +14,274 @@
     />
     <link rel="stylesheet" href="css/theme.css" />
     <link rel="stylesheet" href="css/style.css" />
-    <style>
-      body {
-        font-family: "Inter", sans-serif;
-      }
-      .main-content {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: calc(100vh - 70px);
-        padding: 2rem;
-      }
-      .quiz-container {
-        max-width: 700px;
-        width: 95%;
-        position: relative;
-        background-color: var(--container-bg);
-        color: var(--text-color);
-        box-shadow: 0 10px 20px var(--container-shadow);
-      }
-       h1, h2, p, th, td {
-         color: var(--text-color);
-      }
-      .drop-zone {
-        display: inline-block;
-        min-width: 90px;
-        height: 40px;
-        padding: 0 12px;
-        margin: 0 8px;
-        border: 2px dashed var(--button-hover-bg);
-        border-radius: 8px;
-        text-align: center;
-        line-height: 36px;
-        vertical-align: middle;
-        font-weight: 600;
-        transition: all 0.2s ease;
-        background-color: var(--background-color);
-        color: var(--link-color);
-      }
-      .drop-zone.filled {
-        cursor: pointer;
-      }
-      .option-card {
-        padding: 8px 16px;
-        border-radius: 8px;
-        cursor: pointer;
-        user-select: none;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        transition: all 0.2s ease;
-        background-color: var(--button-bg);
-        border: 1px solid var(--button-hover-bg);
-      }
-      .option-card:hover {
-        transform: translateY(-2px);
-      }
-      .option-card.used {
-        visibility: hidden;
-      }
-
-      .modal {
-        display: none;
-        position: fixed;
-        z-index: 1;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        overflow: auto;
-        background-color: rgba(0, 0, 0, 0.4);
-      }
-      .modal-content {
-        background-color: var(--container-bg);
-        color: var(--text-color);
-        margin: 15% auto;
-        padding: 20px;
-        border-radius: 8px;
-        width: 80%;
-        max-width: 500px;
-        position: relative;
-      }
-      .close-modal {
-        color: #aaa;
-        position: absolute;
-        top: 10px;
-        right: 20px;
-        font-size: 28px;
-        font-weight: bold;
-        cursor: pointer;
-      }
-      .explanation-text {
-        white-space: pre-wrap;
-      }
-      #options-container {
-        background-color: var(--background-color);
-      }
-      table {
-        background-color: var(--container-bg);
-        border-color: var(--button-hover-bg);
-      }
-       thead tr {
-        background-color: #4f46e5;
-        color: white;
-      }
-       thead tr th {
-         color: white;
-      }
-    </style>
   </head>
-  <body translate="no">
+  <body>
     <header class="page-header">
-      <div class="logo-placeholder">
-        <img src="img/LOGO_DANNER.png" alt="Logo" />
-      </div>
-      <a
-        href="https://game-quizzes.netlify.app/"
-        class="menu-link"
-        title="Back to Home"
-        >Menu</a
-      >
-      <button id="theme-toggle-btn">🌞</button>
+        <div class="logo-placeholder">
+            <img src="img/LOGO_DANNER.png" alt="Logo">
+        </div>
+        <a href="https://game-quizzes.netlify.app/" class="menu-link" title="Back to Home">Menu</a>
+        <button id="theme-toggle-btn">🌞</button>
     </header>
     <main class="main-content">
-      <div
-        id="quiz"
-        class="quiz-container p-6 sm:p-8 rounded-xl shadow-lg transition-colors duration-300"
-      >
-        <!-- Nova Tela de Introdução -->
-        <div id="intro-screen" class="relative">
-          <div class="text-center mb-6">
-            <h2 class="text-2xl font-bold mb-2">Object Pronouns 🎯</h2>
-            <p class="text-lg mb-2">
-              "Object pronouns" are small words that replace nouns to avoid
-              repetition.
-            </p>
-            <p class="text-lg mb-4">
-              <br />➡️ <bold>Subject Pronouns</bold> are those that
-              <bold>do the action</bold> in the sentence. <br />➡️ Object
-              Pronouns are those that receive the action in the sentence.
-            </p>
-          </div>
+        <div
+          id="quiz"
+          class="quiz-container bg-white p-6 sm:p-8 rounded-xl shadow-lg transition-colors duration-300"
+        >
+          <!-- Nova Tela de Introdução -->
+          <div id="intro-screen" class="relative">
+            <div class="text-center mb-6">
+              <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-2">
+                Object Pronouns 🎯
+              </h2>
+              <p class="text-lg text-gray-700 dark:text-gray-200 mb-2">
+                "Object pronouns" are small words that replace nouns to avoid
+                repetition.
+              </p>
+              <p class="text-lg text-gray-700 dark:text-gray-200 mb-4">
+                <br />➡️ <bold>Subject Pronouns</bold> are those that
+                <bold>do the action</bold> in the sentence. <br />➡️ Object Pronouns
+                are those that receive the action in the sentence.
+              </p>
+            </div>
 
-          <div class="overflow-x-auto mb-8">
-            <table
-              class="min-w-full border rounded-lg shadow-sm"
-            >
-              <thead>
-                <tr>
-                  <th
-                    class="py-2 px-4 border-b text-left"
+            <div class="overflow-x-auto mb-8">
+              <table
+                class="min-w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm"
+              >
+                <thead>
+                  <tr
+                    class="bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200"
                   >
-                    Subject Pronoun(pronome pessoal)
-                  </th>
-                  <th
-                    class="py-2 px-4 border-b text-left"
+                    <th
+                      class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left"
+                    >
+                      Subject Pronoun(pronome pessoal)
+                    </th>
+                    <th
+                      class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left"
+                    >
+                      Object Pronoun(pronome obliquo)
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td
+                      class="py-1 px-8 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200"
+                    >
+                      I
+                    </td>
+                    <td
+                      class="py-1 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200"
+                    >
+                      me
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      class="py-1 px-8 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200"
+                    >
+                      you
+                    </td>
+                    <td
+                      class="py-1 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200"
+                    >
+                      you
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      class="py-1 px-8 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200"
+                    >
+                      he
+                    </td>
+                    <td
+                      class="py-1 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200"
+                    >
+                      him
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      class="py-1 px-8 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200"
+                    >
+                      she
+                    </td>
+                    <td
+                      class="py-1 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200"
+                    >
+                      her
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      class="py-1 px-8 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200"
+                    >
+                      it
+                    </td>
+                    <td
+                      class="py-1 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200"
+                    >
+                      it
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      class="py-1 px-8 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200"
+                    >
+                      we
+                    </td>
+                    <td
+                      class="py-1 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200"
+                    >
+                      us
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      class="py-1 px-8 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200"
+                    >
+                      you
+                    </td>
+                    <td
+                      class="py-1 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200"
+                    >
+                      you
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      class="py-1 px-8 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200"
+                    >
+                      they
+                    </td>
+                    <td
+                      class="py-1 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200"
+                    >
+                      them
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="text-center">
+              <button
+                id="start-quiz-btn"
+                class="px-8 py-3 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-75 transition-transform transform hover:scale-105"
+              >
+                Começar o Quiz!
+              </button>
+            </div>
+          </div>
+
+          <!-- Conteúdo do Quiz (inicialmente oculto) -->
+          <div id="quiz-game-container" class="hidden">
+            <!-- Header do Quiz -->
+            <div id="header-container">
+              <div class="flex justify-between items-center mb-6">
+                <h1
+                  class="text-xl sm:text-2xl font-bold text-gray-800 dark:text-gray-100"
+                >
+                  Pronoun Quiz
+                </h1>
+                <div class="flex items-center gap-4">
+                  <div
+                    id="progress-text"
+                    class="text-sm font-semibold text-gray-600 dark:text-gray-400"
                   >
-                    Object Pronoun(pronome obliquo)
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class="py-1 px-8 border-b">I</td>
-                  <td class="py-1 px-4 border-b">me</td>
-                </tr>
-                <tr>
-                  <td class="py-1 px-8 border-b">you</td>
-                  <td class="py-1 px-4 border-b">you</td>
-                </tr>
-                <tr>
-                  <td class="py-1 px-8 border-b">he</td>
-                  <td class="py-1 px-4 border-b">him</td>
-                </tr>
-                <tr>
-                  <td class="py-1 px-8 border-b">she</td>
-                  <td class="py-1 px-4 border-b">her</td>
-                </tr>
-                <tr>
-                  <td class="py-1 px-8 border-b">it</td>
-                  <td class="py-1 px-4 border-b">it</td>
-                </tr>
-                <tr>
-                  <td class="py-1 px-8 border-b">we</td>
-                  <td class="py-1 px-4 border-b">us</td>
-                </tr>
-                <tr>
-                  <td class="py-1 px-8 border-b">you</td>
-                  <td class="py-1 px-4 border-b">you</td>
-                </tr>
-                <tr>
-                  <td class="py-1 px-8 border-b">they</td>
-                  <td class="py-1 px-4 border-b">them</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div class="text-center">
-            <button
-              id="start-quiz-btn"
-              class="px-8 py-3 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-75 transition-transform transform hover:scale-105"
-            >
-              Começar o Quiz!
-            </button>
-          </div>
-        </div>
-
-        <!-- Conteúdo do Quiz (inicialmente oculto) -->
-        <div id="quiz-game-container" class="hidden">
-          <!-- Header do Quiz -->
-          <div id="header-container">
-            <div class="flex justify-between items-center mb-6">
-              <h1 class="text-xl sm:text-2xl font-bold">Pronoun Quiz</h1>
-              <div class="flex items-center gap-4">
-                <div id="progress-text" class="text-sm font-semibold">
-                  Question 1 of 10
+                    Question 1 of 10
+                  </div>
                 </div>
+              </div>
+
+              <div
+                class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 mb-6"
+              >
+                <div
+                  id="progress-bar"
+                  class="bg-indigo-600 h-2.5 rounded-full"
+                  style="width: 10%"
+                ></div>
               </div>
             </div>
 
-            <div class="w-full rounded-full h-2.5 mb-6">
+            <!-- Container da Questão -->
+            <div id="question-container" class="mb-6">
+              <div class="flex justify-center items-center gap-2 mb-8">
+                <p
+                  id="question-text"
+                  class="text-lg sm:text-xl text-gray-700 dark:text-gray-200 leading-loose text-center"
+                ></p>
+              </div>
               <div
-                id="progress-bar"
-                class="bg-indigo-600 h-2.5 rounded-full"
-                style="width: 10%"
+                id="options-container"
+                class="flex flex-wrap justify-center items-center gap-3 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg min-h-[60px]"
               ></div>
+              <div id="feedback" class="mt-4 p-4 rounded-lg text-sm hidden"></div>
             </div>
-          </div>
 
-          <!-- Container da Questão -->
-          <div id="question-container" class="mb-6">
-            <div class="flex justify-center items-center gap-2 mb-8">
-              <p
-                id="question-text"
-                class="text-lg sm:text-xl leading-loose text-center"
-              ></p>
-            </div>
+            <!-- Botões de Navegação -->
             <div
-              id="options-container"
-              class="flex flex-wrap justify-center items-center gap-3 p-4 rounded-lg min-h-[60px]"
-            ></div>
-            <div id="feedback" class="mt-4 p-4 rounded-lg text-sm hidden"></div>
-          </div>
+              id="navigation-container"
+              class="flex flex-col sm:flex-row justify-center sm:justify-end items-center mt-6 gap-4 sm:gap-2"
+            >
+              <button
+                id="check-btn"
+                class="w-full sm:w-auto px-6 py-3 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-75 transition-transform transform hover:scale-105 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:transform-none"
+              >
+                Check
+              </button>
+              <button
+                id="explain-btn"
+                class="w-full sm:w-auto px-6 py-3 bg-indigo-500 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-opacity-75 transition-transform transform hover:scale-105 hidden"
+              >
+                Explicar meu erro ✨
+              </button>
+              <button
+                id="next-btn"
+                class="hidden w-full sm:w-auto px-6 py-3 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-75 transition-transform transform hover:scale-105"
+              >
+                Próximo
+              </button>
+            </div>
 
-          <!-- Botões de Navegação -->
-          <div
-            id="navigation-container"
-            class="flex flex-col sm:flex-row justify-center sm:justify-end items-center mt-6 gap-4 sm:gap-2"
-          >
-            <button
-              id="check-btn"
-              class="w-full sm:w-auto px-6 py-3 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-75 transition-transform transform hover:scale-105 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:transform-none"
-            >
-              Check
-            </button>
-            <button
-              id="explain-btn"
-              class="w-full sm:w-auto px-6 py-3 bg-indigo-500 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-opacity-75 transition-transform transform hover:scale-105 hidden"
-            >
-              Explicar meu erro ✨
-            </button>
-            <button
-              id="next-btn"
-              class="hidden w-full sm:w-auto px-6 py-3 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-75 transition-transform transform hover:scale-105"
-            >
-              Próximo
-            </button>
-          </div>
-
-          <!-- Tela de Resultados -->
-          <div id="results-container" class="hidden text-center py-8">
-            <h2 class="text-2xl font-bold mb-4">Quiz Concluído!</h2>
-            <p class="text-lg mb-2">Sua pontuação final é:</p>
-            <p
-              id="score"
-              class="text-4xl font-bold text-indigo-600 mb-6"
-            ></p>
-            <button
-              id="restart-btn"
-              class="px-8 py-3 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-75 transition-transform transform hover:scale-105"
-            >
-              Refazer o Quiz
-            </button>
+            <!-- Tela de Resultados -->
+            <div id="results-container" class="hidden text-center py-8">
+              <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-4">
+                Quiz Concluído!
+              </h2>
+              <p class="text-lg text-gray-700 dark:text-gray-200 mb-2">
+                Sua pontuação final é:
+              </p>
+              <p
+                id="score"
+                class="text-4xl font-bold text-indigo-600 dark:text-indigo-400 mb-6"
+              ></p>
+              <button
+                id="restart-btn"
+                class="px-8 py-3 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-75 transition-transform transform hover:scale-105"
+              >
+                Refazer o Quiz
+              </button>
+            </div>
           </div>
         </div>
-      </div>
     </main>
     <!-- Modal para a explicação -->
     <div id="explanation-modal" class="modal">
-      <div class="modal-content">
+      <div class="modal-content dark:bg-gray-800">
         <span class="close-modal">&times;</span>
         <h3 class="text-xl font-bold mb-4">Explicação da Resposta</h3>
-        <p id="explanation-text" class="explanation-text"></p>
+        <p
+          id="explanation-text"
+          class="explanation-text text-gray-700 dark:text-gray-200"
+        ></p>
       </div>
     </div>
 
-    <script src="js/main.js"></script>
+    <script src="js/main.js" defer></script>
     <script>
       // Dicionário de traduções para palavras-chave e pronomes
       const translations = {
@@ -560,7 +533,7 @@
       const feedbackEl = document.getElementById("feedback");
       const checkBtn = document.getElementById("check-btn");
       const nextBtn = document.getElementById("next-btn");
-      const explainBtn = document.getElementById("explain-btn");
+      const explainBtn = document.getElementById("explain-btn"); // New
       const restartBtn = document.getElementById("restart-btn");
       const progressBar = document.getElementById("progress-bar");
       const progressText = document.getElementById("progress-text");
@@ -571,9 +544,12 @@
       const navigationContainer = document.getElementById(
         "navigation-container"
       );
-      const explanationModal = document.getElementById("explanation-modal");
-      const explanationText = document.getElementById("explanation-text");
-      const closeModalBtn = document.querySelector(".close-modal");
+      const explanationModal = document.getElementById("explanation-modal"); // New
+      const explanationText = document.getElementById("explanation-text"); // New
+      const closeModalBtn = document.querySelector(".close-modal"); // New
+      const playAudioBtn = document.getElementById("play-audio-btn"); // New
+
+      // Referências para a tela de introdução
       const introScreen = document.getElementById("intro-screen");
       const quizGameContainer = document.getElementById("quiz-game-container");
       const startQuizBtn = document.getElementById("start-quiz-btn");
@@ -590,16 +566,17 @@
         checkBtn.classList.remove("hidden");
         checkBtn.disabled = true;
         nextBtn.classList.add("hidden");
-        explainBtn.classList.add("hidden");
+        explainBtn.classList.add("hidden"); // Oculta o botão de explicação
         optionsContainer.innerHTML = "";
 
         const currentQuizData = quizData[currentQuestion];
 
+        // Processa a história para adicionar traduções ao passar o mouse
         let questionHTML = addHoverTranslationsToText(currentQuizData.story);
         for (let i = 0; i < currentQuizData.inputs; i++) {
           questionHTML = questionHTML.replace(
             "{dropzone}",
-            `<span class="drop-zone" data-index="${i}"></span>`
+            `<span class="drop-zone bg-gray-100 dark:bg-gray-900 border-gray-400 dark:border-gray-600 text-indigo-600 dark:text-indigo-400" data-index="${i}"></span>`
           );
         }
         questionTextEl.innerHTML = questionHTML;
@@ -609,7 +586,18 @@
         options.forEach((optionText) => {
           const optionEl = document.createElement("div");
           optionEl.textContent = optionText;
-          optionEl.classList.add( "option-card");
+          optionEl.classList.add(
+            "option-card",
+            "bg-white",
+            "dark:bg-gray-700",
+            "border",
+            "border-gray-300",
+            "dark:border-gray-600",
+            "text-gray-900",
+            "dark:text-gray-100"
+          );
+
+          // Adiciona o atributo title com a tradução para os cartões de opção
           if (translations[optionText]) {
             optionEl.title = translations[optionText];
           }
@@ -629,9 +617,11 @@
             if (option.classList.contains("used") || !checkBtn.disabled) {
               return;
             }
+
             const firstEmptyZone = [...dropZones].find(
               (zone) => zone.textContent === ""
             );
+
             if (firstEmptyZone) {
               firstEmptyZone.textContent = option.textContent;
               firstEmptyZone.classList.add("filled");
@@ -646,10 +636,12 @@
             if (zone.textContent && !nextBtn.classList.contains("hidden")) {
               return;
             }
+
             if (zone.textContent) {
               const optionText = zone.textContent;
               zone.textContent = "";
               zone.classList.remove("filled");
+
               const optionToReturn = [...options].find(
                 (opt) =>
                   opt.textContent === optionText &&
@@ -690,11 +682,11 @@
           const correctAnswer = currentQuizData.answers[zoneIndex];
 
           if (userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
-            zone.style.borderColor = "#22c55e";
-            zone.style.backgroundColor = "#dcfce7";
+            zone.style.borderColor = "#22c55e"; /* green-500 */
+            zone.style.backgroundColor = "#dcfce7"; /* green-100 */
           } else {
-            zone.style.borderColor = "#ef4444";
-            zone.style.backgroundColor = "#fee2e2";
+            zone.style.borderColor = "#ef4444"; /* red-500 */
+            zone.style.backgroundColor = "#fee2e2"; /* red-100 */
             isCorrect = false;
           }
         });
@@ -703,13 +695,13 @@
           score++;
           feedbackEl.innerHTML = `<strong>Correto!</strong>`;
           feedbackEl.className =
-            "mt-4 p-4 rounded-lg text-sm bg-green-100 text-green-700";
+            "mt-4 p-4 rounded-lg text-sm bg-green-100 text-green-700 dark:bg-green-800 dark:text-green-200";
         } else {
           const correctAnswersText = currentQuizData.answers.join(" / ");
           feedbackEl.innerHTML = `<strong>Incorreto.</strong> Resposta correta: <strong>${correctAnswersText}</strong>`;
           feedbackEl.className =
-            "mt-4 p-4 rounded-lg text-sm bg-red-100 text-red-700";
-          explainBtn.classList.remove("hidden");
+            "mt-4 p-4 rounded-lg text-sm bg-red-100 text-red-700 dark:bg-red-800 dark:text-red-200";
+          explainBtn.classList.remove("hidden"); // Mostra o botão de explicação
         }
 
         feedbackEl.classList.remove("hidden");
@@ -741,6 +733,7 @@
         explanationText.innerText = currentQuizData.explanation;
       }
 
+      // Event listeners
       checkBtn.addEventListener("click", checkAnswer);
       nextBtn.addEventListener("click", () => {
         currentQuestion++;
@@ -761,22 +754,22 @@
       });
 
       startQuizBtn.addEventListener("click", () => {
-        introScreen.classList.add("hidden");
-        quizGameContainer.classList.remove("hidden");
-        loadQuiz();
+        introScreen.classList.add("hidden"); // Esconde a tela de introdução
+        quizGameContainer.classList.remove("hidden"); // Mostra o container do quiz
+        loadQuiz(); // Carrega a primeira questão do quiz
       });
 
-      explainBtn.addEventListener("click", getExplanation);
+      explainBtn.addEventListener("click", getExplanation); // New
       closeModalBtn.addEventListener("click", () => {
+        // New
         explanationModal.style.display = "none";
       });
       window.addEventListener("click", (event) => {
+        // New
         if (event.target === explanationModal) {
           explanationModal.style.display = "none";
         }
       });
-
     </script>
-    <script src="js/main.js"></script>
   </body>
 </html>
