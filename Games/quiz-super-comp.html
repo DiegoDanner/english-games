@@ -9,87 +9,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/theme.css" />
     <link rel="stylesheet" href="css/style.css" />
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-        .quiz-container {
-            max-width: none;
-            width: 95%;
-            position: relative;
-            overflow: hidden;
-            padding-top: 12rem !important;
-            background-color: var(--container-bg);
-            color: var(--text-color);
-        }
-        .quiz-container h1, .quiz-container p, .quiz-container h2 {
-            color: var(--text-color);
-        }
-        .answer-btn {
-            transition: background-color 0.3s, transform 0.2s;
-            background-color: var(--button-bg);
-            color: var(--button-text);
-        }
-        .answer-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            background-color: var(--button-hover-bg);
-        }
-        .correct {
-            background-color: #22c55e !important; /* Tailwind green-500 */
-            color: white;
-        }
-        .incorrect {
-            background-color: #ef4444 !important; /* Tailwind red-500 */
-            color: white;
-        }
-        #timer-progress {
-            transition: stroke-dasharray 1s linear;
-        }
-        .quiz-container {
-            max-width: 900px;
-            width: 90%;
-            min-height: 600px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 2rem;  /* You can adjust this too */
-        }
-            .quiz-container {
-            position: relative;
-            overflow: hidden;
-            padding-top: 12rem;
-        }
-
-            .quiz-container::before {
-                content: "";
-                background-image: url('img/LOGO_DANNER.png');
-                background-size: 50%;
-                background-repeat: no-repeat;
-                background-position: top center ;
-                opacity: 0.38;
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                z-index: 0;
-                pointer-events: none;
-            }
-        #timer-text {
-            color: var(--text-color);
-        }
-        #timer-container path {
-            color: var(--button-hover-bg);
-        }
-
-    </style>
 </head>
 <body class="flex items-center justify-center min-h-screen">
     <header class="page-header">
-        <div class="logo-placeholder">
-            <img src="img/LOGO_DANNER.png" alt="Logo">
-        </div>
+        <img src="img/logo.svg" alt="logo" class="logo">
         <a href="https://game-quizzes.netlify.app/" class="menu-link" title="Back to Home">Menu</a>
         <button id="theme-toggle-btn">🌞</button>
     </header>

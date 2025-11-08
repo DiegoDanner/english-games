@@ -13,76 +13,12 @@
     />
     <link rel="stylesheet" href="css/theme.css" />
     <link rel="stylesheet" href="css/style.css" />
-    <style>
-      body {
-        font-family: "Inter", sans-serif;
-      }
-      #quiz-container {
-        background-color: var(--container-bg);
-        box-shadow: 0 10px 20px var(--container-shadow);
-        color: var(--text-color);
-      }
-      #quiz-container h1, #quiz-container p {
-        color: var(--text-color);
-      }
-       .quiz-select {
-        background-color: var(--button-bg);
-        color: var(--button-text);
-        border: 1px solid var(--button-hover-bg);
-      }
-      .quiz-step .border-gray-200 {
-        border-color: var(--button-hover-bg);
-      }
-      .check-step-btn, .next-step-btn {
-        background-color: #4f46e5;
-      }
-      .check-step-btn:hover, .next-step-btn:hover {
-        background-color: #4338ca;
-      }
-      #retry-btn {
-        background-color: #6b7280;
-      }
-       #retry-btn:hover {
-        background-color: #4b5563;
-      }
-      /* Estilos para o feedback */
-      .feedback-correct {
-        color: #16a34a; /* green-600 */
-        font-weight: 600;
-      }
-      .feedback-incorrect {
-        color: #dc2626; /* red-600 */
-        text-decoration: line-through;
-        font-weight: 500;
-      }
-      .correct-answer-text {
-        color: #16a34a; /* green-600 */
-        font-weight: 600;
-        margin-left: 0.25rem;
-      }
-      /* Animação de fade-in */
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(10px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-      .fade-in {
-        animation: fadeIn 0.5s ease-in-out forwards;
-      }
-    </style>
   </head>
   <body
     class="flex items-center justify-center min-h-screen pt-20 p-4 transition-colors duration-300"
   >
     <header class="page-header">
-      <div class="logo-placeholder">
-        <img src="img/LOGO_DANNER.png" alt="Danner Idiomas Logo" />
-      </div>
+      <img src="img/logo.svg" alt="logo" class="logo">
       <a href="/index.html" class="menu-link" title="Back to Home">Menu</a>
       <button id="theme-toggle-btn">🌞</button>
     </header>
