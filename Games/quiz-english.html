@@ -4,11 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>English Quiz</title>
-    <link rel="stylesheet" href="css/theme.css" />
     <link rel="stylesheet" href="css/style.css" />
     <style>
       body {
         font-family: "Inter", sans-serif;
+        background-color: #1a202c; /* Dark background */
         display: flex;
         justify-content: center;
         align-items: center;
@@ -19,9 +19,9 @@
       }
 
       .quiz-container {
-        background-color: var(--container-bg);
+        background-color: #2d3748;
         border-radius: 15px;
-        box-shadow: 0 10px 20px var(--container-shadow);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
         width: 100%;
         max-width: 800px;
         overflow: hidden;
@@ -33,7 +33,6 @@
         padding: 2rem;
         text-align: center;
         transition: all 0.3s ease-in-out;
-        color: var(--text-color);
       }
       .quiz-container::before {
         content: "";
@@ -79,8 +78,8 @@
         }
       }
       .option-button {
-        background-color: var(--button-bg);
-        color: var(--button-text);
+        background-color: #a0aec0; /* Light gray */
+        color: #2d3748; /* Dark text */
         padding: 30px;
         border-radius: 10px;
         font-size: 1.2rem;
@@ -93,7 +92,7 @@
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       }
       .option-button:hover {
-        background-color: var(--button-hover-bg);
+        background-color: #cbd5e0; /* Lighter gray on hover */
         transform: translateY(-2px);
         box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
       }
@@ -110,7 +109,8 @@
         color: white;
       }
       .results-area {
-        color: var(--text-color);
+        background-color: #2d3748;
+        color: white;
         padding: 30px;
         text-align: center;
         font-size: 1.5rem;
@@ -135,7 +135,8 @@
         transform: translateY(-1px);
       }
       .hint-area {
-        color: var(--text-color);
+        background-color: #2d3748; /* Darker blue-gray */
+        color: #a0aec0; /* Light gray for hint text */
         padding: 15px;
         text-align: bottom;
         font-size: 0.9rem;
@@ -159,7 +160,7 @@
         transition: width 0.5s ease-in-out;
       }
       #timer-text {
-        color: var(--text-color);
+        color: white;
         font-size: 1.8rem;
         font-weight: bold;
       }
@@ -208,6 +209,8 @@
         align-items: center;
         height: 400px;
         text-align: center;
+        background-color: #2d3748;
+        color: #a5a7a8;
         padding: 40px;
         border-radius: 10px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0);
@@ -240,11 +243,84 @@
       .hidden {
         display: none !important;
       }
+
+      /* Light Mode */
+      body.light-mode {
+        background-color: #e2e8f0; /* Lighter background */
+      }
+
+      body.light-mode .quiz-container {
+        background-color: #ffffff;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        color: #1a202c;
+      }
+
+      body.light-mode .question-area {
+        background-color: #4299e1; /* Keep this blue */
+        color: white;
+      }
+
+      body.light-mode .options-grid .option-button {
+        background-color: #cbd5e0;
+        color: #1a202c;
+      }
+
+      body.light-mode .options-grid .option-button:hover {
+        background-color: #a0aec0;
+      }
+
+      body.light-mode .option-button.correct {
+        background-color: #48bb78;
+        color: white;
+      }
+
+      body.light-mode .option-button.incorrect {
+        background-color: #e53e3e;
+        color: white;
+      }
+
+      body.light-mode #start-screen {
+        background-color: #ffffff;
+        color: #1a202c;
+      }
+
+      body.light-mode #start-screen h1 {
+        color: #1a202c;
+      }
+
+      body.light-mode #start-screen p {
+        color: #4a5568;
+      }
+
+      body.light-mode .results-area {
+        background-color: #ffffff;
+        color: #1a202c;
+      }
+
+      body.light-mode .hint-area {
+        background-color: #f7fafc;
+        color: #4a5568;
+      }
+
+      body.light-mode #timer-text {
+        color: #1a202c;
+      }
+
+      body.light-mode #next-btn {
+        background-color: #a0aec0;
+        color: #1a202c;
+      }
+
+      body.light-mode #next-btn:hover {
+        background-color: #718096;
+      }
     </style>
   </head>
   <body>
     <header class="page-header">
-      <img src="img/logo.svg" alt="logo" class="logo">
+      <div class="logo-placeholder">
+        <img src="img/LOGO_DANNER.png" alt="Logo" />
+      </div>
       <a
         href="https://game-quizzes.netlify.app/"
         class="menu-link"
@@ -294,7 +370,7 @@
         <div
           id="rationale-area"
           class="hint-area hidden"
-          style="margin-top: 5px;"
+          style="margin-top: 5px; color: #a0aec0"
         >
           <!-- Rationale will be displayed here -->
         </div>
@@ -1813,7 +1889,26 @@
       const hintArea = document.getElementById("hintArea");
       const rationaleArea = document.getElementById("rationale-area");
       const progressBar = document.getElementById("progressBar");
+      const themeToggleBtn = document.getElementById("theme-toggle-btn");
+      const body = document.body;
       const timerText = document.getElementById("timer-text");
+
+      themeToggleBtn.addEventListener("click", () => {
+        body.classList.toggle("light-mode");
+        const isLight = body.classList.contains("light-mode");
+        localStorage.setItem("theme", isLight ? "light" : "dark");
+        themeToggleBtn.textContent = isLight ? "🌙" : "🌞";
+      });
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const savedTheme = localStorage.getItem("theme") || "dark";
+        if (savedTheme === "light") {
+          body.classList.add("light-mode");
+          themeToggleBtn.textContent = "🌙";
+        } else {
+          themeToggleBtn.textContent = "🌞";
+        }
+      });
 
       function shuffleArray(array) {
         for (let i = array.length - 1; i > 0; i--) {
