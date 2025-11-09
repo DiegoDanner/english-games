@@ -4,13 +4,105 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>English Quiz</title>
-    <link rel="stylesheet" href="css/theme.css" />
     <link rel="stylesheet" href="css/style.css" />
     <style>
-        /* Estilos específicos para este quiz que não conflitam com o tema */
-        .option-button {
-            background-color: var(--button-bg);
-            color: var(--button-text);
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1a202c;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+
+        .quiz-container {
+            background-color: #2d3748;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 800px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 500px;
+            position: relative;
+            padding: 2rem;
+            text-align: center;
+
+        }
+
+        .quiz-container::before {
+            content: "";
+            background-image: url('img/LOGO_DANNER.png');
+            background-size: 130px;
+            background-repeat: no-repeat;
+            background-position: bottom left;
+            opacity: 0.55;
+            position: absolute;
+            bottom: 20px;
+            left: 1px;
+            width: 130px;
+            height: auto;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+            #quiz-screen {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .watermark-logo {
+            position: absolute;
+            top: -20px;
+            left: 1px;
+            width: 150px; /* Tamanho controlado */
+            opacity: 0.55;  /* Transparente para parecer marca d'água */
+            pointer-events: none; /* Para não atrapalhar cliques */
+            z-index: 0;
+        }
+
+
+        h1, h2 {
+            color: white;
+        }
+
+        p {
+            color: #a0aec0;
+        }
+
+        #start-screen h1 {
+            margin-top: 100px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        button {
+            background-color: #4299e1;
+            color: rgb(22, 26, 238);
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #1972c5;
+            transform: translateY(-1px);
+        }
+
+        .answer-btn {
+            background-color: #3a82df;
+            color: #2d3748;
             padding: 15px;
             border-radius: 10px;
             font-size: 1.2rem;
@@ -21,85 +113,114 @@
             margin-bottom: 10px;
             width: 100%;
         }
-        .option-button:hover {
-            background-color: var(--button-hover-bg);
+
+        .answer-btn:hover {
+            background-color: #cbd5e0;
             transform: translateY(-2px);
         }
-        .option-button.correct {
+
+        .answer-btn.correct {
             background-color: #48bb78;
             color: white;
         }
-        .option-button.incorrect {
+
+        .answer-btn.incorrect {
             background-color: #e53e3e;
             color: white;
         }
-        #hintArea {
-            margin-top: 1rem;
-            font-style: italic;
+
+        #timer-text {
+            color: white;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
         }
-        #resultsArea h2 {
-            font-size: 1.75rem;
-            margin-bottom: 1rem;
+
+        #score-display,
+        #question-counter {
+            color: #a0aec0;
         }
-        #resultsArea p {
-             font-size: 1.25rem;
-             margin-bottom: 0.5rem;
+
+        #feedback-message {
+            font-size: 1.2rem;
+            margin-top: 10px;
         }
-        .restart-button {
-            background-color: var(--button-bg);
-            color: var(--button-text);
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            border: none;
-            font-weight: 600;
-            transition: background-color 0.3s;
+        #result-screen h1 {
+            margin-top: 100px;
+            margin-bottom: 20px;
+            text-align: center;
         }
-        .restart-button:hover {
-            background-color: var(--button-hover-bg);
+        .hidden {
+            display: none;
         }
     </style>
 </head>
 <body>
     <header class="page-header">
-        <img src="img/logo.svg" alt="logo" class="logo">
-        <a href="index.html" class="menu-link" title="Back to Home">Menu</a>
+        <div class="logo-placeholder">
+            <img src="img/LOGO_DANNER.png" alt="Logo">
+        </div>
+        <a href="https://game-quizzes.netlify.app/" class="menu-link" title="Back to Home">Menu</a>
         <button id="theme-toggle-btn">🌞</button>
     </header>
 
-   <div class="quiz-container">
-        <div id="start-screen" style="text-align: center;">
-            <h1>QUESTIONS TO PRACTICE ENGLISH</h1>
+   <div id="quiz-container" class="quiz-container" >
+        <div id="start-screen">
+            <img src="img/LOGO_DANNER.png" alt="Logótipo Danner Idiomas" class="watermark-logo">
+            <h1 >QUESTIONS TO PRACTICE ENGLISH</h1>
             <p>You'll have 20 seconds for each question. Good luck!</p>
-            <button id="start-btn" class="btn">Start Quiz</button>
+            <button id="start-btn">Start Quiz</button>
         </div>
         
         <div id="quiz-screen" class="hidden"> 
-            <h2 id="questionArea" style="margin-bottom: 1.5rem; font-size: 1.5rem;"></h2>
-            <div id="optionsGrid" class="grid grid-cols-1 gap-4"></div>
-            <div id="hintArea" class="hidden mt-4 text-sm text-gray-400"></div>
-            <div id="progressBarContainer" class="w-full bg-gray-700 rounded-full h-2.5 mt-6">
-                <div id="progressBar" class="bg-blue-500 h-2.5 rounded-full" style="width: 0%"></div>
+            <img src="img/LOGO_DANNER.png" alt="Logótipo Danner Idiomas" class="watermark-logo">
+            <p id="feedback-message" class="hidden"></p>
+            <div id="timer-text"></div>
+            <div id="progress-container">
+                <p id="question-counter"></p>
+                <p id="score-display"></p>
             </div>
+            <button id="next-btn" class="hidden">Next Question</button>
+            <h2 id="question-text"></h2>
+            <div id="answer-buttons"></div>
+
         </div>
 
-        <div id="resultsArea" class="hidden text-center"></div>
-   </div>
+        <div id="result-screen" class="hidden">
+            <img src="img/LOGO_DANNER.png" alt="Logótipo Danner Idiomas" class="watermark-logo">
+            <h1>Quiz Complete!</h1>
+            <p id="final-score"></p>
+            <p id="score-message"></p>
+            <button id="restart-btn">Play Again</button>
+        </div>
+    </div>
 
     <script>
         const startScreen = document.getElementById('start-screen');
         const quizScreen = document.getElementById('quiz-screen');
         const startBtn = document.getElementById('start-btn');
 
+
         startBtn.addEventListener('click', startQuiz);
+        nextBtn.addEventListener('click', () => {
+            currentQuestion++;
+            showQuestion();
+        });
+
 
         function startQuiz() {
             startScreen.classList.add('hidden');
             quizScreen.classList.remove('hidden');
-            shuffleArray(quizData.questions);
-            displayQuestion();
+            currentQuestion = 0;
+            score = 0;
+            showQuestion();
         }
 
+        function startQuiz() {
+          console.log("Quiz started!");
+          // Aqui você colocaria a lógica de inicialização do quiz, como carregar a primeira pergunta
+        }
+
+        // Quiz data from the provided JSON
         const quizData = {
           "questions": [
             {
@@ -1407,21 +1528,25 @@
 
         let currentQuestionIndex = 0;
         let score = 0;
-        let quizActive = true;
+        let quizActive = true; // Flag to prevent multiple clicks
 
         const questionArea = document.getElementById('questionArea');
         const optionsGrid = document.getElementById('optionsGrid');
         const resultsArea = document.getElementById('resultsArea');
+        const restartButton = document.getElementById('restartButton');
         const hintArea = document.getElementById('hintArea');
         const progressBar = document.getElementById('progressBar');
 
+        // Function to shuffle array (Fisher-Yates algorithm)
         function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
+                [array[i], array[j]] = [array[j], array[i]]; // Swap elements
             }
             return array;
         }
+
+
 
         function updateProgressBar() {
             const progress = (currentQuestionIndex / quizData.questions.length) * 100;
@@ -1433,42 +1558,46 @@
                 quizActive = true;
                 const question = quizData.questions[currentQuestionIndex];
                 questionArea.textContent = question.question;
-                optionsGrid.innerHTML = '';
-                hintArea.classList.add('hidden');
+                optionsGrid.innerHTML = ''; // Clear previous options
+                hintArea.classList.add('hidden'); // Hide hint for new question
 
+                // Shuffle answer options for the current question
                 const shuffledOptions = shuffleArray([...question.answerOptions]);
 
                 shuffledOptions.forEach(option => {
                     const button = document.createElement('button');
                     button.textContent = option.text;
                     button.classList.add('option-button');
-                    button.addEventListener('click', () => handleAnswerClick(button, option));
+                    button.addEventListener('click', () => handleAnswerClick(button, option.isCorrect));
                     optionsGrid.appendChild(button);
                 });
 
-                if (question.hint) {
+                // Display hint for the current question
+                if (question.hint) { // Check if a hint exists
                     hintArea.textContent = 'Hint: ' + question.hint;
                     hintArea.classList.remove('hidden');
                 }
-                updateProgressBar();
+                updateProgressBar(); // Update progress bar
             } else {
                 displayResults();
             }
         }
 
-        function handleAnswerClick(selectedButton, option) {
-            if (!quizActive) return;
-            quizActive = false;
+        function handleAnswerClick(selectedButton, isCorrect) {
+            if (!quizActive) return; // Prevent double clicking
+            quizActive = false; // Deactivate quiz until next question
 
+            // Disable all buttons to prevent further clicks
             Array.from(optionsGrid.children).forEach(button => {
                 button.disabled = true;
             });
 
-            if (option.isCorrect) {
+            if (isCorrect) {
                 selectedButton.classList.add('correct');
                 score++;
             } else {
                 selectedButton.classList.add('incorrect');
+                // Find and highlight the correct answer
                 Array.from(optionsGrid.children).forEach(button => {
                     const optionText = button.textContent;
                     const correctOption = quizData.questions[currentQuestionIndex].answerOptions.find(opt => opt.text === optionText && opt.isCorrect);
@@ -1478,28 +1607,36 @@
                 });
             }
 
-            hintArea.textContent = 'Explanation: ' + option.rationale;
-            hintArea.classList.remove('hidden');
+            // Display rationale as hint after answer
+            const currentQuestion = quizData.questions[currentQuestionIndex];
+            if (currentQuestion.rationale) {
+                hintArea.textContent = 'Explanation: ' + currentQuestion.rationale;
+                hintArea.classList.remove('hidden');
+            }
 
 
             setTimeout(() => {
                 currentQuestionIndex++;
                 displayQuestion();
-            }, 3000);
+            }, 3000); // Increased pause to 3 seconds (3000 milliseconds)
         }
 
         function displayResults() {
-            quizScreen.classList.add('hidden');
+            questionArea.classList.add('hidden');
+            optionsGrid.classList.add('hidden');
+            hintArea.classList.add('hidden');
             resultsArea.classList.remove('hidden');
-            progressBar.style.width = '100%';
+            restartButton.classList.remove('hidden');
+            progressBar.style.width = '100%'; // Ensure progress bar is full at the end
+
 
             const totalQuestions = quizData.questions.length;
             const incorrectAnswers = totalQuestions - score;
 
             resultsArea.innerHTML = `
-                <h2>Quiz Completed!</h2>
-                <p>You got ${score} correct out of ${totalQuestions} questions.</p>
-                <p>Incorrect answers: ${incorrectAnswers}</p>
+                <h2 class="text-3xl font-bold mb-4">Quiz Completed!</h2>
+                <p class="text-2xl mb-6">You got ${score} correct out of ${totalQuestions} questions.</p>
+                <p class="text-xl mb-6">Incorrect answers: ${incorrectAnswers}</p>
                 <button id="restartButton" class="restart-button">Restart Quiz</button>
             `;
             document.getElementById('restartButton').addEventListener('click', restartQuiz);
@@ -1510,12 +1647,22 @@
             score = 0;
             quizActive = true;
 
-            quizScreen.classList.remove('hidden');
+            questionArea.classList.remove('hidden');
+            optionsGrid.classList.remove('hidden');
             resultsArea.classList.add('hidden');
+            restartButton.classList.add('hidden');
+            hintArea.classList.add('hidden');
 
-            shuffleArray(quizData.questions);
+            shuffleArray(quizData.questions); // Reshuffle questions for a new game
             displayQuestion();
         }
+
+        // Initial shuffle of questions and start the quiz
+        window.onload = function() {
+            shuffleArray(quizData.questions); // Shuffle the order of questions
+            displayQuestion();
+        };
+
     </script>
     <script src="js/main.js"></script>
 </body>

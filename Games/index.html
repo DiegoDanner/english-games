@@ -11,7 +11,23 @@
             font-family: 'Inter', sans-serif;
             background-color: #f3f4f6; /* gray-100 */
         }
+        /* A classe 'hidden' será usada pelo script anti-flicker */
+        .hidden { display: none; }
     </style>
+    <script>
+        // Anti-flicker script
+        // Este script verifica se existe uma sessão do Firebase no localStorage.
+        // Se existir, esconde o wrapper de login antes que a página seja renderizada para evitar o "piscar".
+        try {
+            const firebaseUserKey = Object.keys(window.localStorage).find(key => key.startsWith('firebase:authUser'));
+            if (firebaseUserKey) {
+                // Adiciona uma regra de estilo diretamente para esconder o login wrapper o mais rápido possível.
+                document.write('<style>#login-wrapper { display: none; }</style>');
+            }
+        } catch (e) {
+            // Ignora quaisquer erros. O script principal de autenticação tratará dos casos de falha.
+        }
+    </script>
 </head>
 <body class="bg-gray-100">
 

@@ -8,12 +8,50 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/theme.css" />
     <link rel="stylesheet" href="css/style.css" />
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .quiz-container {
+            max-width: 600px;
+            width: 95%;
+        }
+        .input-blank {
+            border-bottom: 2px solid #9ca3af;
+            background-color: transparent;
+            text-align: center;
+            width: 80px;
+            margin: 0 8px;
+            padding: 2px 4px;
+            font-weight: 600;
+            color: #4f46e5;
+            transition: all 0.3s ease;
+        }
+        .input-blank:focus {
+            outline: none;
+            border-bottom-color: #4f46e5;
+        }
+        /* Estilo para o spinner de carregamento */
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4f46e5;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
-<body class="flex items-center justify-center min-h-screen">
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
     <header class="page-header">
-        <img src="img/logo.svg" alt="logo" class="logo">
+        <div class="logo-placeholder">
+          <img src="img/LOGO_DANNER.png" alt="Logo" />
+        </div>
         <a
           href="https://game-quizzes.netlify.app/"
           class="menu-link"
@@ -22,46 +60,46 @@
         >
         <button id="theme-toggle-btn">🌞</button>
       </header>
-    <div id="quiz" class="quiz-container p-6 sm:p-8 rounded-xl">
+    <div id="quiz" class="quiz-container bg-white p-6 sm:p-8 rounded-xl shadow-lg">
         
         <!-- Tela de Início -->
         <div id="welcome-screen" class="text-center">
-            <h1 class="text-3xl font-bold mb-2">Object Pronouns</h1>
-            <p class="mb-6">"Object pronouns" são pequenas palavras que substituem nomes para evitar repetição.</p>
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Object Pronouns</h1>
+            <p class="text-gray-600 mb-6">"Object pronouns" são pequenas palavras que substituem nomes para evitar repetição.</p>
             <div class="text-left my-6 space-y-2">
-                <p class="flex items-center"><span class="flex-shrink-0 w-5 h-5 mr-2"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5"><path fill-rule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clip-rule="evenodd" /></svg></span>Subject Pronouns são aqueles que fazem a ação na frase.</p>
-                <p class="flex items-center"><span class="flex-shrink-0 w-5 h-5 mr-2"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5"><path fill-rule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clip-rule="evenodd" /></svg></span>Object Pronouns são aqueles que recebem a ação na frase.</p>
+                <p class="flex items-center"><span class="flex-shrink-0 w-5 h-5 mr-2 text-blue-500"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5"><path fill-rule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clip-rule="evenodd" /></svg></span>Subject Pronouns são aqueles que fazem a ação na frase.</p>
+                <p class="flex items-center"><span class="flex-shrink-0 w-5 h-5 mr-2 text-blue-500"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5"><path fill-rule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clip-rule="evenodd" /></svg></span>Object Pronouns são aqueles que recebem a ação na frase.</p>
             </div>
             <div class="w-full overflow-hidden rounded-lg shadow-md my-8">
-                <table class="pronoun-table w-full text-sm text-left">
-                    <thead>
+                <table class="w-full text-sm text-left text-gray-500">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-200">
                         <tr>
                             <th scope="col" class="px-6 py-3">Subject Pronoun (pronome pessoal)</th>
                             <th scope="col" class="px-6 py-3">Object Pronoun (pronome oblíquo)</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr><td class="px-6 py-4">I</td><td class="px-6 py-4">me</td></tr>
-                        <tr><td class="px-6 py-4">you</td><td class="px-6 py-4">you</td></tr>
-                        <tr><td class="px-6 py-4">he</td><td class="px-6 py-4">him</td></tr>
-                        <tr><td class="px-6 py-4">she</td><td class="px-6 py-4">her</td></tr>
-                        <tr><td class="px-6 py-4">it</td><td class="px-6 py-4">it</td></tr>
-                        <tr><td class="px-6 py-4">we</td><td class="px-6 py-4">us</td></tr>
-                        <tr><td class="px-6 py-4">you</td><td class="px-6 py-4">you</td></tr>
-                        <tr><td class="px-6 py-4">they</td><td class="px-6 py-4">them</td></tr>
+                        <tr class="bg-white border-b"><td class="px-6 py-4">I</td><td class="px-6 py-4">me</td></tr>
+                        <tr class="bg-gray-50 border-b"><td class="px-6 py-4">you</td><td class="px-6 py-4">you</td></tr>
+                        <tr class="bg-white border-b"><td class="px-6 py-4">he</td><td class="px-6 py-4">him</td></tr>
+                        <tr class="bg-gray-50 border-b"><td class="px-6 py-4">she</td><td class="px-6 py-4">her</td></tr>
+                        <tr class="bg-white border-b"><td class="px-6 py-4">it</td><td class="px-6 py-4">it</td></tr>
+                        <tr class="bg-gray-50 border-b"><td class="px-6 py-4">we</td><td class="px-6 py-4">us</td></tr>
+                        <tr class="bg-white border-b"><td class="px-6 py-4">you</td><td class="px-6 py-4">you</td></tr>
+                        <tr class="bg-gray-50"><td class="px-6 py-4">they</td><td class="px-6 py-4">them</td></tr>
                     </tbody>
                 </table>
             </div>
-            <button id="start-quiz-btn" class="w-full px-6 py-3 font-semibold rounded-lg shadow-md transition-transform transform hover:scale-105">Começar o Quiz!</button>
+            <button id="start-quiz-btn" class="w-full px-6 py-3 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-75 transition-transform transform hover:scale-105">Começar o Quiz!</button>
         </div>
 
         <!-- Seleção de Modo -->
         <div id="mode-selection" class="hidden text-center">
-            <h1 class="text-2xl font-bold mb-4">Quiz de Pronomes</h1>
-            <p class="mb-8">Escolha um modo para começar.</p>
+            <h1 class="text-2xl font-bold text-gray-800 mb-4">Quiz de Pronomes</h1>
+            <p class="text-gray-600 mb-8">Escolha um modo para começar.</p>
             <div class="flex flex-col sm:flex-row gap-4">
-                <button id="standard-quiz-btn" class="w-full px-6 py-3 font-semibold rounded-lg shadow-md transition-transform transform hover:scale-105">Quiz Padrão (10 Questões)</button>
-                <button id="gemini-practice-btn" class="w-full px-6 py-3 font-semibold rounded-lg shadow-md transition-transform transform hover:scale-105 gemini-btn">✨ Prática com IA</button>
+                <button id="standard-quiz-btn" class="w-full px-6 py-3 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-75 transition-transform transform hover:scale-105">Quiz Padrão (10 Questões)</button>
+                <button id="gemini-practice-btn" class="w-full px-6 py-3 bg-purple-600 text-white font-semibold rounded-lg shadow-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-75 transition-transform transform hover:scale-105">✨ Prática com IA</button>
             </div>
         </div>
 
@@ -69,40 +107,40 @@
         <div id="quiz-structure" class="hidden">
             <!-- Header do Quiz -->
             <div id="header-container" class="flex justify-between items-center mb-6">
-                <h1 id="quiz-title" class="text-xl sm:text-2xl font-bold"></h1>
-                <button id="back-to-menu" class="text-sm font-semibold back-menu-btn">Menu</button>
+                <h1 id="quiz-title" class="text-xl sm:text-2xl font-bold text-gray-800"></h1>
+                <button id="back-to-menu" class="text-sm font-semibold text-indigo-600 hover:underline">Menu</button>
             </div>
             
             <div id="progress-container">
                 <div class="flex justify-between items-center mb-2">
-                    <span class="text-sm font-medium">Progresso</span>
-                    <span id="progress-text" class="text-sm font-semibold">Questão 1 de 10</span>
+                    <span class="text-sm font-medium text-gray-700">Progresso</span>
+                    <span id="progress-text" class="text-sm font-semibold text-gray-600">Questão 1 de 10</span>
                 </div>
-                <div class="progress-bar-bg w-full rounded-full h-2.5 mb-6">
-                    <div id="progress-bar" class="progress-bar h-2.5 rounded-full" style="width: 10%"></div>
+                <div class="w-full bg-gray-200 rounded-full h-2.5 mb-6">
+                    <div id="progress-bar" class="bg-indigo-600 h-2.5 rounded-full" style="width: 10%"></div>
                 </div>
             </div>
 
             <!-- Container da Questão -->
             <div id="question-container" class="mb-6 min-h-[150px] flex items-center justify-center">
-                <p id="question-text" class="text-lg sm:text-xl leading-relaxed text-center"></p>
+                <p id="question-text" class="text-lg sm:text-xl text-gray-700 leading-relaxed text-center"></p>
                 <div id="loader" class="loader hidden"></div>
             </div>
             <div id="feedback" class="mt-4 p-4 rounded-lg text-sm hidden"></div>
             
             <!-- Botões de Navegação -->
             <div id="navigation-container" class="flex flex-col sm:flex-row gap-4 items-center justify-between">
-                <button id="check-btn" class="w-full sm:w-auto px-6 py-2 font-semibold rounded-lg shadow-md transition-transform transform hover:scale-105">Verificar</button>
-                <button id="next-btn" class="hidden w-full sm:w-auto px-6 py-2 font-semibold rounded-lg shadow-md transition-transform transform hover:scale-105 next-btn">Próxima</button>
-                <button id="gemini-generate-btn" class="hidden w-full sm:w-auto px-6 py-2 font-semibold rounded-lg shadow-md transition-transform transform hover:scale-105 gemini-btn">✨ Gerar Nova Frase</button>
+                <button id="check-btn" class="w-full sm:w-auto px-6 py-2 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-75 transition-transform transform hover:scale-105">Verificar</button>
+                <button id="next-btn" class="hidden w-full sm:w-auto px-6 py-2 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-75 transition-transform transform hover:scale-105">Próxima</button>
+                <button id="gemini-generate-btn" class="hidden w-full sm:w-auto px-6 py-2 bg-purple-600 text-white font-semibold rounded-lg shadow-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-75 transition-transform transform hover:scale-105">✨ Gerar Nova Frase</button>
             </div>
 
             <!-- Tela de Resultados -->
             <div id="results-container" class="hidden text-center">
-                <h2 class="text-2xl font-bold mb-4">Quiz Concluído!</h2>
-                <p class="text-lg mb-2">Sua pontuação final é:</p>
-                <p id="score" class="text-4xl font-bold score-text mb-6"></p>
-                <button id="restart-btn" class="px-8 py-3 font-semibold rounded-lg shadow-md transition-transform transform hover:scale-105">Refazer Quiz</button>
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Quiz Concluído!</h2>
+                <p class="text-lg text-gray-700 mb-2">Sua pontuação final é:</p>
+                <p id="score" class="text-4xl font-bold text-indigo-600 mb-6"></p>
+                <button id="restart-btn" class="px-8 py-3 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-75 transition-transform transform hover:scale-105">Refazer Quiz</button>
             </div>
         </div>
     </div>
@@ -314,7 +352,7 @@
         }
         
         async function callGemini(prompt, schema) {
-            const apiKey = "YOUR_API_KEY"; // SUBSTITUA PELA SUA CHAVE DE API
+            const apiKey = "AIzaSyAfTvpDGULlQo72Xkv_1JW1W7cjQ6K_9ts"; // A chave será fornecida pelo ambiente
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
             
             const payload = {
