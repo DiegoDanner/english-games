@@ -12,189 +12,12 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="css/theme.css" />
     <link rel="stylesheet" href="css/style.css" />
-    <style>
-      body {
-        font-family: "Inter", sans-serif;
-        padding-top: 70px;
-      }
-      .main-content {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          min-height: calc(100vh - 70px);
-          padding: 2rem;
-      }
-      .quiz-container {
-        max-width: 700px;
-        width: 95%;
-        position: relative; /* Necessário para posicionar o botão do tema */
-      }
-      .drop-zone {
-        display: inline-block;
-        min-width: 90px;
-        height: 40px;
-        padding: 0 12px;
-        margin: 0 8px;
-        border: 2px dashed #9ca3af; /* gray-400 */
-        border-radius: 8px;
-        text-align: center;
-        line-height: 36px;
-        vertical-align: middle;
-        font-weight: 600;
-        transition: all 0.2s ease;
-      }
-      .drop-zone.filled {
-        cursor: pointer;
-      }
-      .option-card {
-        padding: 8px 16px;
-        border-radius: 8px;
-        cursor: pointer;
-        user-select: none;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        transition: all 0.2s ease;
-      }
-      .option-card:hover {
-        transform: translateY(-2px);
-      }
-      .option-card.used {
-        visibility: hidden;
-      }
-
-      .modal {
-        display: none;
-        position: fixed;
-        z-index: 1;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        overflow: auto;
-        background-color: rgba(0, 0, 0, 0.4);
-      }
-      .modal-content {
-        background-color: #fefefe;
-        margin: 15% auto;
-        padding: 20px;
-        border-radius: 8px;
-        width: 80%;
-        max-width: 500px;
-        position: relative;
-      }
-      .close-modal {
-        color: #aaa;
-        position: absolute;
-        top: 10px;
-        right: 20px;
-        font-size: 28px;
-        font-weight: bold;
-        cursor: pointer;
-      }
-      .explanation-text {
-        white-space: pre-wrap; /* Para preservar quebras de linha da resposta da API */
-      }
-      .loading-spinner {
-        border: 4px solid #f3f3f3;
-        border-radius: 50%;
-        border-top: 4px solid #3498db;
-        width: 20px;
-        height: 20px;
-        -webkit-animation: spin 1s linear infinite;
-        animation: spin 1s linear infinite;
-      }
-      @-webkit-keyframes spin {
-        0% {
-          -webkit-transform: rotate(0deg);
-        }
-        100% {
-          -webkit-transform: rotate(360deg);
-        }
-      }
-      @keyframes spin {
-        0% {
-          transform: rotate(0deg);
-        }
-        100% {
-          transform: rotate(360deg);
-        }
-      }
-      /* Estilos do Dark Mode */
-      body:not(.light-mode) {
-        background-color: #1a202c; /* gray-900 */
-      }
-      body:not(.light-mode) .quiz-container {
-        background-color: #2d3748; /* gray-800 */
-      }
-      body:not(.light-mode) h1,
-      body:not(.light-mode) h2,
-      body:not(.light-mode) p,
-      body:not(.light-mode) table {
-        color: #e2e8f0; /* gray-200 */
-      }
-      body:not(.light-mode) .bg-gray-100 {
-        background-color: #2d3748;
-      }
-      body:not(.light-mode) .bg-white {
-        background-color: #2d3748;
-      }
-      body:not(.light-mode) .bg-gray-50 {
-        background-color: #1a202c;
-      }
-      body:not(.light-mode) .text-gray-900 {
-        color: #e2e8f0;
-      }
-      body:not(.light-mode) .border-gray-200 {
-        border-color: #4a5568;
-      }
-      body:not(.light-mode) .border-gray-300 {
-        border-color: #4a5568;
-      }
-      body:not(.light-mode) .text-gray-700 {
-        color: #cbd5e0;
-      }
-      body:not(.light-mode) .text-gray-800 {
-        color: #e2e8f0;
-      }
-      body:not(.light-mode) .text-gray-600 {
-        color: #a0aec0;
-      }
-      body:not(.light-mode) .text-gray-400 {
-        color: #a0aec0;
-      }
-      body:not(.light-mode) .option-card {
-        background-color: #4a5568;
-        border-color: #4a5568;
-        color: #e2e8f0;
-      }
-      body:not(.light-mode) .drop-zone {
-        background-color: #1a202c;
-        border-color: #4a5568;
-        color: #63b3ed;
-      }
-      body:not(.light-mode) .bg-indigo-100 {
-        background-color: #4c51bf;
-      }
-      body:not(.light-mode) .text-indigo-800 {
-        color: #e0e7ff;
-      }
-      body:not(.light-mode) .bg-gray-200 {
-        background-color: #4a5568;
-      }
-      body:not(.light-mode) .modal-content {
-        background-color: #1a202c;
-        color: #e2e8f0;
-      }
-    </style>
   </head>
-  <body
-    class="bg-gray-100 dark:bg-gray-900 transition-colors duration-300"
-    translate="no"
-  >
+  <body>
     <header class="page-header">
-        <div class="logo-placeholder">
-            <img src="img/LOGO_DANNER.png" alt="Logo">
-        </div>
+        <img src="img/logo.svg" alt="logo" class="logo">
         <a href="https://game-quizzes.netlify.app/" class="menu-link" title="Back to Home">Menu</a>
         <button id="theme-toggle-btn">🌞</button>
     </header>
@@ -205,64 +28,15 @@
         >
           <!-- Nova Tela de Introdução -->
           <div id="intro-screen" class="relative">
-            <!-- Botão de alternância do tema na tela de introdução -->
-            <button
-              id="theme-toggle"
-              class="absolute top-1 right-1 p-2 rounded-full text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            >
-              <!-- Ícone de Sol (Modo Claro) -->
-              <svg
-                id="theme-toggle-light-icon"
-                class="w-6 h-6"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="lucide lucide-sun"
-              >
-                <circle cx="12" cy="12" r="4" />
-                <path d="M12 2v2" />
-                <path d="M12 20v2" />
-                <path d="M4.93 4.93l1.41 1.41" />
-                <path d="M17.66 17.66l1.41 1.41" />
-                <path d="M2 12h2" />
-                <path d="M20 12h2" />
-                <path d="M4.93 19.07l1.41-1.41" />
-                <path d="M17.66 6.34l1.41-1.41" />
-              </svg>
-              <!-- Ícone de Lua (Modo Escuro) -->
-              <svg
-                id="theme-toggle-dark-icon"
-                class="hidden w-6 h-6"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="lucide lucide-moon"
-              >
-                <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
-              </svg>
-            </button>
-
             <div class="text-center mb-6">
-              <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-2">
+              <h2 class="text-2xl font-bold mb-2">
                 Object Pronouns 🎯
               </h2>
-              <p class="text-lg text-gray-700 dark:text-gray-200 mb-2">
+              <p class="text-lg mb-2">
                 "Object pronouns" are small words that replace nouns to avoid
                 repetition.
               </p>
-              <p class="text-lg text-gray-700 dark:text-gray-200 mb-4">
+              <p class="text-lg mb-4">
                 <br />➡️ <bold>Subject Pronouns</bold> are those that
                 <bold>do the action</bold> in the sentence. <br />➡️ Object Pronouns
                 are those that receive the action in the sentence.
@@ -271,19 +45,19 @@
 
             <div class="overflow-x-auto mb-8">
               <table
-                class="min-w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm"
+                class="min-w-full border rounded-lg shadow-sm"
               >
                 <thead>
                   <tr
-                    class="bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200"
+                    class="bg-indigo-100 text-indigo-800"
                   >
                     <th
-                      class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left"
+                      class="py-2 px-4 border-b text-left"
                     >
                       Subject Pronoun(pronome pessoal)
                     </th>
                     <th
-                      class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left"
+                      class="py-2 px-4 border-b text-left"
                     >
                       Object Pronoun(pronome obliquo)
                     </th>
@@ -292,96 +66,96 @@
                 <tbody>
                   <tr>
                     <td
-                      class="py-1 px-8 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200"
+                      class="py-1 px-8 border-b"
                     >
                       I
                     </td>
                     <td
-                      class="py-1 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200"
+                      class="py-1 px-4 border-b"
                     >
                       me
                     </td>
                   </tr>
                   <tr>
                     <td
-                      class="py-1 px-8 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200"
+                      class="py-1 px-8 border-b"
                     >
                       you
                     </td>
                     <td
-                      class="py-1 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200"
+                      class="py-1 px-4 border-b"
                     >
                       you
                     </td>
                   </tr>
                   <tr>
                     <td
-                      class="py-1 px-8 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200"
+                      class="py-1 px-8 border-b"
                     >
                       he
                     </td>
                     <td
-                      class="py-1 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200"
+                      class="py-1 px-4 border-b"
                     >
                       him
                     </td>
                   </tr>
                   <tr>
                     <td
-                      class="py-1 px-8 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200"
+                      class="py-1 px-8 border-b"
                     >
                       she
                     </td>
                     <td
-                      class="py-1 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200"
+                      class="py-1 px-4 border-b"
                     >
                       her
                     </td>
                   </tr>
                   <tr>
                     <td
-                      class="py-1 px-8 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200"
+                      class="py-1 px-8 border-b"
                     >
                       it
                     </td>
                     <td
-                      class="py-1 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200"
+                      class="py-1 px-4 border-b"
                     >
                       it
                     </td>
                   </tr>
                   <tr>
                     <td
-                      class="py-1 px-8 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200"
+                      class="py-1 px-8 border-b"
                     >
                       we
                     </td>
                     <td
-                      class="py-1 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200"
+                      class="py-1 px-4 border-b"
                     >
                       us
                     </td>
                   </tr>
                   <tr>
                     <td
-                      class="py-1 px-8 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200"
+                      class="py-1 px-8 border-b"
                     >
                       you
                     </td>
                     <td
-                      class="py-1 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200"
+                      class="py-1 px-4 border-b"
                     >
                       you
                     </td>
                   </tr>
                   <tr>
                     <td
-                      class="py-1 px-8 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200"
+                      class="py-1 px-8 border-b"
                     >
                       they
                     </td>
                     <td
-                      class="py-1 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200"
+                      class="py-1 px-4 border-b"
                     >
                       them
                     </td>
@@ -406,14 +180,14 @@
             <div id="header-container">
               <div class="flex justify-between items-center mb-6">
                 <h1
-                  class="text-xl sm:text-2xl font-bold text-gray-800 dark:text-gray-100"
+                  class="text-xl sm:text-2xl font-bold"
                 >
                   Pronoun Quiz
                 </h1>
                 <div class="flex items-center gap-4">
                   <div
                     id="progress-text"
-                    class="text-sm font-semibold text-gray-600 dark:text-gray-400"
+                    class="text-sm font-semibold text-gray-600"
                   >
                     Question 1 of 10
                   </div>
@@ -421,7 +195,7 @@
               </div>
 
               <div
-                class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 mb-6"
+                class="w-full bg-gray-200 rounded-full h-2.5 mb-6"
               >
                 <div
                   id="progress-bar"
@@ -436,12 +210,12 @@
               <div class="flex justify-center items-center gap-2 mb-8">
                 <p
                   id="question-text"
-                  class="text-lg sm:text-xl text-gray-700 dark:text-gray-200 leading-loose text-center"
+                  class="text-lg sm:text-xl leading-loose text-center"
                 ></p>
               </div>
               <div
                 id="options-container"
-                class="flex flex-wrap justify-center items-center gap-3 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg min-h-[60px]"
+                class="flex flex-wrap justify-center items-center gap-3 p-4 bg-gray-50 rounded-lg min-h-[60px]"
               ></div>
               <div id="feedback" class="mt-4 p-4 rounded-lg text-sm hidden"></div>
             </div>
@@ -473,15 +247,15 @@
 
             <!-- Tela de Resultados -->
             <div id="results-container" class="hidden text-center py-8">
-              <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-4">
+              <h2 class="text-2xl font-bold mb-4">
                 Quiz Concluído!
               </h2>
-              <p class="text-lg text-gray-700 dark:text-gray-200 mb-2">
+              <p class="text-lg mb-2">
                 Sua pontuação final é:
               </p>
               <p
                 id="score"
-                class="text-4xl font-bold text-indigo-600 dark:text-indigo-400 mb-6"
+                class="text-4xl font-bold text-indigo-600 mb-6"
               ></p>
               <button
                 id="restart-btn"
@@ -495,17 +269,17 @@
     </main>
     <!-- Modal para a explicação -->
     <div id="explanation-modal" class="modal">
-      <div class="modal-content dark:bg-gray-800">
+      <div class="modal-content">
         <span class="close-modal">&times;</span>
         <h3 class="text-xl font-bold mb-4">Explicação da Resposta</h3>
         <p
           id="explanation-text"
-          class="explanation-text text-gray-700 dark:text-gray-200"
+          class="explanation-text"
         ></p>
       </div>
     </div>
 
-    <script src="js/main.js"></script>
+    <script src="js/main.js" defer></script>
     <script>
       // Dicionário de traduções para palavras-chave e pronomes
       const translations = {
@@ -778,33 +552,6 @@
       const quizGameContainer = document.getElementById("quiz-game-container");
       const startQuizBtn = document.getElementById("start-quiz-btn");
 
-      // Referências para os elementos do tema
-      const themeToggleBtn = document.getElementById("theme-toggle");
-      const themeToggleLightIcon = document.getElementById(
-        "theme-toggle-light-icon"
-      );
-      const themeToggleDarkIcon = document.getElementById(
-        "theme-toggle-dark-icon"
-      );
-      const html = document.documentElement;
-
-      // Função para aplicar o tema (claro ou escuro)
-      function applyTheme() {
-        if (
-          localStorage.getItem("theme") === "dark" ||
-          (!("theme" in localStorage) &&
-            window.matchMedia("(prefers-color-scheme: dark)").matches)
-        ) {
-          html.classList.add("dark");
-          themeToggleLightIcon.classList.remove("hidden");
-          themeToggleDarkIcon.classList.add("hidden");
-        } else {
-          html.classList.remove("dark");
-          themeToggleLightIcon.classList.add("hidden");
-          themeToggleDarkIcon.classList.remove("hidden");
-        }
-      }
-
       function shuffleArray(array) {
         for (let i = array.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
@@ -1010,17 +757,6 @@
         loadQuiz(); // Carrega a primeira questão do quiz
       });
 
-      themeToggleBtn.addEventListener("click", () => {
-        if (html.classList.contains("dark")) {
-          html.classList.remove("dark");
-          localStorage.setItem("theme", "light");
-        } else {
-          html.classList.add("dark");
-          localStorage.setItem("theme", "dark");
-        }
-        applyTheme();
-      });
-
       explainBtn.addEventListener("click", getExplanation); // New
       closeModalBtn.addEventListener("click", () => {
         // New
@@ -1032,8 +768,6 @@
           explanationModal.style.display = "none";
         }
       });
-
-      applyTheme();
     </script>
   </body>
 </html>
