@@ -8,261 +8,44 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="css/theme.css" />
     <link rel="stylesheet" href="css/style.css" />
-    <style>
-      body {
-        font-family: "Inter", sans-serif;
-        background-color: #1a202c;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        margin: 0;
-        padding-top: 70px;
-        box-sizing: border-box;
-      }
-
-      .quiz-container {
-        background-color: #2d3748;
-        border-radius: 15px;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-        width: 100%;
-        max-width: 800px;
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-        min-height: 500px;
-        position: relative;
-        padding: 2rem;
-        text-align: center;
-      }
-
-      .quiz-container::before {
-        content: "";
-        background-image: url("img/LOGO_DANNER.png");
-        background-size: 130px;
-        background-repeat: no-repeat;
-        background-position: bottom left;
-        opacity: 0.75;
-        position: absolute;
-        bottom: 20px;
-        left: 1px;
-        width: 130px;
-        height: auto;
-        z-index: 0;
-        pointer-events: none;
-      }
-
-      #quiz-screen {
-        position: relative;
-        overflow: hidden;
-      }
-
-      .watermark-logo {
-        position: absolute;
-        top: -20px;
-        left: 1px;
-        width: 150px;
-        opacity: 0.75;
-        pointer-events: none;
-        z-index: 0;
-      }
-
-      h1,
-      h2 {
-        color: rgb(77, 63, 63);
-      }
-
-      p {
-        color: #131314;
-      }
-
-      #start-screen h1 {
-        margin-top: 100px;
-        margin-bottom: 20px;
-        text-align: center;
-      }
-
-      button {
-        background-color: #4299e1;
-        color: white;
-        padding: 12px 25px;
-        border-radius: 8px;
-        font-size: 1.1rem;
-        font-weight: bold;
-        cursor: pointer;
-        transition: background-color 0.3s ease, transform 0.2s ease;
-        border: none;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        margin-top: 10px;
-      }
-
-      button:hover {
-        background-color: #3182ce;
-        transform: translateY(-1px);
-      }
-
-      .answer-btn {
-        background-color: #a0aec0;
-        color: #2d3748;
-        padding: 15px;
-        border-radius: 10px;
-        font-size: 1.2rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: background-color 0.3s ease, transform 0.2s ease,
-          box-shadow 0.2s ease;
-        border: none;
-        margin-bottom: 10px;
-        width: 100%;
-      }
-
-      .answer-btn:hover {
-        background-color: #cbd5e0;
-        transform: translateY(-2px);
-      }
-
-      .answer-btn.correct {
-        background-color: #48bb78;
-        color: white;
-      }
-
-      .answer-btn.incorrect {
-        background-color: #e53e3e;
-        color: white;
-      }
-
-      #timer-text {
-        color: white;
-        font-size: 1.5rem;
-        margin-bottom: 10px;
-      }
-
-      #score-display,
-      #question-counter {
-        color: #a0aec0;
-      }
-
-      #feedback-message {
-        font-size: 1.2rem;
-        margin-top: 10px;
-      }
-
-      #result-screen h1 {
-        margin-top: 100px;
-        margin-bottom: 20px;
-        text-align: center;
-      }
-
-      .hidden {
-        display: none;
-      }
-
-      body.light-mode {
-        background-color: #fff;
-      }
-
-      body.light-mode .quiz-container {
-        background-color: #f8f9f9;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-      }
-
-      body.light-mode h1,
-      body.light-mode h2 {
-        color: #1a202c;
-      }
-
-      body.light-mode p {
-        color: #030303;
-      }
-
-      body.light-mode .answer-btn {
-        background-color: #e2e8f0;
-        color: #1a202c;
-      }
-
-      body.light-mode .answer-btn:hover {
-        background-color: #cbd5e0;
-      }
-
-      body.light-mode .answer-btn.correct {
-        background-color: #48bb78;
-        color: white;
-      }
-
-      body.light-mode .answer-btn.incorrect {
-        background-color: #e53e3e;
-        color: white;
-      }
-
-      body.light-mode #timer-text {
-        color: #1a202c;
-      }
-
-      body.light-mode #score-display,
-      body.light-mode #question-counter {
-        color: #4a5568;
-      }
-
-    </style>
   </head>
   <body>
-    <header class="page-header">
-      <div class="logo-placeholder">
-        <img src="img/LOGO_DANNER.png" alt="Logo" />
-      </div>
-      <a
-        href="https://game-quizzes.netlify.app/"
-        class="menu-link"
-        title="Back to Home"
-        >Menu</a
-      >
-      <button id="theme-toggle-btn">🌞</button>
-    </header>
+    <div id="header-placeholder"></div>
+
     <div class="quiz-container">
       <div id="start-screen">
-        <img
-          src="img/LOGO_DANNER.png"
-          alt="Logótipo Danner Idiomas"
-          class="watermark-logo"
-        />
         <h1 style="text-align: center">
           Comparative and Superlative: Adjectives
         </h1>
         <p style="text-align: center">
           You'll have 20 seconds for each question. Good luck!
         </p>
-        <button id="start-btn">Start Quiz</button>
+        <button id="start-btn" class="btn">Start Quiz</button>
       </div>
       <div id="quiz-screen" class="hidden">
-        <img
-          src="img/LOGO_DANNER.png"
-          alt="Logótipo Danner Idiomas"
-          class="watermark-logo"
-        />
         <p id="feedback-message" class="hidden"></p>
         <div id="timer-text"></div>
         <div id="progress-container">
           <p id="question-counter"></p>
           <p id="score-display"></p>
         </div>
-        <button id="next-btn" class="hidden">Next Question</button>
+        <button id="next-btn" class="hidden btn">Next Question</button>
         <h2 id="question-text"></h2>
         <div id="answer-buttons"></div>
       </div>
       <div id="result-screen" class="hidden">
-        <img
-          src="img/LOGO_DANNER.png"
-          alt="Logótipo Danner Idiomas"
-          class="watermark-logo"
-        />
         <h1>Quiz Complete!</h1>
         <p id="final-score"></p>
         <p id="score-message"></p>
-        <button id="restart-btn">Play Again</button>
+        <button id="restart-btn" class="btn">Play Again</button>
       </div>
     </div>
+
     <script src="js/main.js"></script>
+    <script type="module" src="js/firebase-config.js"></script>
+    <script type="module" src="js/header.js"></script>
     <script>
       const startScreen = document.getElementById("start-screen");
       const quizScreen = document.getElementById("quiz-screen");
@@ -278,8 +61,6 @@
       const timerText = document.getElementById("timer-text");
       const finalScoreDisplay = document.getElementById("final-score");
       const scoreMessage = document.getElementById("score-message");
-      const themeToggleBtn = document.getElementById("theme-toggle-btn");
-      const body = document.body;
 
       const questions = [
         {

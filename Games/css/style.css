@@ -1,53 +1,85 @@
+/* ================= Header Styles ================= */
 .page-header {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     z-index: 10;
-    height: 50px;
+    height: 64px; /* Aumentado para melhor espaçamento */
     padding: 0 1.5rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    transition: background-color 0.5s, border-color 0.5s;
-    line-height: 1;
     background-color: var(--header-bg);
     border-bottom: 1px solid var(--header-shadow);
-  }
-  .page-header .menu-link {
+    transition: background-color 0.5s, border-color 0.5s;
+}
+
+.header-left, .header-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem; /* Espaçamento entre os itens */
+}
+
+.logo {
+    height: 40px; /* Equivalente a h-10 no Tailwind */
+    width: auto;
+}
+
+.header-title {
+    font-size: 1.25rem; /* text-xl */
+    font-weight: 600; /* font-semibold */
+    color: var(--text-color);
+}
+
+.menu-link {
     font-size: 1rem;
     text-decoration: none;
     font-weight: 500;
-    transition: color 0.3s;
     color: var(--menu-link-color);
-  }
-
-  .page-header .menu-link:hover {
-    color: var(--menu-link-hover);
-  }
-
-  .logo {
-    max-height: 40px;
-    width: auto;
-  }
-
-#theme-toggle-btn {
-    background-color: var(--button-bg);
-    color: var(--button-text);
-    border: none;
-    padding: 5px 10px;
-    border-radius: 50%;
-    font-size: 1.2rem;
-    cursor: pointer;
-    z-index: 10;
+    transition: color 0.3s;
 }
 
-#theme-toggle-btn:hover {
-    background-color: var(--button-hover-bg);
+.menu-link:hover {
+    color: var(--menu-link-hover);
+}
+
+#theme-toggle-btn {
+    background-color: transparent;
+    border: none;
+    font-size: 1.5rem; /* Aumentado para melhor visibilidade */
+    cursor: pointer;
+    color: var(--text-color);
+}
+
+.user-display {
+    font-size: 0.875rem; /* text-sm */
+    color: var(--text-color-light);
+}
+
+.user-display .user-name {
+    font-weight: 600;
+}
+
+.logout-button {
+    background-color: #ef4444; /* red-500 */
+    color: white;
+    font-weight: 600;
+    padding: 0.25rem 0.75rem; /* py-1 px-3 */
+    border-radius: 0.5rem; /* rounded-lg */
+    border: none;
+    cursor: pointer;
+    font-size: 0.875rem; /* text-sm */
+    transition: background-color 0.2s;
+}
+
+.logout-button:hover {
+    background-color: #dc2626; /* red-600 */
 }
 
 body {
-    padding-top: 70px;
+    /* Ajustado para a nova altura do header */
+    padding-top: 80px;
 }
 
 /* Generic Quiz styles */
