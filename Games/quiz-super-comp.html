@@ -1,9 +1,8 @@
-
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Grammar Quiz</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
@@ -63,9 +62,28 @@
             <p id="score-message" class="mb-8"></p>
             <button id="restart-btn" class="w-full bg-blue-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-600 transition-colors duration-300 text-lg">Play Again</button>
         </div>
+      </div>
 
+      <!-- Result Screen -->
+      <div id="result-screen" class="hidden">
+        <h1
+          class="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-white mb-4"
+        >
+          Quiz Complete!
+        </h1>
+        <p
+          id="final-score"
+          class="text-2xl text-gray-700 dark:text-gray-200 mb-2"
+        ></p>
+        <p id="score-message" class="text-gray-600 dark:text-gray-400 mb-8"></p>
+        <button
+          id="restart-btn"
+          class="w-full bg-blue-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-600 transition-colors duration-300 text-lg"
+        >
+          Play Again
+        </button>
+      </div>
     </div>
-
 
     <script>
 
@@ -205,125 +223,154 @@
             }, 1000);
 
         }
+      }
 
+      /**
+       * Starts the countdown timer for the current question.
+       */
+      function startTimer() {
+        timeLeft = TIME_LIMIT;
+        timerText.textContent = timeLeft;
+        timerProgress.style.strokeDasharray = "100, 100"; // Reset progress bar
 
+        clearInterval(timer); // Clear any existing timer
+        timer = setInterval(() => {
+          timeLeft--;
+          timerText.textContent = timeLeft;
+          const progress = (timeLeft / TIME_LIMIT) * 100;
+          timerProgress.style.strokeDasharray = `${progress}, 100`;
 
-        /**
-         * Handles the situation when the timer runs out.
-         */
-        function timeUp() {
-
+          if (timeLeft <= 0) {
             clearInterval(timer);
-                countdownAudio.pause();
-                countdownAudio.currentTime = 0;
-            showFeedback(); // Show the correct answer
-            nextBtn.classList.remove('hidden');
-           // Wait before moving to the next question
+            timeUp();
+          }
+        }, 1000);
+      }
 
+      /**
+       * Handles the situation when the timer runs out.
+       */
+      function timeUp() {
+        clearInterval(timer);
+        countdownAudio.pause();
+        countdownAudio.currentTime = 0;
+        showFeedback(); // Show the correct answer
+        nextBtn.classList.remove("hidden");
+        // Wait before moving to the next question
+      }
 
+      /**
+       * Handles the user's answer selection.
+       * @param {Event} e The click event from the answer button.
+       */
+      function selectAnswer(e) {
+        clearInterval(timer); // Stop the timer as soon as an answer is selected
+        countdownAudio.pause();
+        countdownAudio.currentTime = 0;
+        const selectedBtn = e.target;
+        const isCorrect = selectedBtn.dataset.correct === "true";
+
+        if (isCorrect) {
+          score++;
+          updateScoreDisplay();
         }
 
-        /**
-         * Handles the user's answer selection.
-         * @param {Event} e The click event from the answer button.
-         */
-        function selectAnswer(e) {
+        showFeedback();
 
-            clearInterval(timer); // Stop the timer as soon as an answer is selected
-            countdownAudio.pause();
-            countdownAudio.currentTime = 0;
-            const selectedBtn = e.target;
-            const isCorrect = selectedBtn.dataset.correct === 'true';
+        nextBtn.classList.remove("hidden");
 
-            if (isCorrect) {
-                score++;
-                updateScoreDisplay();
-            }
-
-
-            showFeedback();
-
-              nextBtn.classList.remove('hidden');
-
-
-
-            const feedbackMessage = document.getElementById('feedback-message');
-            if (isCorrect) {
-                feedbackMessage.innerText = "Correct!";
-                feedbackMessage.classList.remove('hidden');
-                feedbackMessage.classList.add('text-green-500');
-            } else {
-                feedbackMessage.innerText = "Wrong!";
-                feedbackMessage.classList.remove('hidden');
-                feedbackMessage.classList.add('text-red-500');
-            }
-
-
+        const feedbackMessage = document.getElementById("feedback-message");
+        if (isCorrect) {
+          feedbackMessage.innerText = "Correct!";
+          feedbackMessage.classList.remove("hidden");
+          feedbackMessage.classList.add("text-green-500");
+        } else {
+          feedbackMessage.innerText = "Wrong!";
+          feedbackMessage.classList.remove("hidden");
+          feedbackMessage.classList.add("text-red-500");
         }
+      }
 
-        /**
-         * Provides visual feedback (correct/incorrect) on all answer buttons.
-         */
-        function showFeedback() {
-            Array.from(answerButtonsContainer.children).forEach(button => {
-                if (button.dataset.correct === 'true') {
-                    button.classList.add('correct');
-                } else {
-                    button.classList.add('incorrect');
-                }
-                button.disabled = true; // Disable all buttons after an answer is chosen or time is up
-            });
+      /**
+       * Provides visual feedback (correct/incorrect) on all answer buttons.
+       */
+      function showFeedback() {
+        Array.from(answerButtonsContainer.children).forEach((button) => {
+          if (button.dataset.correct === "true") {
+            button.classList.add("correct");
+          } else {
+            button.classList.add("incorrect");
+          }
+          button.disabled = true; // Disable all buttons after an answer is chosen or time is up
+        });
+      }
+
+      /**
+       * Clears previous question's state (buttons).
+       */
+      function resetState() {
+        while (answerButtonsContainer.firstChild) {
+          answerButtonsContainer.removeChild(answerButtonsContainer.firstChild);
         }
+        const feedbackMessage = document.getElementById("feedback-message");
+        feedbackMessage.innerText = "";
+        feedbackMessage.classList.add("hidden");
+        feedbackMessage.classList.remove("text-green-500", "text-red-500");
+      }
 
-        /**
-         * Clears previous question's state (buttons).
-         */
-        function resetState() {
-            while (answerButtonsContainer.firstChild) {
-                answerButtonsContainer.removeChild(answerButtonsContainer.firstChild);
-            }
-            const feedbackMessage = document.getElementById('feedback-message');
-                feedbackMessage.innerText = '';
-                feedbackMessage.classList.add('hidden');
-                feedbackMessage.classList.remove('text-green-500', 'text-red-500');
+      function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
         }
+      }
 
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
+      /**
+       * Updates the score display on the quiz screen.
+       */
+      function updateScoreDisplay() {
+        scoreDisplay.innerText = `Score: ${score}`;
+      }
+
+      /**
+       * Displays the final results screen.
+       */
+      function showResults() {
+        quizScreen.classList.add("hidden");
+        resultScreen.classList.remove("hidden");
+        finalScoreDisplay.innerText = `You scored ${score} out of ${shuffledQuestions.length}!`;
+
+        const scorePercent = (score / shuffledQuestions.length) * 100;
+        if (scorePercent === 100) {
+          scoreMessage.innerText = "Perfect score! You're a grammar master!";
+        } else if (scorePercent >= 75) {
+          scoreMessage.innerText =
+            "Great job! You really know your adjectives.";
+        } else if (scorePercent >= 50) {
+          scoreMessage.innerText = "Not bad! A solid effort.";
+        } else {
+          scoreMessage.innerText = "Better luck next time! Keep practicing.";
         }
+      }
 
-        /**
-         * Updates the score display on the quiz screen.
-         */
-        function updateScoreDisplay() {
-            scoreDisplay.innerText = `Score: ${score}`;
+      const themeToggleBtn = document.getElementById("theme-toggle-btn");
+
+      const applyTheme = () => {
+        if (
+          localStorage.theme === "dark" ||
+          (!("theme" in localStorage) &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches)
+        ) {
+          document.documentElement.classList.add("dark");
+          themeToggleBtn.textContent = "🌙";
+        } else {
+          document.documentElement.classList.remove("dark");
+          themeToggleBtn.textContent = "☀️";
         }
-
-        /**
-         * Displays the final results screen.
-         */
-        function showResults() {
-            quizScreen.classList.add('hidden');
-            resultScreen.classList.remove('hidden');
-            finalScoreDisplay.innerText = `You scored ${score} out of ${shuffledQuestions.length}!`;
-
-            const scorePercent = (score / shuffledQuestions.length) * 100;
-            if (scorePercent === 100) {
-                scoreMessage.innerText = "Perfect score! You're a grammar master!";
-            } else if (scorePercent >= 75) {
-                scoreMessage.innerText = "Great job! You really know your adjectives.";
-            } else if (scorePercent >= 50) {
-                scoreMessage.innerText = "Not bad! A solid effort.";
-            } else {
-                scoreMessage.innerText = "Better luck next time! Keep practicing.";
-            }
-        }
+      };
 
     </script>
 
     <script src="js/main.js"></script>
-</body>
+  </body>
 </html>
