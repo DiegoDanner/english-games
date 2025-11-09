@@ -32,25 +32,6 @@
       .globe-fill {
         fill: var(--blue);
       }
-      .brand {
-        fill: var(--text-dark);
-        font-family: "Inter", "Segoe UI", Arial, sans-serif;
-        font-weight: 800;
-        letter-spacing: 0.5px;
-      }
-      .brand-sub {
-        fill: var(--blue);
-        font-weight: 900;
-        letter-spacing: 1.5px;
-      }
-    </style>
-    <style
-      xmlns="http://www.w3.org/2000/svg"
-      xmlns:bx="https://boxy-svg.com"
-      bx:fonts="Bayon"
-      bx:pinned="true"
-    >
-      @import url(https://fonts.googleapis.com/css2?family=Bayon%3Aital%2Cwght%400%2C400&amp;display=swap);
     </style>
   </defs>
 
@@ -98,35 +79,19 @@
   </g>
 
   <!-- ===== Right side: brand text ===== -->
-  <g transform="translate(122,69)">
+  <g transform="translate(260, 155)">
     <text
       style="
-        fill: rgb(31, 102, 229);
+        fill: #1f56c4;
         font-family: Arial, sans-serif;
-        font-size: 69px;
-        paint-order: stroke;
-        white-space: pre;
-        pointer-events: none;
+        font-size: 90px;
+        font-weight: 800;
       "
-      transform="matrix(1, 0, 0, 1, -120, -120)"
+      text-anchor="middle"
+      dominant-baseline="middle"
     >
-      <tspan
-        style="font-family: Forte; stroke: rgba(0, 36, 218, 0.843)"
-        x="63.353"
-        y="148.148"
-      >
-        Danner
-      </tspan>
-      <tspan x="0em" dy="1em">​</tspan>
-      <tspan
-        style="
-          font-family: 'Bauhaus 93';
-          stroke: rgb(23, 99, 232);
-          mix-blend-mode: darken;
-        "
-      >
-        Idiomas
-      </tspan>
+      <tspan x="180" y="-35">Danner</tspan>
+      <tspan x="180" dy="1.1em" style="fill: #0f3d91;">Idiomas</tspan>
     </text>
   </g>
 </svg>

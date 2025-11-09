@@ -5,194 +5,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Grammar Quiz</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      // On page load or when changing themes, best to add inline in `head` to avoid FOUC
-      if (
-        localStorage.theme === "dark" ||
-        (!("theme" in localStorage) &&
-          window.matchMedia("(prefers-color-scheme: dark)").matches)
-      ) {
-        document.documentElement.classList.add("dark");
-      } else {
-        document.documentElement.classList.remove("dark");
-      }
-    </script>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/theme.css" />
     <link rel="stylesheet" href="css/style.css" />
-    <style>
-      body {
-        font-family: "Inter", sans-serif;
-      }
-      .quiz-container {
-        max-width: none;
-        width: 95%;
-        position: relative;
-        overflow: hidden;
-        padding-top: 12rem !important;
-        background-color: var(--container-bg);
-        color: var(--text-color);
-      }
-      .quiz-container h1,
-      .quiz-container p,
-      .quiz-container h2 {
-        color: var(--text-color);
-      }
-      .answer-btn {
-        transition: background-color 0.3s, transform 0.2s;
-        background-color: var(--button-bg);
-        color: var(--button-text);
-      }
-      .answer-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        background-color: var(--button-hover-bg);
-      }
-      .correct {
-        background-color: #22c55e !important; /* Tailwind green-500 */
-        color: white;
-      }
-      .incorrect {
-        background-color: #ef4444 !important; /* Tailwind red-500 */
-        color: white;
-      }
-      #timer-progress {
-        transition: stroke-dasharray 1s linear;
-      }
-      .quiz-container {
-        max-width: 900px;
-        width: 90%;
-        min-height: 600px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        padding: 2rem; /* You can adjust this too */
-      }
-      .quiz-container {
-        position: relative;
-        overflow: hidden;
-        padding-top: 12rem;
-      }
-
-      .quiz-container::before {
-        content: "";
-        background-image: url("img/LOGO_DANNER.png");
-        background-size: 50%;
-        background-repeat: no-repeat;
-        background-position: top center;
-        opacity: 0.38;
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 0;
-        pointer-events: none;
-      }
-      #timer-text {
-        color: var(--text-color);
-      }
-      #timer-container path {
-        color: var(--button-hover-bg);
-      }
-    </style>
-  </head>
-  <body
-    class="bg-gray-100 dark:bg-gray-900 flex items-center justify-center min-h-screen"
-  >
+</head>
+<body class="flex items-center justify-center min-h-screen">
     <header class="page-header">
-      <div class="logo-placeholder">
-        <img src="img/LOGO_DANNER.png" alt="Logo" />
-      </div>
-      <a
-        href="https://game-quizzes.netlify.app/"
-        class="menu-link"
-        title="Back to Home"
-        >Menu</a
-      >
-      <button id="theme-toggle-btn">🌞</button>
+        <img src="img/logo.svg" alt="logo" class="logo">
+        <a href="https://game-quizzes.netlify.app/" class="menu-link" title="Back to Home">Menu</a>
+        <button id="theme-toggle-btn">🌞</button>
     </header>
-    <div
-      id="quiz-container"
-      class="quiz-container bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-2xl shadow-lg text-center relative"
-    >
-      <!-- Start Screen -->
-      <div id="start-screen">
-        <h1
-          class="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-white mb-4 mt-8 text-center"
-        >
-          Comparative and Superlative: Adjectives
-        </h1>
-        <p class="text-gray-600 dark:text-gray-300 mb-16">
-          You'll have 20 seconds for each question. Good luck!
-        </p>
-        <button
-          id="start-btn"
-          class="w-48 bg-blue-500 text-white font-bold py-3 rounded-lg hover:bg-blue-600 transition-colors duration-300 text-lg mx-auto block"
-        >
-          Start Quiz
-        </button>
-      </div>
+    <div id="quiz-container" class="quiz-container p-6 sm:p-8 rounded-2xl shadow-lg text-center relative">
+        
+        <!-- Start Screen -->
+        <div id="start-screen">
+            
+            <h1 class="text-3xl sm:text-4xl font-bold mb-4 mt-8 text-center">Comparative and Superlative: Adjectives</h1>
+            <p class="mb-16">You'll have 20 seconds for each question. Good luck!</p>
+            <button id="start-btn" class="w-48 bg-blue-500 text-white font-bold py-3 rounded-lg hover:bg-blue-600 transition-colors duration-300 text-lg mx-auto block">Start Quiz</button>
+            
+        </div>
 
-      <!-- Quiz Screen -->
-      <div id="quiz-screen" class="hidden">
-        <p
-          id="feedback-message"
-          class="text-xl font-semibold mb-4 text-gray-700 dark:text-gray-200 hidden"
-        ></p>
-        <div id="timer-container" class="relative w-20 h-20 mx-auto mb-4">
-          <svg
-            class="w-full h-full"
-            viewBox="0 0 36 36"
-            transform="rotate(-90)"
-          >
-            <path
-              class="text-gray-200 dark:text-gray-600"
-              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="3"
-            />
-            <path
-              id="timer-progress"
-              class="text-blue-500"
-              stroke-dasharray="100, 100"
-              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="3"
-              stroke-linecap="round"
-            />
-          </svg>
-          <div
-            id="timer-text"
-            class="absolute inset-0 flex items-center justify-center text-2xl font-bold text-gray-800 dark:text-white"
-          ></div>
+        <!-- Quiz Screen -->
+        <div id="quiz-screen" class="hidden">
+            
+            <p id="feedback-message" class="text-xl font-semibold mb-4 hidden"></p>
+            <div id="timer-container" class="relative w-20 h-20 mx-auto mb-4">
+                <svg class="w-full h-full" viewBox="0 0 36 36" transform="rotate(-90)">
+                    <path
+                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                        fill="none" stroke="currentColor" stroke-width="3" />
+                    <path id="timer-progress" class="text-blue-500"
+                        stroke-dasharray="100, 100"
+                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                        fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
+                </svg>
+                <div id="timer-text" class="absolute inset-0 flex items-center justify-center text-2xl font-bold"></div>
+            </div>
+            <div id="progress-container" class="flex justify-between items-center mb-4">
+                <p id="question-counter"></p>
+                <p id="score-display" class="font-semibold text-blue-600"></p>
+            </div>
+            <button id="next-btn" class="hidden mt-4 bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600 transition-colors duration-300">
+                Next Question</button>
+            <h2 id="question-text" class="text-2xl font-semibold mb-6 min-h-[50px]"></h2>
+            <div id="answer-buttons" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <!-- Answer buttons will be inserted here by JavaScript -->
+            
+            </div>  
         </div>
-        <div
-          id="progress-container"
-          class="flex justify-between items-center mb-4"
-        >
-          <p id="question-counter" class="text-gray-600 dark:text-gray-400"></p>
-          <p
-            id="score-display"
-            class="font-semibold text-blue-600 dark:text-blue-400"
-          ></p>
-        </div>
-        <button
-          id="next-btn"
-          class="hidden mt-4 bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600 transition-colors duration-300"
-        >
-          Next Question
-        </button>
-        <h2
-          id="question-text"
-          class="text-2xl font-semibold text-gray-800 dark:text-white mb-6 min-h-[50px]"
-        ></h2>
-        <div id="answer-buttons" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <!-- Answer buttons will be inserted here by JavaScript -->
+
+        <!-- Result Screen -->
+        <div id="result-screen" class="hidden">
+            <h1 class="text-3xl sm:text-4xl font-bold mb-4">Quiz Complete!</h1>
+            <p id="final-score" class="text-2xl mb-2"></p>
+            <p id="score-message" class="mb-8"></p>
+            <button id="restart-btn" class="w-full bg-blue-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-600 transition-colors duration-300 text-lg">Play Again</button>
         </div>
       </div>
 
@@ -218,287 +86,142 @@
     </div>
 
     <script>
-      // --- DOM Elements ---
-      const nextBtn = document.getElementById("next-btn");
-      const startScreen = document.getElementById("start-screen");
-      const quizScreen = document.getElementById("quiz-screen");
-      const resultScreen = document.getElementById("result-screen");
 
-      const startBtn = document.getElementById("start-btn");
-      const restartBtn = document.getElementById("restart-btn");
 
-      const questionCounter = document.getElementById("question-counter");
-      const scoreDisplay = document.getElementById("score-display");
-      const questionText = document.getElementById("question-text");
-      const answerButtonsContainer = document.getElementById("answer-buttons");
+        // --- DOM Elements ---
+        const nextBtn = document.getElementById('next-btn');
+        const startScreen = document.getElementById('start-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const resultScreen = document.getElementById('result-screen');
 
-      const finalScoreDisplay = document.getElementById("final-score");
-      const scoreMessage = document.getElementById("score-message");
+        const startBtn = document.getElementById('start-btn');
+        const restartBtn = document.getElementById('restart-btn');
 
-      const timerText = document.getElementById("timer-text");
-      const timerProgress = document.getElementById("timer-progress");
-      const countdownAudio = new Audio("audio/countdown_beep.wav");
+        const questionCounter = document.getElementById('question-counter');
+        const scoreDisplay = document.getElementById('score-display');
+        const questionText = document.getElementById('question-text');
+        const answerButtonsContainer = document.getElementById('answer-buttons');
 
-      // --- Quiz Data (20 Questions) ---
-      const quizQuestions = [
-        {
-          question: "What is the comparative form of the adjective 'big'?",
-          answers: [
-            { text: "Bigger", correct: true },
-            { text: "More big", correct: false },
-            { text: "Biger", correct: false },
-            { text: "Biggest", correct: false },
-          ],
-        },
-        {
-          question: "Which adjective is the superlative form of 'good'?",
-          answers: [
-            { text: "Goodest", correct: false },
-            { text: "Better", correct: false },
-            { text: "Best", correct: true },
-            { text: "More good", correct: false },
-          ],
-        },
-        {
-          question: "How do you make the comparative form of 'expensive'?",
-          answers: [
-            { text: "Expensiver", correct: false },
-            { text: "More expensive", correct: true },
-            { text: "Expensivest", correct: false },
-            { text: "Most expensive", correct: false },
-          ],
-        },
-        {
-          question: "What is the superlative form of 'happy'?",
-          answers: [
-            { text: "Happiest", correct: true },
-            { text: "Happyest", correct: false },
-            { text: "Most happy", correct: false },
-            { text: "Happier", correct: false },
-          ],
-        },
-        {
-          question:
-            "Which one-syllable adjective should use 'more' for its comparative form?",
-          answers: [
-            { text: "Tall", correct: false },
-            { text: "Cold", correct: false },
-            { text: "Fun", correct: true },
-            { text: "Wet", correct: false },
-          ],
-        },
-        {
-          question: "What is the comparative form of 'bad'?",
-          answers: [
-            { text: "Badder", correct: false },
-            { text: "More bad", correct: false },
-            { text: "Worse", correct: true },
-            { text: "Worst", correct: false },
-          ],
-        },
-        {
-          question:
-            "How do you correctly write the superlative form of 'simple'?",
-          answers: [
-            { text: "Simpler", correct: false },
-            { text: "Most simple", correct: false },
-            { text: "Simplest", correct: true },
-            { text: "More simple", correct: false },
-          ],
-        },
-        {
-          question: "What is the comparative form of 'beautiful'?",
-          answers: [
-            { text: "Beautifuller", correct: false },
-            { text: "More beautiful", correct: true },
-            { text: "Beautifuler", correct: false },
-            { text: "Most beautiful", correct: false },
-          ],
-        },
-        {
-          question: "What is the superlative form of 'clean'?",
-          answers: [
-            { text: "Cleanest", correct: true },
-            { text: "Most clean", correct: false },
-            { text: "Cleaner", correct: false },
-            { text: "More clean", correct: false },
-          ],
-        },
-        {
-          question: "My soup is hot, but yours is even ___.",
-          answers: [
-            { text: "Hotter", correct: true },
-            { text: "More hot", correct: false },
-            { text: "Hottest", correct: false },
-            { text: "Most hot", correct: false },
-          ],
-        },
-        {
-          question: "What is the superlative form of 'dry'?",
-          answers: [
-            { text: "Dryest", correct: false },
-            { text: "Most dry", correct: false },
-            { text: "Driest", correct: true },
-            { text: "Drier", correct: false },
-          ],
-        },
-        {
-          question: "An elephant is ___ than a mouse.",
-          answers: [
-            { text: "Larger", correct: true },
-            { text: "More large", correct: false },
-            { text: "Largest", correct: false },
-            { text: "Most large", correct: false },
-          ],
-        },
-        {
-          question: "Which is the correct superlative form of 'wrong'?",
-          answers: [
-            { text: "Wrongest", correct: false },
-            { text: "Most wrong", correct: true },
-            { text: "Wronger", correct: false },
-            { text: "More wrong", correct: false },
-          ],
-        },
-        {
-          question: "You should be ___ when you drive in the rain.",
-          answers: [
-            { text: "Carefuler", correct: false },
-            { text: "Careful", correct: false },
-            { text: "More careful", correct: true },
-            { text: "Most careful", correct: false },
-          ],
-        },
-        {
-          question: "She is the ___ person in our class.",
-          answers: [
-            { text: "Cleverest", correct: true },
-            { text: "Most clever", correct: false },
-            { text: "Cleverer", correct: false },
-            { text: "More clever", correct: false },
-          ],
-        },
-        {
-          question: "This street is ___ than the main road.",
-          answers: [
-            { text: "Narrower", correct: true },
-            { text: "More narrow", correct: false },
-            { text: "Narrowest", correct: false },
-            { text: "Most narrow", correct: false },
-          ],
-        },
-        {
-          question: "What is the comparative form of 'dirty'?",
-          answers: [
-            { text: "More dirty", correct: false },
-            { text: "Dirtier", correct: true },
-            { text: "Dirtyer", correct: false },
-            { text: "Dirtiest", correct: false },
-          ],
-        },
-        {
-          question: "What is the superlative form of 'intelligent'?",
-          answers: [
-            { text: "Intelligenter", correct: false },
-            { text: "Intelligentest", correct: false },
-            { text: "More intelligent", correct: false },
-            { text: "Most intelligent", correct: true },
-          ],
-        },
-        {
-          question: "The airport is ___ away than the train station.",
-          answers: [
-            { text: "Farther", correct: true },
-            { text: "Farrer", correct: false },
-            { text: "Most far", correct: false },
-            { text: "More far", correct: false },
-          ],
-        },
-        {
-          question: "This is the ___ of my worries.",
-          answers: [
-            { text: "Littlest", correct: false },
-            { text: "Less", correct: false },
-            { text: "Least", correct: true },
-            { text: "Little", correct: false },
-          ],
-        },
-      ];
+        const finalScoreDisplay = document.getElementById('final-score');
+        const scoreMessage = document.getElementById('score-message');
 
-      // --- State Variables ---
-      let currentQuestionIndex;
-      let score;
-      let shuffledQuestions;
-      let timer;
-      let timeLeft;
-      const TIME_LIMIT = 20;
+        const timerText = document.getElementById('timer-text');
+        const timerProgress = document.getElementById('timer-progress');
+        const countdownAudio = new Audio('audio/countdown_beep.wav');
 
-      // --- Event Listeners ---
-      startBtn.addEventListener("click", startQuiz);
-      restartBtn.addEventListener("click", () => {
-        resultScreen.classList.add("hidden");
-        startScreen.classList.remove("hidden");
-      });
-      nextBtn.addEventListener("click", () => {
-        countdownAudio.pause();
-        countdownAudio.currentTime = 0;
-        countdownAudio.play();
-        currentQuestionIndex++;
-        nextBtn.classList.add("hidden");
-        showNextQuestion();
-      });
 
-      /**
-       * Starts the quiz by resetting state, shuffling questions, and showing the first question.
-       */
-      function startQuiz() {
-        startScreen.classList.add("hidden");
-        quizScreen.classList.remove("hidden");
-        shuffledQuestions = quizQuestions.sort(() => Math.random() - 0.5);
-        currentQuestionIndex = 0;
-        score = 0;
-        updateScoreDisplay();
-        showNextQuestion();
+        // --- Quiz Data (20 Questions) ---
+        const quizQuestions = [
+            { question: "What is the comparative form of the adjective 'big'?", answers: [ { text: "Bigger", correct: true }, { text: "More big", correct: false }, { text: "Biger", correct: false }, { text: "Biggest", correct: false } ] },
+            { question: "Which adjective is the superlative form of 'good'?", answers: [ { text: "Goodest", correct: false }, { text: "Better", correct: false }, { text: "Best", correct: true }, { text: "More good", correct: false } ] },
+            { question: "How do you make the comparative form of 'expensive'?", answers: [ { text: "Expensiver", correct: false }, { text: "More expensive", correct: true }, { text: "Expensivest", correct: false }, { text: "Most expensive", correct: false } ] },
+            { question: "What is the superlative form of 'happy'?", answers: [ { text: "Happiest", correct: true }, { text: "Happyest", correct: false }, { text: "Most happy", correct: false }, { text: "Happier", correct: false } ] },
+            { question: "Which one-syllable adjective should use 'more' for its comparative form?", answers: [ { text: "Tall", correct: false }, { text: "Cold", correct: false }, { text: "Fun", correct: true }, { text: "Wet", correct: false } ] },
+            { question: "What is the comparative form of 'bad'?", answers: [ { text: "Badder", correct: false }, { text: "More bad", correct: false }, { text: "Worse", correct: true }, { text: "Worst", correct: false } ] },
+            { question: "How do you correctly write the superlative form of 'simple'?", answers: [ { text: "Simpler", correct: false }, { text: "Most simple", correct: false }, { text: "Simplest", correct: true }, { text: "More simple", correct: false } ] },
+            { question: "What is the comparative form of 'beautiful'?", answers: [ { text: "Beautifuller", correct: false }, { text: "More beautiful", correct: true }, { text: "Beautifuler", correct: false }, { text: "Most beautiful", correct: false } ] },
+            { question: "What is the superlative form of 'clean'?", answers: [ { text: "Cleanest", correct: true }, { text: "Most clean", correct: false }, { text: "Cleaner", correct: false }, { text: "More clean", correct: false } ] },
+            { question: "My soup is hot, but yours is even ___.", answers: [ { text: "Hotter", correct: true }, { text: "More hot", correct: false }, { text: "Hottest", correct: false }, { text: "Most hot", correct: false } ] },
+            { question: "What is the superlative form of 'dry'?", answers: [ { text: "Dryest", correct: false }, { text: "Most dry", correct: false }, { text: "Driest", correct:true }, { text: "Drier", correct: false } ] },
+            { question: "An elephant is ___ than a mouse.", answers: [ { text: "Larger", correct: true }, { text: "More large", correct: false }, { text: "Largest", correct: false }, { text: "Most large", correct: false } ] },
+            { question: "Which is the correct superlative form of 'wrong'?", answers: [ { text: "Wrongest", correct: false }, { text: "Most wrong", correct: true }, { text: "Wronger", correct: false }, { text: "More wrong", correct: false } ] },
+            { question: "You should be ___ when you drive in the rain.", answers: [ { text: "Carefuler", correct: false }, { text: "Careful", correct: false }, { text: "More careful", correct: true }, { text: "Most careful", correct: false } ] },
+            { question: "She is the ___ person in our class.", answers: [ { text: "Cleverest", correct: true }, { text: "Most clever", correct: false }, { text: "Cleverer", correct: false }, { text: "More clever", correct: false } ] },
+            { question: "This street is ___ than the main road.", answers: [ { text: "Narrower", correct: true }, { text: "More narrow", correct: false }, { text: "Narrowest", correct: false }, { text: "Most narrow", correct: false } ] },
+            { question: "What is the comparative form of 'dirty'?", answers: [ { text: "More dirty", correct: false }, { text: "Dirtier", correct: true }, { text: "Dirtyer", correct: false }, { text: "Dirtiest", correct: false } ] },
+            { question: "What is the superlative form of 'intelligent'?", answers: [ { text: "Intelligenter", correct: false }, { text: "Intelligentest", correct: false }, { text: "More intelligent", correct: false }, { text: "Most intelligent", correct: true } ] },
+            { question: "The airport is ___ away than the train station.", answers: [ { text: "Farther", correct: true }, { text: "Farrer", correct: false }, { text: "Most far", correct: false }, { text: "More far", correct: false } ] },
+            { question: "This is the ___ of my worries.", answers: [ { text: "Littlest", correct: false }, { text: "Less", correct: false }, { text: "Least", correct: true }, { text: "Little", correct: false } ] }
+        ];
 
-        countdownAudio.currentTime = 0;
-        countdownAudio.play();
-      }
+        // --- State Variables ---
+        let currentQuestionIndex;
+        let score;
+        let shuffledQuestions;
+        let timer;
+        let timeLeft;
+        const TIME_LIMIT = 20;
 
-      /**
-       * Displays the current question and its answer options, and starts the timer.
-       */
-      function showNextQuestion() {
-        nextBtn.classList.add("hidden");
-        resetState();
-        if (currentQuestionIndex < shuffledQuestions.length) {
-          const question = shuffledQuestions[currentQuestionIndex];
-          questionText.innerText = question.question;
-          questionCounter.innerText = `Question ${
-            currentQuestionIndex + 1
-          } of ${shuffledQuestions.length}`;
+        // --- Event Listeners ---
+        startBtn.addEventListener('click', startQuiz);
+        restartBtn.addEventListener('click', () => {
+            resultScreen.classList.add('hidden');
+            startScreen.classList.remove('hidden');
+        });
+            nextBtn.addEventListener('click', () => {
+                countdownAudio.pause();
+                countdownAudio.currentTime = 0;
+                countdownAudio.play();
+                currentQuestionIndex++;
+                nextBtn.classList.add('hidden');
+                showNextQuestion();
+        });
 
-          shuffleArray(question.answers); // ✅ Shuffle answers here
+        /**
+         * Starts the quiz by resetting state, shuffling questions, and showing the first question.
+         */
+        function startQuiz() {
+            startScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+            shuffledQuestions = quizQuestions.sort(() => Math.random() - 0.5);
+            currentQuestionIndex = 0;
+            score = 0;
+            updateScoreDisplay();
+            showNextQuestion();
 
-          question.answers.forEach((answer) => {
-            const button = document.createElement("button");
-            button.innerText = answer.text;
-            button.classList.add(
-              "answer-btn",
-              "w-full",
-              "bg-gray-400",
-              "text-black",
-              "font-semibold",
-              "py-3",
-              "px-4",
-              "rounded-lg"
-            );
-            button.dataset.correct = answer.correct;
-            button.addEventListener("click", selectAnswer);
-            answerButtonsContainer.appendChild(button);
-          });
-          startTimer();
-        } else {
-          showResults();
+                        countdownAudio.currentTime = 0;
+            countdownAudio.play();
+        }
+
+        /**
+         * Displays the current question and its answer options, and starts the timer.
+         */
+        function showNextQuestion() {
+            nextBtn.classList.add('hidden');
+            resetState();
+            if (currentQuestionIndex < shuffledQuestions.length) {
+                const question = shuffledQuestions[currentQuestionIndex];
+                questionText.innerText = question.question;
+                questionCounter.innerText = `Question ${currentQuestionIndex + 1} of ${shuffledQuestions.length}`;
+
+                shuffleArray(question.answers);// ✅ Shuffle answers here
+
+                question.answers.forEach(answer => {
+                    const button = document.createElement('button');
+                    button.innerText = answer.text;
+                    button.classList.add('answer-btn', 'w-full', 'font-semibold', 'py-3', 'px-4', 'rounded-lg');
+                    button.dataset.correct = answer.correct;
+                    button.addEventListener('click', selectAnswer);
+                    answerButtonsContainer.appendChild(button);
+                });
+                startTimer();
+            } else {
+                showResults();
+            }
+        }
+
+        /**
+         * Starts the countdown timer for the current question.
+         */
+        function startTimer() {
+
+            timeLeft = TIME_LIMIT;
+            timerText.textContent = timeLeft;
+            timerProgress.style.strokeDasharray = '100, 100'; // Reset progress bar
+
+            clearInterval(timer); // Clear any existing timer
+            timer = setInterval(() => {
+                timeLeft--;
+                timerText.textContent = timeLeft;
+                const progress = (timeLeft / TIME_LIMIT) * 100;
+                timerProgress.style.strokeDasharray = `${progress}, 100`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    timeUp();
+                }
+            }, 1000);
+
         }
       }
 
@@ -646,13 +369,6 @@
         }
       };
 
-      themeToggleBtn.addEventListener("click", () => {
-        const isDark = document.documentElement.classList.toggle("dark");
-        localStorage.theme = isDark ? "dark" : "light";
-        applyTheme();
-      });
-
-      document.addEventListener("DOMContentLoaded", applyTheme);
     </script>
 
     <script src="js/main.js"></script>
