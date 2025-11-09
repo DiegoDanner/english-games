@@ -1,0 +1,105 @@
+:root {
+  /* Base colors for Light Mode */
+  --background-color-light: #f3f4f6; /* gray-100 */
+  --container-bg-light: #ffffff;
+  --container-shadow-light: rgba(0, 0, 0, 0.1);
+  --text-color-light: #1a202c; /* gray-800 */
+  --header-bg-light: #ffffff;
+  --header-shadow-light: #dee2e6;
+  --menu-link-color-light: #333;
+  --menu-link-hover-light: #007bff;
+  --button-bg-light: #4299e1; /* blue-400 */
+  --button-text-light: #ffffff;
+  --button-hover-bg-light: #3182ce; /* blue-500 */
+  --border-color-light: #e2e8f0; /* gray-200 */
+  --input-bg-light: #ffffff;
+  --link-color-light: #3182ce;
+  --link-hover-light: #2c5282;
+  --gemini-btn-bg-light: #db4437;
+  --gemini-btn-hover-light: #c22d21;
+
+  /* Base colors for Dark Mode */
+  --background-color-dark: #1a202c; /* gray-900 */
+  --container-bg-dark: #2d3748; /* gray-800 */
+  --container-shadow-dark: rgba(0, 0, 0, 0.3);
+  --text-color-dark: #e2e8f0; /* gray-200 */
+  --header-bg-dark: #2d3748;
+  --header-shadow-dark: #4a5568;
+  --menu-link-color-dark: #cbd5e0;
+  --menu-link-hover-dark: #63b3ed;
+  --button-bg-dark: #4299e1; /* blue-400 */
+  --button-text-dark: #ffffff;
+  --button-hover-bg-dark: #3182ce; /* blue-500 */
+  --border-color-dark: #4a5568; /* gray-600 */
+  --input-bg-dark: #4a5568;
+  --link-color-dark: #63b3ed;
+  --link-hover-dark: #90cdf4;
+  --gemini-btn-bg-dark: #e57373;
+  --gemini-btn-hover-dark: #ef5350;
+}
+
+/* Light Mode variables */
+body.light-mode {
+  --background-color: var(--background-color-light);
+  --container-bg: var(--container-bg-light);
+  --container-shadow: var(--container-shadow-light);
+  --text-color: var(--text-color-light);
+  --header-bg: var(--header-bg-light);
+  --header-shadow: var(--header-shadow-light);
+  --menu-link-color: var(--menu-link-color-light);
+  --menu-link-hover: var(--menu-link-hover-light);
+  --button-bg: var(--button-bg-light);
+  --button-text: var(--button-text-light);
+  --button-hover-bg: var(--button-hover-bg-light);
+  --border-color: var(--border-color-light);
+  --input-bg: var(--input-bg-light);
+  --link-color: var(--link-color-light);
+  --link-hover: var(--link-hover-light);
+  --gemini-btn-bg: var(--gemini-btn-bg-light);
+  --gemini-btn-hover: var(--gemini-btn-hover-light);
+}
+
+/* Dark Mode variables (default) */
+body:not(.light-mode) {
+  --background-color: var(--background-color-dark);
+  --container-bg: var(--container-bg-dark);
+  --container-shadow: var(--container-shadow-dark);
+  --text-color: var(--text-color-dark);
+  --header-bg: var(--header-bg-dark);
+  --header-shadow: var(--header-shadow-dark);
+  --menu-link-color: var(--menu-link-color-dark);
+  --menu-link-hover: var(--menu-link-hover-dark);
+  --button-bg: var(--button-bg-dark);
+  --button-text: var(--button-text-dark);
+  --button-hover-bg: var(--button-hover-bg-dark);
+  --border-color: var(--border-color-dark);
+  --input-bg: var(--input-bg-dark);
+  --link-color: var(--link-color-dark);
+  --link-hover: var(--link-hover-dark);
+  --gemini-btn-bg: var(--gemini-btn-bg-dark);
+  --gemini-btn-hover: var(--gemini-btn-hover-dark);
+}
+
+/* General body styles */
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  margin: 0;
+  padding-top: 70px; /* Space for fixed header */
+  transition: background-color 0.5s, color 0.5s;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--text-color);
+}
+
+a {
+    color: var(--link-color);
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+a:hover {
+    color: var(--link-hover);
+}
