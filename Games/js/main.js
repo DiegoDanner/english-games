@@ -18,7 +18,6 @@ document.addEventListener("DOMContentLoaded", () => {
             themeToggleBtn.textContent = "🌙";
         }
     } else {
-        body.classList.remove("light-mode");
         if (themeToggleBtn) {
             themeToggleBtn.textContent = "🌞";
         }
