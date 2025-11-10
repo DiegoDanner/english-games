@@ -67,37 +67,35 @@ body:not(.light-mode) #login-section p {
 
 /* Overrides para as outras páginas de quiz com Tailwind */
 
-/* --- Backgrounds --- */
+/* Fundo geral da página */
 body:not(.light-mode) .bg-gray-100 {
     background-color: var(--bg-color) !important;
 }
 
-body:not(.light-mode) .bg-white,
-body:not(.light-mode) .bg-gray-50 {
+/* Contêiner principal dos quizzes problemáticos (usando IDs para alta especificidade) */
+body:not(.light-mode) div#quiz.bg-white,
+body:not(.light-mode) div#quiz-container.bg-white {
     background-color: var(--container-bg) !important;
+    color: var(--text-color) !important;
 }
 
-body:not(.light-mode) .pronoun-table thead.bg-gray-200,
-body:not(.light-mode) thead .bg-indigo-100 {
+/* Tabelas e linhas de tabela */
+body:not(.light-mode) .pronoun-table tr.bg-white,
+body:not(.light-mode) .pronoun-table tr.bg-gray-50 {
+    background-color: var(--container-bg) !important;
+}
+body:not(.light-mode) .pronoun-table thead.bg-gray-200 {
     background-color: var(--button-hover-bg) !important;
 }
 
-body:not(.light-mode) .answer-btn.bg-gray-200 {
-    background-color: var(--button-bg) !important;
-    color: var(--button-text) !important;
-}
-
-/* --- Text Colors --- */
+/* Textos genéricos */
 body:not(.light-mode) .text-gray-900,
 body:not(.light-mode) .text-gray-800,
 body:not(.light-mode) .text-gray-700,
 body:not(.light-mode) .text-gray-600,
-body:not(.light-mode) .text-gray-500 {
+body:not(.light-mode) .text-gray-500,
+body:not(.light-mode) .text-indigo-800 { /* Força todos os textos a usar a cor do tema */
     color: var(--text-color) !important;
-}
-
-body:not(.light-mode) thead .text-indigo-800 {
-    color: var(--button-text) !important;
 }
 
 body:not(.light-mode) .text-blue-600,
@@ -105,16 +103,21 @@ body:not(.light-mode) .text-blue-500 {
     color: var(--link-color) !important;
 }
 
-/* --- Borders --- */
+/* Botões */
+body:not(.light-mode) .answer-btn.bg-gray-200 {
+    background-color: var(--button-bg) !important;
+    color: var(--button-text) !important;
+}
+
+/* Bordas */
 body:not(.light-mode) .border-b,
 body:not(.light-mode) .border {
     border-color: var(--border-color) !important;
 }
 
-/* --- SVGs --- */
-/* Specific fix for SVG timer */
+/* SVG do Timer */
 body:not(.light-mode) #timer-container .text-gray-200 {
-    color: var(--border-color) !important; /* This is the timer track */
+    color: var(--border-color) !important;
 }
 
 
