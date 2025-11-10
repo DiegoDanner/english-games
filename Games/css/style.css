@@ -65,6 +65,44 @@ body:not(.light-mode) #login-section p {
     color: var(--text-color-light) !important;
 }
 
+/* Overrides para as outras páginas de quiz com Tailwind */
+body:not(.light-mode) .bg-gray-100 {
+    background-color: var(--bg-color) !important;
+}
+
+body:not(.light-mode) .quiz-container.bg-white,
+body:not(.light-mode) .pronoun-table,
+body:not(.light-mode) .pronoun-table tr.bg-white,
+body:not(.light-mode) .pronoun-table tr.bg-gray-50 {
+    background-color: var(--container-bg) !important;
+    color: var(--text-color) !important;
+}
+
+body:not(.light-mode) .text-gray-800,
+body:not(.light-mode) .text-gray-700,
+body:not(.light-mode) .text-gray-600,
+body:not(.light-mode) .text-gray-500 {
+    color: var(--text-color) !important;
+}
+
+body:not(.light-mode) .pronoun-table thead.bg-gray-200,
+body:not(.light-mode) thead .bg-indigo-100 {
+    background-color: var(--button-hover-bg) !important;
+}
+body:not(.light-mode) thead .text-indigo-800 {
+    color: var(--button-text) !important;
+}
+
+body:not(.light-mode) .border-b,
+body:not(.light-mode) .border {
+    border-color: var(--border-color) !important;
+}
+
+body:not(.light-mode) .answer-btn.bg-gray-200 {
+    background-color: var(--button-bg) !important;
+    color: var(--button-text) !important;
+}
+
 
 /* ================= Header Styles ================= */
 .page-header {
