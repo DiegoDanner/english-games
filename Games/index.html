@@ -6,17 +6,17 @@
     <title>Acesso aos Quizzes</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6; /* gray-100 */
             /* Oculta o corpo por padrão para evitar o flash da tela de login */
             visibility: hidden;
         }
         .hidden { display: none; }
     </style>
 </head>
-<body class="bg-gray-100">
+<body>
 
     <!-- Seção de Login (Visível por padrão) -->
     <div id="login-wrapper" class="flex items-center justify-center min-h-screen">
@@ -34,22 +34,8 @@
 
     <!-- Seção de Conteúdo (Oculta por padrão) -->
     <div id="content-section" class="hidden">
-        <!-- CABEÇALHO FIXO -->
-        <header class="fixed top-0 left-0 right-0 bg-white shadow-sm z-10">
-            <div class="container mx-auto px-6 py-3 flex justify-between items-center">
-                <div class="flex items-center">
-                    <img src="img/logo.svg" alt="Logo Danner Idiomas" class="h-10 w-auto mr-2">
-                    <span class="text-xl font-semibold text-gray-700">Danner Idiomas</span>
-                </div>
-                <nav class="flex items-center space-x-4">
-                    <a href="#" class="text-gray-700 hover:text-blue-600 font-medium">Menu</a>
-                     <p id="user-display" class="text-gray-600 text-sm">Logado como: <span class="font-semibold"></span></p>
-                    <button id="logout-button" class="bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-3 rounded-lg text-sm transition duration-200">
-                        Sair
-                    </button>
-                </nav>
-            </div>
-        </header>
+        <!-- O cabeçalho dinâmico será inserido aqui -->
+        <div id="header-placeholder"></div>
 
         <!-- O contêiner principal dos quizzes será inserido aqui -->
         <main id="quiz-container" class="pt-24 pb-12 flex justify-center">
@@ -62,63 +48,44 @@
         </main>
     </div>
 
+    <script src="js/main.js"></script>
+    <script type="module" src="js/header.js"></script>
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-        import {
-            getAuth,
-            onAuthStateChanged,
-            GoogleAuthProvider,
-            signInWithPopup,
-            signOut,
-        } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
-        import {
-            getFirestore,
-            doc,
-            setDoc,
-            collection,
-            addDoc,
-            serverTimestamp,
-        } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
-        import { firebaseConfig } from './js/firebase-config.js';
-
-        // --- INICIALIZAÇÃO ---
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+        // Importa apenas o necessário para esta página
+        import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+        import { auth, db } from './js/firebase-config.js'; // Importa instâncias já inicializadas
 
         // --- ELEMENTOS DA UI ---
         const loginWrapper = document.getElementById('login-wrapper');
         const contentSection = document.getElementById('content-section');
         const loginButton = document.getElementById('login-button');
-        const logoutButton = document.getElementById('logout-button');
-        const userDisplay = document.getElementById('user-display').querySelector('span');
         const authError = document.getElementById('auth-error');
 
         // --- LÓGICA DE AUTENTICAÇÃO ---
 
-        // Monitora mudanças no estado de autenticação
+        // Monitora o estado para mostrar/esconder a tela de login vs. conteúdo principal
         onAuthStateChanged(auth, (user) => {
-            if (user) {
-                // Usuário está logado
-                showContent(user);
+            // Esta página requer um login com Google, não anônimo.
+            if (user && !user.isAnonymous) {
+                showContent();
             } else {
-                // Usuário não está logado
                 showLogin();
             }
-            // Torna o corpo visível após a verificação de autenticação para evitar "flash"
+            // Garante que a página só se torne visível após a checagem, evitando "flash"
             document.body.style.visibility = 'visible';
         });
 
-        // Função de Login
+        // Evento do botão de login
         loginButton.addEventListener('click', async () => {
             const provider = new GoogleAuthProvider();
             try {
                 const result = await signInWithPopup(auth, provider);
                 await recordAccess(result.user);
-                // O onAuthStateChanged vai cuidar de mostrar o conteúdo
+                // `onAuthStateChanged` vai automaticamente chamar `showContent`
             } catch (error) {
                 console.error("Erro no login com Google:", error);
-                authError.textContent = `Falha no login: ${error.code}`;
+                authError.textContent = `Falha no login: ${error.code || error.message}`;
             }
         });
 
@@ -135,39 +102,27 @@
             }
         }
 
-        // Função de Logout
-        logoutButton.addEventListener('click', async () => {
-            try {
-                await signOut(auth);
-                // O onAuthStateChanged vai cuidar de mostrar a tela de login
-            } catch (error) {
-                console.error("Erro ao fazer logout:", error);
-            }
-        });
-
         // --- CONTROLE DA UI ---
         function showLogin() {
             loginWrapper.classList.remove('hidden');
             contentSection.classList.add('hidden');
         }
 
-        function showContent(user) {
+        function showContent() {
             loginWrapper.classList.add('hidden');
             contentSection.classList.remove('hidden');
-            userDisplay.textContent = user.displayName || user.email;
             renderGameList();
         }
 
         // --- RENDERIZAÇÃO DA LISTA DE JOGOS ---
         function renderGameList() {
             const gameListContainer = document.getElementById('game-list');
-             const games = [
+            const games = [
                 { name: "Quiz about English", url: "quiz-english.html", color: "bg-blue-500 hover:bg-blue-600" },
                 { name: "Quiz about Verb To Be", url: "verbtobe-quiz.html", color: "bg-green-500 hover:bg-green-600" },
                 { name: "Quiz about Pronouns", url: "quiz-pronomes-AI.html", color: "bg-purple-600 hover:bg-purple-700" },
                 { name: "Quiz about Comparative and Superlative", url: "comparative-superlative.html", color: "bg-yellow-500 hover:bg-yellow-600" },
                 { name: "Vocabulary Memory Match", url: "memory-match.html", color: "bg-pink-500 hover:bg-pink-600" },
-                // --- Outros quizzes com cores padrão ---
                 { name: "Object Pronoun Quiz", url: "objectPronoun-quiz.html", color: "bg-indigo-500 hover:bg-indigo-600" },
                 { name: "Superlative & Comparative II", url: "quiz-super-comp.html", color: "bg-yellow-500 hover:bg-yellow-600" },
                 { name: "Questions to Practice", url: "questionstopracticeenglish.html", color: "bg-gray-500 hover:bg-gray-600" },
