@@ -5,19 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>English Quiz</title>
     <link rel="stylesheet" href="css/style.css" />
-    <link rel="stylesheet" href="css/theme.css" />
   </head>
   <body>
-    <header class="page-header">
-      <img src="img/logo.svg" alt="Logo" class="logo" />
-      <a
-        href="https://game-quizzes.netlify.app/"
-        class="menu-link"
-        title="Back to Home"
-        >Menu</a
-      >
-      <button id="theme-toggle-btn">🌞</button>
-    </header>
+    <div id="header-placeholder"></div>
 
     <!-- Tela de início -->
 
@@ -1578,8 +1568,6 @@
       const hintArea = document.getElementById("hintArea");
       const rationaleArea = document.getElementById("rationale-area");
       const progressBar = document.getElementById("progressBar");
-      const themeToggleBtn = document.getElementById("theme-toggle-btn");
-      const body = document.body;
       const timerText = document.getElementById("timer-text");
 
       function shuffleArray(array) {
@@ -1768,5 +1756,6 @@
       };
     </script>
     <script src="js/main.js"></script>
+    <script type="module" src="js/header.js"></script>
   </body>
 </html>

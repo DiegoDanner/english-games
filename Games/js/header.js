@@ -1,18 +1,22 @@
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-import {
-    getAuth,
-    onAuthStateChanged,
-    signInAnonymously,
-    signOut,
-} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
-import { firebaseConfig } from './firebase-config.js';
+import { auth } from './firebase-config.js';
+import { onAuthStateChanged, signInAnonymously, signOut } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 
-// --- 1. Inicialização do Firebase ---
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+const isIndexPage = window.location.pathname.endsWith('index.html') || window.location.pathname.endsWith('/');
 
-// --- 2. Definição do HTML do Cabeçalho ---
+const themeSelectorHTML = `
+<div class="theme-selector">
+    <button id="theme-menu-button" class="theme-menu-button">
+        <span id="theme-icon">🎨</span> Theme
+    </button>
+    <div id="theme-menu" class="theme-menu hidden">
+        <a href="#" data-theme="light"><span class="theme-option-icon">🌞</span> Light</a>
+        <a href="#" data-theme="dark"><span class="theme-option-icon">🌜</span> Dark</a>
+        <a href="#" data-theme="system"><span class="theme-option-icon">💻</span> System</a>
+    </div>
+</div>
+`;
+
 const headerHTML = `
 <header class="page-header">
     <div class="header-left">
@@ -21,7 +25,7 @@ const headerHTML = `
     </div>
     <div class="header-right">
         <a href="index.html" class="menu-link">Menu</a>
-        <button id="theme-toggle-btn">🌞</button>
+        ${isIndexPage ? themeSelectorHTML : ''}
         <div id="user-info" class="user-display hidden">
             Logado como: <span class="user-name"></span>
         </div>
@@ -30,53 +34,62 @@ const headerHTML = `
 </header>
 `;
 
-// --- 3. Injeção e Lógica do Cabeçalho ---
 function setupHeader() {
     const placeholder = document.getElementById('header-placeholder');
     if (!placeholder) {
-        console.error("Elemento #header-placeholder não encontrado. O cabeçalho não pode ser injetado.");
+        console.error("#header-placeholder not found.");
         return;
     }
     placeholder.innerHTML = headerHTML;
 
-    // Elementos da UI do Cabeçalho
     const userInfo = document.getElementById('user-info');
     const userName = userInfo.querySelector('.user-name');
     const logoutButton = document.getElementById('logout-button');
-    const themeToggleBtn = document.getElementById('theme-toggle-btn'); // O botão de tema já está no HTML injetado
 
-    // Lógica de autenticação
     onAuthStateChanged(auth, (user) => {
         if (user && !user.isAnonymous) {
-            // Usuário logado com Google
             userName.textContent = user.displayName || 'Usuário';
             userInfo.classList.remove('hidden');
             logoutButton.classList.remove('hidden');
         } else if (user && user.isAnonymous) {
-            // Usuário anônimo, esconde informações
             userInfo.classList.add('hidden');
             logoutButton.classList.add('hidden');
         } else {
-            // Nenhum usuário, tenta login anônimo
-            signInAnonymously(auth).catch((error) => {
-                console.error("Falha no login anônimo:", error);
-            });
+            signInAnonymously(auth).catch((error) => console.error("Falha no login anônimo:", error));
         }
     });
 
-    // Evento de Logout
     logoutButton.addEventListener('click', () => {
         signOut(auth).then(() => {
-            // Redireciona para a página principal para um novo ciclo de login
             window.location.href = 'index.html';
-        }).catch((error) => {
-            console.error('Erro ao fazer logout:', error);
-        });
+        }).catch((error) => console.error('Erro ao fazer logout:', error));
     });
 
-    // A lógica de alternância de tema já está em js/main.js,
-    // então não precisamos adicioná-la aqui. Apenas garantimos que o botão exista.
+    if (isIndexPage) {
+        const themeMenuButton = document.getElementById('theme-menu-button');
+        const themeMenu = document.getElementById('theme-menu');
+        if (themeMenuButton && themeMenu) {
+            themeMenuButton.addEventListener('click', (event) => {
+                event.stopPropagation();
+                themeMenu.classList.toggle('hidden');
+            });
+            document.addEventListener('click', (event) => {
+                if (!themeMenu.contains(event.target) && !themeMenuButton.contains(event.target)) {
+                    themeMenu.classList.add('hidden');
+                }
+            });
+            themeMenu.addEventListener('click', (event) => {
+                event.preventDefault();
+                const target = event.target.closest('a');
+                if (target && target.dataset.theme) {
+                    if (window.setTheme) {
+                        window.setTheme(target.dataset.theme);
+                    }
+                    themeMenu.classList.add('hidden');
+                }
+            });
+        }
+    }
 }
 
-// --- Executa a função quando o DOM estiver pronto ---
 document.addEventListener('DOMContentLoaded', setupHeader);
