@@ -47,6 +47,25 @@ body.light-mode {
     --gemini-btn-hover: #805ad5;
 }
 
+
+/* ================= Tailwind Overrides for Dark Mode ================= */
+/* Aplica o tema escuro nos elementos da index.html que usam classes do Tailwind */
+body:not(.light-mode) #login-section,
+body:not(.light-mode) #quiz-container > div {
+    background-color: var(--container-bg) !important;
+    color: var(--text-color) !important;
+}
+
+body:not(.light-mode) #login-section h1,
+body:not(.light-mode) #quiz-container h2 {
+    color: var(--text-color) !important;
+}
+
+body:not(.light-mode) #login-section p {
+    color: var(--text-color-light) !important;
+}
+
+
 /* ================= Header Styles ================= */
 .page-header {
     position: fixed;
