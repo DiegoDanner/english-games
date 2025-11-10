@@ -1,3 +1,52 @@
+/* ================= Theme Variables ================= */
+body {
+    --bg-color: #1a202c; /* Cinza escuro para o fundo */
+    --text-color: #e2e8f0; /* Texto claro */
+    --text-color-light: #a0aec0; /* Texto um pouco mais escuro para detalhes */
+    --container-bg: #2d3748; /* Fundo dos containers um pouco mais claro */
+    --container-shadow: rgba(0, 0, 0, 0.2);
+    --header-bg: rgba(45, 55, 72, 0.8);
+    --header-shadow: #1a202c;
+    --border-color: #4a5568;
+    --input-bg: #4a5568;
+    --button-bg: #4a5568;
+    --button-text: #ffffff;
+    --button-hover-bg: #2d3748;
+    --link-color: #63b3ed;
+    --link-hover: #90cdf4;
+    --menu-link-color: #cbd5e0;
+    --menu-link-hover: #ffffff;
+    --card-front-bg: #4a5568;
+    --gemini-btn-bg: #805ad5;
+    --gemini-btn-hover: #6b46c1;
+
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.5s, color 0.5s;
+}
+
+body.light-mode {
+    --bg-color: #f7fafc; /* Fundo branco/cinza claro */
+    --text-color: #2d3748; /* Texto escuro */
+    --text-color-light: #718096;
+    --container-bg: #ffffff;
+    --container-shadow: rgba(0, 0, 0, 0.05);
+    --header-bg: rgba(255, 255, 255, 0.8);
+    --header-shadow: #e2e8f0;
+    --border-color: #e2e8f0;
+    --input-bg: #edf2f7;
+    --button-bg: #4299e1;
+    --button-text: #ffffff;
+    --button-hover-bg: #3182ce;
+    --link-color: #3182ce;
+    --link-hover: #2b6cb0;
+    --menu-link-color: #4a5568;
+    --menu-link-hover: #1a202c;
+    --card-front-bg: #e2e8f0;
+    --gemini-btn-bg: #9f7aea;
+    --gemini-btn-hover: #805ad5;
+}
+
 /* ================= Header Styles ================= */
 .page-header {
     position: fixed;
