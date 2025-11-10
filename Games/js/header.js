@@ -25,7 +25,7 @@ const headerHTML = `
     </div>
     <div class="header-right">
         <a href="index.html" class="menu-link">Menu</a>
-        ${isIndexPage ? themeSelectorHTML : ''}
+        ${themeSelectorHTML}
         <div id="user-info" class="user-display hidden">
             Logado como: <span class="user-name"></span>
         </div>
@@ -65,30 +65,29 @@ function setupHeader() {
         }).catch((error) => console.error('Erro ao fazer logout:', error));
     });
 
-    if (isIndexPage) {
-        const themeMenuButton = document.getElementById('theme-menu-button');
-        const themeMenu = document.getElementById('theme-menu');
-        if (themeMenuButton && themeMenu) {
-            themeMenuButton.addEventListener('click', (event) => {
-                event.stopPropagation();
-                themeMenu.classList.toggle('hidden');
-            });
-            document.addEventListener('click', (event) => {
-                if (!themeMenu.contains(event.target) && !themeMenuButton.contains(event.target)) {
-                    themeMenu.classList.add('hidden');
+    // A lógica do tema deve ser aplicada em todas as páginas
+    const themeMenuButton = document.getElementById('theme-menu-button');
+    const themeMenu = document.getElementById('theme-menu');
+    if (themeMenuButton && themeMenu) {
+        themeMenuButton.addEventListener('click', (event) => {
+            event.stopPropagation();
+            themeMenu.classList.toggle('hidden');
+        });
+        document.addEventListener('click', (event) => {
+            if (!themeMenu.contains(event.target) && !themeMenuButton.contains(event.target)) {
+                themeMenu.classList.add('hidden');
+            }
+        });
+        themeMenu.addEventListener('click', (event) => {
+            event.preventDefault();
+            const target = event.target.closest('a');
+            if (target && target.dataset.theme) {
+                if (window.setTheme) {
+                    window.setTheme(target.dataset.theme);
                 }
-            });
-            themeMenu.addEventListener('click', (event) => {
-                event.preventDefault();
-                const target = event.target.closest('a');
-                if (target && target.dataset.theme) {
-                    if (window.setTheme) {
-                        window.setTheme(target.dataset.theme);
-                    }
-                    themeMenu.classList.add('hidden');
-                }
-            });
-        }
+                themeMenu.classList.add('hidden');
+            }
+        });
     }
 }
 
