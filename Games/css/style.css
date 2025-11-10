@@ -19,8 +19,10 @@ body {
     --card-front-bg: #4a5568;
     --gemini-btn-bg: #805ad5;
     --gemini-btn-hover: #6b46c1;
+}
 
-    background-color: var(--bg-color);
+html, body {
+    background-color: var(--bg-color) !important;
     color: var(--text-color);
     transition: background-color 0.5s, color 0.5s;
 }
