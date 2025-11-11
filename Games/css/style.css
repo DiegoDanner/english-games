@@ -83,10 +83,12 @@ body:not(.light-mode) div#quiz-container.bg-white {
 
 /* Tabelas e linhas de tabela */
 body:not(.light-mode) .pronoun-table tr.bg-white,
-body:not(.light-mode) .pronoun-table tr.bg-gray-50 {
-    background-color: var(--container-bg) !important;
+body:not(.light-mode) .pronoun-table tr.bg-gray-50,
+body:not(.light-mode) .pronoun-table td.border-b { /* Cobre as células da tabela de pronomes */
+    background-color: transparent !important; /* Usa o fundo do container */
 }
-body:not(.light-mode) .pronoun-table thead.bg-gray-200 {
+body:not(.light-mode) .pronoun-table thead.bg-gray-200,
+body:not(.light-mode) .pronoun-table tr.bg-indigo-100 { /* Cobre o cabeçalho da tabela de pronomes */
     background-color: var(--button-hover-bg) !important;
 }
 
