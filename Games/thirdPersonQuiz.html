@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>English Third Person Verb Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'primary': '#0ea5e9',
+              'secondary': '#facc15',
+              'accent': '#dc2626',
+              'dark-bg': '#0f172a',
+              'light-bg': '#1e293b',
+              'dark-text': '#e2e8f0',
+              'light-text': '#94a3b8',
+            },
+            animation: {
+              'fade-in': 'fadeIn 0.5s ease-in-out',
+            },
+            keyframes: {
+              fadeIn: {
+                '0%': { opacity: '0' },
+                '100%': { opacity: '1' },
+              },
+            },
+          }
+        }
+      }
+    </script>
+</head>
+<body class="bg-dark-bg text-dark-text">
+    <div id="app" class="min-h-screen bg-dark-bg text-dark-text flex flex-col font-sans">
+         <header class="w-full bg-light-bg shadow-md">
+            <div class="container mx-auto px-4 py-2 flex justify-between items-center">
+                <div class="flex items-center">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-primary mr-2"><path d="M21 15C21 15.5304 20.7893 16.0391 20.4142 16.4142C20.0391 16.7893 19.5304 17 19 17H7L3 21V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V15Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7C13.6569 7 15 8.34315 15 10C15 11.6569 13.6569 13 12 13C10.3431 13 9 11.6569 9 10C9 8.34315 10.3431 7 12 7Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 10H9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 10H17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 7V13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <span class="text-xl font-bold text-dark-text">Danner Idiomas</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="w-full max-w-2xl mx-auto flex-grow flex flex-col items-center justify-center p-4">
+            <div id="content-container" class="w-full">
+                <!-- Rules Card -->
+                <div id="rules-card" class="bg-light-bg p-8 rounded-2xl shadow-lg border border-slate-700 animate-fade-in">
+                    <h2 class="text-2xl font-bold text-primary mb-6 border-b border-slate-700 pb-4">English Grammar Rules</h2>
+                    <div class="space-y-6">
+                        <div>
+                            <h3 class="font-bold text-xl text-dark-text mb-4">(3) Terceira pessoa do singular do presente:</h3>
+                            <ul class="space-y-6">
+                                <li class="flex items-start space-x-4"><span class="text-primary font-bold text-2xl mt-1">=&gt;</span><div><h3 class="font-semibold text-lg text-dark-text">Acrescenta-se "-s" ao verbo.</h3><div class="text-light-text pl-4 border-l-2 border-slate-600 ml-1 mt-1"><div class="mt-2 text-sm italic"><p>Ex: I send; She sends</p></div></div></div></li>
+                                <li class="flex items-start space-x-4"><span class="text-primary font-bold text-2xl mt-1">=&gt;</span><div><h3 class="font-semibold text-lg text-dark-text">Quando o verbo termina em “-o, -x, -ss, -ch, -sh”</h3><div class="text-light-text pl-4 border-l-2 border-slate-600 ml-1 mt-1"><p>Acrescenta-se <span class="font-semibold text-primary">"-es"</span>.</p><div class="mt-2 text-sm italic"><p>Ex: I wash; She washes</p></div></div></div></li>
+                                <li class="flex items-start space-x-4"><span class="text-primary font-bold text-2xl mt-1">=&gt;</span><div><h3 class="font-semibold text-lg text-dark-text">Quando verbo terminar em “-y” precedido de consoante</h3><div class="text-light-text pl-4 border-l-2 border-slate-600 ml-1 mt-1"><p>Corta-se o “-y” e acrescenta-se <span class="font-semibold text-primary">"-ies"</span></p><div class="mt-2 text-sm italic"><p>Ex: I study; She studies</p></div></div></div></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-xl text-dark-text mb-4">(4) Exceção para o verbo “to have”:</h3>
+                            <div class="flex items-start space-x-4"><p class="text-light-text pl-4 border-l-2 border-slate-600 ml-1">Que na 3ª pessoa do singular é <span class="font-semibold text-primary">“has”</span>.</p></div>
+                        </div>
+                    </div>
+                    <button id="start-button" class="w-full mt-8 bg-primary text-white font-bold py-3 px-6 rounded-lg hover:bg-sky-600 focus:outline-none focus:ring-4 focus:ring-sky-400 transition-all duration-300 ease-in-out transform hover:scale-105">Start Quiz</button>
+                </div>
+
+                <!-- Quiz Card -->
+                <div id="quiz-card" class="bg-light-bg p-8 rounded-2xl shadow-lg border border-slate-700 w-full animate-fade-in" style="display: none;">
+                    <div class="mb-6">
+                        <p id="question-counter" class="text-sm text-light-text">Question 1 of 30</p>
+                        <div class="w-full bg-slate-700 rounded-full h-2.5 mt-2">
+                            <div id="progress-bar" class="bg-secondary h-2.5 rounded-full" style="width: 3.33%"></div>
+                        </div>
+                    </div>
+                    <div id="sentence-container" class="bg-dark-bg p-6 rounded-lg mb-6 text-xl md:text-2xl text-dark-text text-center leading-relaxed"></div>
+                    <div class="flex justify-center">
+                        <button id="check-next-button" class="w-full sm:w-auto px-8 py-3 text-white font-bold rounded-lg transition-all duration-300 ease-in-out transform focus:outline-none focus:ring-4 focus:ring-sky-400 disabled:bg-slate-600 disabled:cursor-not-allowed">Check</button>
+                    </div>
+                    <div id="feedback-container" class="mt-6" style="display: none;"></div>
+                </div>
+
+                <!-- Result Card -->
+                <div id="result-card" class="bg-light-bg p-8 rounded-2xl shadow-lg border border-slate-700 text-center animate-fade-in" style="display: none;">
+                    <h2 class="text-3xl font-bold text-primary mb-4">Quiz Complete!</h2>
+                    <p id="result-message" class="text-lg text-light-text mb-6">Excellent work!</p>
+                    <div class="my-8">
+                        <p id="result-score" class="text-5xl font-bold text-dark-text">25 / 30</p>
+                        <p id="result-percentage" class="text-xl font-semibold text-secondary mt-2">83%</p>
+                    </div>
+                    <button id="restart-button" class="w-full bg-primary text-white font-bold py-3 px-6 rounded-lg hover:bg-sky-600 focus:outline-none focus:ring-4 focus:ring-sky-400 transition-all duration-300 ease-in-out transform hover:scale-105">Try Again</button>
+                </div>
+            </div>
+        </main>
+
+        <footer class="text-center w-full py-4 text-light-text text-sm">
+            <p>Built with Vanilla JS & Tailwind CSS</p>
+        </footer>
+    </div>
+
+    <script>
+        const QUESTIONS = [
+            { sentence: 'She ___ to the library every week.', verb: 'go', options: ['go', 'goes', 'going'], answer: 'goes', rule: 'Verbs ending in -o: add "-es"', translation: 'Ela vai para a biblioteca toda semana.' },
+            { sentence: 'He ___ his car on Sundays.', verb: 'wash', options: ['washes', 'washs', 'wash'], answer: 'washes', rule: 'Verbs ending in -sh: add "-es"', translation: 'Ele lava o carro dele aos domingos.' },
+            { sentence: 'The teacher ___ the old classroom.', verb: 'miss', options: ['miss', 'mises', 'misses'], answer: 'misses', rule: 'Verbs ending in -ss: add "-es"', translation: 'O professor sente falta da antiga sala de aula.' },
+            { sentence: 'My dad ___ the TV in the evening.', verb: 'watch', options: ['watch', 'watches', 'watchs'], answer: 'watches', rule: 'Verbs ending in -ch: add "-es"', translation: 'Meu pai assiste à TV à noite.' },
+            { sentence: 'He ___ broken toys.', verb: 'fix', options: ['fixs', 'fix', 'fixes'], answer: 'fixes', rule: 'Verbs ending in -x: add "-es"', translation: 'Ele conserta brinquedos quebrados.' },
+            { sentence: 'The baby ___ when he is hungry.', verb: 'cry', options: ['cries', 'crys', 'cry'], answer: 'cries', rule: 'Consonant + y: change "y" to "-ies"', translation: 'O bebê chora quando está com fome.' },
+            { sentence: 'She ___ very hard for her exams.', verb: 'study', options: ['studys', 'studies', 'study'], answer: 'studies', rule: 'Consonant + y: change "y" to "-ies"', translation: 'Ela estuda muito para suas provas.' },
+            { sentence: 'A pilot ___ airplanes.', verb: 'fly', options: ['flyes', 'fly', 'flies'], answer: 'flies', rule: 'Consonant + y: change "y" to "-ies"', translation: 'Um piloto pilota aviões.' },
+            { sentence: 'He ___ to be the best.', verb: 'try', options: ['tries', 'trys', 'try'], answer: 'tries', rule: 'Consonant + y: change "y" to "-ies"', translation: 'Ele tenta ser o melhor.' },
+            { sentence: 'She ___ a beautiful dog.', verb: 'have', options: ['have', 'has', 'haves'], answer: 'has', rule: 'Exception for the verb "to have"', translation: 'Ela tem um cachorro bonito.' },
+            { sentence: 'My brother ___ in a big company.', verb: 'work', options: ['workes', 'work', 'works'], answer: 'works', rule: 'General rule: add "-s"', translation: 'Meu irmão trabalha em uma grande empresa.' },
+            { sentence: 'The sun ___ in the east.', verb: 'rise', options: ['rises', 'rising', 'rise'], answer: 'rises', rule: 'General rule: add "-s"', translation: 'O sol nasce no leste.' },
+            { sentence: 'She always ___ delicious cakes.', verb: 'make', options: ['makes', 'make', 'making'], answer: 'makes', rule: 'General rule: add "-s"', translation: 'Ela sempre faz bolos deliciosos.' },
+            { sentence: 'It ___ a lot in winter here.', verb: 'rain', options: ['rain', 'raining', 'rains'], answer: 'rains', rule: 'General rule: add "-s"', translation: 'Chove muito no inverno aqui.' },
+            { sentence: 'He ___ his homework after school.', verb: 'do', options: ['does', 'do', 'doing'], answer: 'does', rule: 'Verbs ending in -o: add "-es"', translation: 'Ele faz sua lição de casa depois da escola.' },
+            { sentence: 'The cat ___ on the sofa all day.', verb: 'sleep', options: ['sleep', 'sleeps', 'sleeping'], answer: 'sleeps', rule: 'General rule: add "-s"', translation: 'O gato dorme no sofá o dia todo.' },
+            { sentence: 'She ___ her friends every weekend.', verb: 'meet', options: ['meeting', 'meets', 'meet'], answer: 'meets', rule: 'General rule: add "-s"', translation: 'Ela encontra seus amigos todo fim de semana.' },
+            { sentence: 'He ___ the piano beautifully.', verb: 'play', options: ['plays', 'playes', 'play'], answer: 'plays', rule: 'General rule: add "-s"', translation: 'Ele toca piano lindamente.' },
+            { sentence: 'A chef ___ food in a restaurant.', verb: 'cook', options: ['cooking', 'cook', 'cooks'], answer: 'cooks', rule: 'General rule: add "-s"', translation: 'Um chef cozinha comida em um restaurante.' },
+            { sentence: 'She ___ beautiful songs.', verb: 'sing', options: ['sings', 'sing', 'singing'], answer: 'sings', rule: 'General rule: add "-s"', translation: 'Ela canta belas canções.' },
+            { sentence: 'The train ___ at 8 AM.', verb: 'leave', options: ['leave', 'leaves', 'leaving'], answer: 'leaves', rule: 'General rule: add "-s"', translation: 'O trem parte às 8h.' },
+            { sentence: 'My mom ___ the best cookies.', verb: 'bake', options: ['bakes', 'bake', 'baking'], answer: 'bakes', rule: 'General rule: add "-s"', translation: 'Minha mãe assa os melhores cookies.' },
+            { sentence: 'He often ___ about his adventures.', verb: 'talk', options: ['talks', 'talk', 'talking'], answer: 'talks', rule: 'General rule: add "-s"', translation: 'Ele frequentemente fala sobre suas aventuras.' },
+            { sentence: 'She ___ her hair every morning.', verb: 'brush', options: ['brushs', 'brushes', 'brush'], answer: 'brushes', rule: 'Verbs ending in -sh: add "-es"', translation: 'Ela escova o cabelo toda manhã.' },
+            { sentence: 'A good student ___ for answers.', verb: 'search', options: ['searchs', 'search', 'searches'], answer: 'searches', rule: 'Verbs ending in -ch: add "-es"', translation: 'Um bom aluno procura por respostas.' },
+            { sentence: 'He ___ different ingredients for the recipe.', verb: 'mix', options: ['mixes', 'mixs', 'mix'], answer: 'mixes', rule: 'Verbs ending in -x: add "-es"', translation: 'Ele mistura diferentes ingredientes para a receita.' },
+            { sentence: 'She ___ the heavy bag with difficulty.', verb: 'carry', options: ['carrys', 'carries', 'carry'], answer: 'carries', rule: 'Consonant + y: change "y" to "-ies"', translation: 'Ela carrega a bolsa pesada com dificuldade.' },
+            { sentence: 'He ___ that he will be late.', verb: 'worry', options: ['worrys', 'worries', 'worry'], answer: 'worries', rule: 'Consonant + y: change "y" to "-ies"', translation: 'Ele se preocupa que vai se atrasar.' },
+            { sentence: 'The new car ___ a powerful engine.', verb: 'have', options: ['has', 'haves', 'have'], answer: 'has', rule: 'Exception for the verb "to have"', translation: 'O carro novo tem um motor potente.' },
+            { sentence: 'The politician ___ the issue in his speech.', verb: 'address', options: ['address', 'addresses', 'addresss'], answer: 'addresses', rule: 'Verbs ending in -ss: add "-es"', translation: 'O político aborda a questão em seu discurso.' },
+        ];
+
+        let quizState = 'rules';
+        let questions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let isSubmitted = false;
+        
+        const rulesCard = document.getElementById('rules-card');
+        const quizCard = document.getElementById('quiz-card');
+        const resultCard = document.getElementById('result-card');
+        
+        const startButton = document.getElementById('start-button');
+        const checkNextButton = document.getElementById('check-next-button');
+        const restartButton = document.getElementById('restart-button');
+        
+        const questionCounter = document.getElementById('question-counter');
+        const progressBar = document.getElementById('progress-bar');
+        const sentenceContainer = document.getElementById('sentence-container');
+        const feedbackContainer = document.getElementById('feedback-container');
+
+        const shuffleQuestions = () => {
+            questions = [...QUESTIONS].sort(() => Math.random() - 0.5);
+        };
+
+        const showCard = (card) => {
+            rulesCard.style.display = 'none';
+            quizCard.style.display = 'none';
+            resultCard.style.display = 'none';
+            card.style.display = 'block';
+        };
+
+        const renderQuestion = () => {
+            isSubmitted = false;
+            const question = questions[currentQuestionIndex];
+            
+            questionCounter.textContent = `Question ${currentQuestionIndex + 1} of ${questions.length}`;
+            progressBar.style.width = `${((currentQuestionIndex + 1) / questions.length) * 100}%`;
+            
+            const sentenceParts = question.sentence.split('___');
+            
+            const optionsHTML = question.options.map(option => `<option value="${option}">${option}</option>`).join('');
+            
+            sentenceContainer.innerHTML = `
+                <span>${sentenceParts[0]}</span>
+                <div class="inline-block mx-2 align-middle">
+                    <select id="answer-select" class="bg-light-bg px-4 py-2 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition duration-200 font-semibold text-primary border-primary">
+                        <option value="" disabled selected>(${question.verb})</option>
+                        ${optionsHTML}
+                    </select>
+                </div>
+                <span>${sentenceParts[1] || ''}</span>
+            `;
+            
+            checkNextButton.textContent = 'Check';
+            checkNextButton.disabled = true; // Disabled until an option is selected
+            document.getElementById('answer-select').addEventListener('change', () => {
+                 checkNextButton.disabled = false;
+            });
+
+            feedbackContainer.style.display = 'none';
+        };
+
+        const handleStartQuiz = () => {
+            currentQuestionIndex = 0;
+            score = 0;
+            shuffleQuestions();
+            quizState = 'in_progress';
+            renderQuestion();
+            showCard(quizCard);
+        };
+
+        const handleCheckAnswer = () => {
+            isSubmitted = true;
+            const answerSelect = document.getElementById('answer-select');
+            const userAnswer = answerSelect.value;
+            const question = questions[currentQuestionIndex];
+            const isCorrect = userAnswer.toLowerCase() === question.answer.toLowerCase();
+
+            if (isCorrect) {
+                score++;
+            }
+            
+            answerSelect.disabled = true;
+
+            const feedbackBgColor = isCorrect ? 'bg-green-900/50' : 'bg-red-900/50';
+            const feedbackTextColor = isCorrect ? 'text-green-300' : 'text-red-300';
+            const feedbackBorderColor = isCorrect ? 'border-green-500' : 'border-red-500';
+            const icon = isCorrect 
+                ? `<svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>`
+                : `<svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>`;
+            
+            feedbackContainer.innerHTML = `
+                <div class="p-4 rounded-lg border ${feedbackBorderColor} ${feedbackBgColor} ${feedbackTextColor} flex items-center gap-4 animate-fade-in">
+                    ${icon}
+                    <div>
+                        <p class="font-bold">${isCorrect ? 'Correct!' : 'Not quite...'}</p>
+                        ${!isCorrect ? `<p>The correct answer is: <span class="font-bold">${question.answer}</span></p>` : ''}
+                        <p class="text-sm mt-1">${question.rule}</p>
+                    </div>
+                </div>
+            `;
+            feedbackContainer.style.display = 'block';
+            
+            checkNextButton.textContent = 'Next';
+        };
+        
+        const handleNextQuestion = () => {
+            if (currentQuestionIndex < questions.length - 1) {
+                currentQuestionIndex++;
+                renderQuestion();
+            } else {
+                quizState = 'finished';
+                renderResult();
+                showCard(resultCard);
+            }
+        };
+        
+        const renderResult = () => {
+            const percentage = Math.round((score / questions.length) * 100);
+            let message = '';
+            if (percentage === 100) {
+                message = 'Perfect Score! You\'re a grammar master!';
+            } else if (percentage >= 80) {
+                message = 'Excellent work! You really know your stuff.';
+            } else if (percentage >= 50) {
+                message = 'Good job! A little more practice and you\'ll be perfect.';
+            } else {
+                message = 'Keep practicing! You\'ll get there.';
+            }
+            
+            document.getElementById('result-message').textContent = message;
+            document.getElementById('result-score').textContent = `${score} / ${questions.length}`;
+            document.getElementById('result-percentage').textContent = `${percentage}%`;
+        };
+        
+        // Event Listeners
+        startButton.addEventListener('click', handleStartQuiz);
+        checkNextButton.addEventListener('click', () => {
+            if (isSubmitted) {
+                handleNextQuestion();
+            } else {
+                handleCheckAnswer();
+            }
+        });
+        restartButton.addEventListener('click', handleStartQuiz);
+
+        // Initial state
+        showCard(rulesCard);
+    </script>
+</body>
+</html>
