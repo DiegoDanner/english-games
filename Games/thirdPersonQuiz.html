@@ -148,7 +148,6 @@
         <footer class="text-center w-full py-4 text-light-text text-sm">
             <p>Built with Vanilla JS & Tailwind CSS</p>
         </footer>
-    </div>
 
     <script>
         const QUESTIONS = [
@@ -253,8 +252,33 @@
             speakButton.addEventListener('click', () => {
                 const sentence = question.sentence.replace('___', `(${question.verb})`);
                 const utterance = new SpeechSynthesisUtterance(sentence);
-                utterance.lang = 'en-US';
-                speechSynthesis.speak(utterance);
+
+                // Function to set the voice and speak
+                const speak = () => {
+                    const voices = speechSynthesis.getVoices();
+                    // Try to find a high-quality Google US English voice
+                    let bestVoice = voices.find(voice => voice.name === 'Google US English' && voice.lang.startsWith('en'));
+
+                    // If not found, find any US English voice as a fallback
+                    if (!bestVoice) {
+                        bestVoice = voices.find(voice => voice.lang === 'en-US');
+                    }
+
+                    if (bestVoice) {
+                        utterance.voice = bestVoice;
+                    }
+
+                    utterance.lang = 'en-US'; // Set lang as a fallback
+                    speechSynthesis.speak(utterance);
+                };
+
+                // Voices often load asynchronously.
+                // If they are ready, speak immediately. Otherwise, wait for the event.
+                if (speechSynthesis.getVoices().length > 0) {
+                    speak();
+                } else {
+                    speechSynthesis.onvoiceschanged = speak;
+                }
             });
 
             feedbackContainer.style.display = 'none';
