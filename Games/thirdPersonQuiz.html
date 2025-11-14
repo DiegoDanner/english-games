@@ -226,7 +226,7 @@
             
             sentenceContainer.innerHTML = `
                 <div class="flex items-center justify-center">
-                    <span>${sentenceParts[0]}</span>
+                    <span>-----</span>
                     <div class="inline-block mx-2 align-middle">
                         <select id="answer-select" class="bg-light-bg px-4 py-2 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition duration-200 font-semibold text-primary border-primary">
                             <option value="" disabled selected>(${question.verb})</option>
@@ -250,8 +250,9 @@
 
             const speakButton = document.getElementById('speak-button');
             speakButton.addEventListener('click', () => {
-                const sentence = question.sentence.replace('___', `(${question.verb})`);
-                const utterance = new SpeechSynthesisUtterance(sentence);
+                const sentenceParts = question.sentence.split('___');
+                const sentenceToSpeak = `----- ${sentenceParts[1] || ''}`.replace('___', `(${question.verb})`);
+                const utterance = new SpeechSynthesisUtterance(sentenceToSpeak);
 
                 // Function to set the voice and speak
                 const speak = () => {
