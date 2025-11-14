@@ -68,6 +68,31 @@
         body.light-mode .text-light-text {
             color: #64748b;
         }
+
+        /* Header override to always be light */
+        .page-header {
+            background-color: #ffffff !important;
+            border-bottom: 1px solid #e2e8f0 !important;
+        }
+
+        .page-header .header-title,
+        .page-header .menu-link,
+        .page-header .theme-menu-button {
+            color: #2d3748 !important; /* Dark text color */
+        }
+
+        .page-header .theme-menu-button {
+            border-color: #e2e8f0 !important;
+        }
+
+        .page-header .menu-link:hover {
+            color: #1a202c !important;
+        }
+
+        /* Ensure user info text is also dark */
+        .page-header .user-display {
+            color: #718096 !important; /* Light text color from light theme */
+        }
     </style>
 </head>
 <body>
