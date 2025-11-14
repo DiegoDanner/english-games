@@ -33,10 +33,46 @@
         }
       }
     </script>
+    <style>
+        /* Dark mode styles (default) */
+        #app {
+            background-color: #0f172a;
+            color: #e2e8f0;
+        }
+
+        /* Light mode styles */
+        body.light-mode #app {
+            background-color: #f1f5f9; /* Cor de fundo claro */
+            color: #1e293b; /* Cor de texto escuro */
+        }
+
+        /* Card styles that need to adapt */
+        body.light-mode #rules-card,
+        body.light-mode #quiz-card,
+        body.light-mode #result-card {
+            background-color: #ffffff;
+            border-color: #e2e8f0;
+        }
+
+        body.light-mode #sentence-container {
+            background-color: #f1f5f9;
+        }
+
+        body.light-mode h3,
+        body.light-mode p,
+        body.light-mode span,
+        body.light-mode div {
+            color: #1e293b;
+        }
+
+        body.light-mode .text-light-text {
+            color: #64748b;
+        }
+    </style>
 </head>
 <body>
     <div id="header-placeholder"></div>
-    <div id="app" class="min-h-screen flex flex-col font-sans bg-dark-bg text-dark-text">
+    <div id="app" class="min-h-screen flex flex-col font-sans">
 
         <main class="w-full max-w-2xl mx-auto flex-grow flex flex-col items-center justify-center p-4">
             <div id="content-container" class="w-full">
