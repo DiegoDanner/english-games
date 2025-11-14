@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>English Third Person Verb Quiz</title>
+    <link rel="stylesheet" href="css/style.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -31,17 +32,67 @@
         }
       }
     </script>
+    <style>
+        /* Dark mode styles (default) */
+        #app {
+            background-color: #0f172a;
+            color: #e2e8f0;
+        }
+
+        /* Light mode styles */
+        body.light-mode #app {
+            background-color: #f1f5f9; /* Cor de fundo claro */
+            color: #1e293b; /* Cor de texto escuro */
+        }
+
+        /* Card styles that need to adapt */
+        body.light-mode #rules-card,
+        body.light-mode #quiz-card,
+        body.light-mode #result-card {
+            background-color: #ffffff;
+            border-color: #e2e8f0;
+        }
+
+        body.light-mode #sentence-container {
+            background-color: #f1f5f9;
+        }
+
+        body.light-mode h3,
+        body.light-mode p,
+        body.light-mode span,
+        body.light-mode div {
+            color: #1e293b;
+        }
+
+        body.light-mode .text-light-text {
+            color: #64748b;
+        }
+
+        /* Fix select dropdown style in light mode */
+        body.light-mode #answer-select {
+            background-color: #f1f5f9 !important; /* Light background */
+            color: #0f172a !important; /* Dark text */
+            border-color: #cbd5e0 !important; /* Light gray border */
+        }
+
+        /* Style for the text-to-speech button */
+        #speak-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            margin-left: 0.5rem;
+            color: var(--text-color);
+            transition: color 0.2s;
+        }
+        #speak-button:hover {
+            color: var(--link-hover);
+        }
+    </style>
 </head>
-<body class="bg-dark-bg text-dark-text">
-    <div id="app" class="min-h-screen bg-dark-bg text-dark-text flex flex-col font-sans">
-         <header class="w-full bg-light-bg shadow-md">
-            <div class="container mx-auto px-4 py-2 flex justify-between items-center">
-                <div class="flex items-center">
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-primary mr-2"><path d="M21 15C21 15.5304 20.7893 16.0391 20.4142 16.4142C20.0391 16.7893 19.5304 17 19 17H7L3 21V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V15Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7C13.6569 7 15 8.34315 15 10C15 11.6569 13.6569 13 12 13C10.3431 13 9 11.6569 9 10C9 8.34315 10.3431 7 12 7Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 10H9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 10H17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 7V13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    <span class="text-xl font-bold text-dark-text">Danner Idiomas</span>
-                </div>
-            </div>
-        </header>
+<body>
+    <div id="header-placeholder"></div>
+    <div id="app" class="min-h-screen flex flex-col font-sans">
 
         <main class="w-full max-w-2xl mx-auto flex-grow flex flex-col items-center justify-center p-4">
             <div id="content-container" class="w-full">
@@ -177,7 +228,7 @@
                 <span>${sentenceParts[0]}</span>
                 <div class="inline-block mx-2 align-middle">
                     <select id="answer-select" class="bg-light-bg px-4 py-2 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition duration-200 font-semibold text-primary border-primary">
-                        <option value="" disabled selected>(${question.verb})</option>
+                        <option value="" disabled selected>-----</option>
                         ${optionsHTML}
                     </select>
                 </div>
@@ -280,5 +331,8 @@
         // Initial state
         showCard(rulesCard);
     </script>
+    </div>
+    <script src="js/main.js"></script>
+    <script type="module" src="js/header.js"></script>
 </body>
 </html>
