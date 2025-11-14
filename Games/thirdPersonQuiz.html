@@ -75,6 +75,20 @@
             color: #0f172a !important; /* Dark text */
             border-color: #cbd5e0 !important; /* Light gray border */
         }
+
+        /* Style for the text-to-speech button */
+        #speak-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            margin-left: 0.5rem;
+            color: var(--text-color);
+            transition: color 0.2s;
+        }
+        #speak-button:hover {
+            color: var(--link-hover);
+        }
     </style>
 </head>
 <body>
@@ -212,20 +226,35 @@
             const optionsHTML = question.options.map(option => `<option value="${option}">${option}</option>`).join('');
             
             sentenceContainer.innerHTML = `
-                <span>${sentenceParts[0]}</span>
-                <div class="inline-block mx-2 align-middle">
-                    <select id="answer-select" class="bg-light-bg px-4 py-2 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition duration-200 font-semibold text-primary border-primary">
-                        <option value="" disabled selected>(${question.verb})</option>
-                        ${optionsHTML}
-                    </select>
+                <div class="flex items-center justify-center">
+                    <span>${sentenceParts[0]}</span>
+                    <div class="inline-block mx-2 align-middle">
+                        <select id="answer-select" class="bg-light-bg px-4 py-2 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition duration-200 font-semibold text-primary border-primary">
+                            <option value="" disabled selected>(${question.verb})</option>
+                            ${optionsHTML}
+                        </select>
+                    </div>
+                    <span>${sentenceParts[1] || ''}</span>
+                    <button id="speak-button" title="Read sentence aloud">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.858 12h.01M10 12a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                    </button>
                 </div>
-                <span>${sentenceParts[1] || ''}</span>
             `;
             
             checkNextButton.textContent = 'Check';
             checkNextButton.disabled = true; // Disabled until an option is selected
             document.getElementById('answer-select').addEventListener('change', () => {
                  checkNextButton.disabled = false;
+            });
+
+            const speakButton = document.getElementById('speak-button');
+            speakButton.addEventListener('click', () => {
+                const sentence = question.sentence.replace('___', `(${question.verb})`);
+                const utterance = new SpeechSynthesisUtterance(sentence);
+                utterance.lang = 'en-US';
+                speechSynthesis.speak(utterance);
             });
 
             feedbackContainer.style.display = 'none';
