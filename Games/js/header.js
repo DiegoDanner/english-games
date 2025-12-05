@@ -48,14 +48,19 @@ function setupHeader() {
 
     onAuthStateChanged(auth, (user) => {
         if (user && !user.isAnonymous) {
+            // Se for um usuário logado com Google (não anônimo)
             userName.textContent = user.displayName || 'Usuário';
             userInfo.classList.remove('hidden');
             logoutButton.classList.remove('hidden');
-        } else if (user && user.isAnonymous) {
+        } else {
+            // Para usuários anônimos ou deslogados
             userInfo.classList.add('hidden');
             logoutButton.classList.add('hidden');
-        } else {
-            signInAnonymously(auth).catch((error) => console.error("Falha no login anônimo:", error));
+
+            // Apenas tenta o login anônimo se NÃO estivermos na página de login principal
+            if (!isIndexPage) {
+                signInAnonymously(auth).catch((error) => console.error("Falha no login anônimo:", error));
+            }
         }
     });
 
