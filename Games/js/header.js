@@ -25,6 +25,7 @@ const headerHTML = `
     </div>
     <div class="header-right">
         <a href="index.html" class="menu-link">Menu</a>
+        <a href="gestao_alunos.html" class="menu-link">Management</a>
         ${themeSelectorHTML}
         <div id="user-info" class="user-display hidden">
             Logado como: <span class="user-name"></span>
